@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36511.14 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService.API", "IdentityService.API\IdentityService.API.csproj", "{8973CD6D-653A-42B6-8012-81FA273EC98A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService.Domain", "IdentityService.Domain\IdentityService.Domain.csproj", "{D6F5FC9C-DA5A-4E4B-A3AB-706D70D98770}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService.Application", "IdentityService.Application\IdentityService.Application.csproj", "{657611A1-42B4-47E1-9F95-F6634CF3C7B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService.Infrastructure", "IdentityService.Infrastructure\IdentityService.Infrastructure.csproj", "{13365E80-755E-444F-A1C2-DA9A65C74245}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService.UnitTests", "IdentityService.UnitTests\IdentityService.UnitTests.csproj", "{99CA40F4-993D-4A05-9C22-91998B996A11}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{C5C3B25B-063C-43D7-B328-1D1B561F5A0C}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8973CD6D-653A-42B6-8012-81FA273EC98A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8973CD6D-653A-42B6-8012-81FA273EC98A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8973CD6D-653A-42B6-8012-81FA273EC98A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8973CD6D-653A-42B6-8012-81FA273EC98A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6F5FC9C-DA5A-4E4B-A3AB-706D70D98770}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6F5FC9C-DA5A-4E4B-A3AB-706D70D98770}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6F5FC9C-DA5A-4E4B-A3AB-706D70D98770}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6F5FC9C-DA5A-4E4B-A3AB-706D70D98770}.Release|Any CPU.Build.0 = Release|Any CPU
+		{657611A1-42B4-47E1-9F95-F6634CF3C7B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{657611A1-42B4-47E1-9F95-F6634CF3C7B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{657611A1-42B4-47E1-9F95-F6634CF3C7B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{657611A1-42B4-47E1-9F95-F6634CF3C7B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13365E80-755E-444F-A1C2-DA9A65C74245}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13365E80-755E-444F-A1C2-DA9A65C74245}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13365E80-755E-444F-A1C2-DA9A65C74245}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13365E80-755E-444F-A1C2-DA9A65C74245}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99CA40F4-993D-4A05-9C22-91998B996A11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99CA40F4-993D-4A05-9C22-91998B996A11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99CA40F4-993D-4A05-9C22-91998B996A11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99CA40F4-993D-4A05-9C22-91998B996A11}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

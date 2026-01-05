@@ -1,0 +1,110 @@
+﻿{
+  "SeedData": 
+  {
+    "SpecialtySeed": [
+      { "SpecialtyTitle": "Программирование" },
+      { "SpecialtyTitle": "Веб-разработка" },
+      { "SpecialtyTitle": "Юриспруденция" },
+      { "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+      { "SpecialtyTitle": "Логистика" }
+    ],
+    
+    "GroupSeed": [
+      { "Course": 1, "Number": 1, "SpecialtyTitle": "Программирование" },
+      { "Course": 1, "Number": 2, "SpecialtyTitle": "Программирование" },
+      { "Course": 1, "Number": 3, "SpecialtyTitle": "Программирование" },
+      { "Course": 1, "Number": 4, "SpecialtyTitle": "Программирование" },
+
+      { "Course": 2, "Number": 1, "SpecialtyTitle": "Программирование" },
+      { "Course": 2, "Number": 2, "SpecialtyTitle": "Веб-разработка" },
+      { "Course": 2, "Number": 3, "SpecialtyTitle": "Программирование" },
+      { "Course": 2, "Number": 4, "SpecialtyTitle": "Веб-разработка" },
+
+      { "Course": 3, "Number": 1, "SpecialtyTitle": "Программирование" },
+      { "Course": 3, "Number": 2, "SpecialtyTitle": "Веб-разработка" },
+      { "Course": 3, "Number": 3, "SpecialtyTitle": "Программирование" },
+      { "Course": 3, "Number": 4, "SpecialtyTitle": "Веб-разработка" },
+
+      { "Course": 4, "Number": 1, "SpecialtyTitle": "Программирование" },
+      { "Course": 4, "Number": 2, "SpecialtyTitle": "Веб-разработка" },
+      { "Course": 4, "Number": 3, "SpecialtyTitle": "Программирование" },
+      { "Course": 4, "Number": 4, "SpecialtyTitle": "Веб-разработка" },
+
+      { "Course": 1, "Number": 1, "SpecialtyTitle": "Юриспруденция" },
+      { "Course": 1, "Number": 2, "SpecialtyTitle": "Юриспруденция" },
+      { "Course": 1, "Number": 3, "SpecialtyTitle": "Юриспруденция" },
+      { "Course": 1, "Number": 4, "SpecialtyTitle": "Юриспруденция" },
+
+      { "Course": 2, "Number": 1, "SpecialtyTitle": "Юриспруденция" },
+      { "Course": 2, "Number": 2, "SpecialtyTitle": "Юриспруденция" },
+      { "Course": 2, "Number": 3, "SpecialtyTitle": "Юриспруденция" },
+      { "Course": 2, "Number": 4, "SpecialtyTitle": "Юриспруденция" },
+
+      { "Course": 3, "Number": 1, "SpecialtyTitle": "Юриспруденция" },
+      { "Course": 3, "Number": 2, "SpecialtyTitle": "Юриспруденция" },
+      { "Course": 3, "Number": 3, "SpecialtyTitle": "Юриспруденция" },
+      { "Course": 3, "Number": 4, "SpecialtyTitle": "Юриспруденция" },
+
+      { "Course": 1, "Number": 1, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+      { "Course": 1, "Number": 2, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+      { "Course": 1, "Number": 3, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+      { "Course": 1, "Number": 4, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+
+      { "Course": 2, "Number": 1, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+      { "Course": 2, "Number": 2, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+      { "Course": 2, "Number": 3, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+      { "Course": 2, "Number": 4, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+
+      { "Course": 3, "Number": 1, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+      { "Course": 3, "Number": 2, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+      { "Course": 3, "Number": 3, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+      { "Course": 3, "Number": 4, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+
+      { "Course": 4, "Number": 1, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+      { "Course": 4, "Number": 2, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+      { "Course": 4, "Number": 3, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+      { "Course": 4, "Number": 4, "SpecialtyTitle": "Бухгалтерский учет и экономика" },
+
+      { "Course": 1, "Number": 1, "SpecialtyTitle": "Логистика" },
+      { "Course": 1, "Number": 2, "SpecialtyTitle": "Логистика" },
+      { "Course": 1, "Number": 3, "SpecialtyTitle": "Логистика" },
+      { "Course": 1, "Number": 4, "SpecialtyTitle": "Логистика" },
+
+      { "Course": 2, "Number": 1, "SpecialtyTitle": "Логистика" },
+      { "Course": 2, "Number": 2, "SpecialtyTitle": "Логистика" },
+      { "Course": 2, "Number": 3, "SpecialtyTitle": "Логистика" },
+      { "Course": 2, "Number": 4, "SpecialtyTitle": "Логистика" },
+
+      { "Course": 3, "Number": 1, "SpecialtyTitle": "Логистика" },
+      { "Course": 3, "Number": 2, "SpecialtyTitle": "Логистика" },
+      { "Course": 3, "Number": 3, "SpecialtyTitle": "Логистика" },
+      { "Course": 3, "Number": 4, "SpecialtyTitle": "Логистика" }
+    ],
+
+
+    "DepartmentSeed": [
+      { "DepartmentName": "Отдел воспитательной работы" },
+      { "DepartmentName": "Отдел по работе со студентами" },
+      { "DepartmentName": "Пресс-служба колледжа" },
+      { "DepartmentName": "Культурно-массовый отдел" }
+    ],
+
+    "PostSeed": [
+      { "PostName": "Заместитель директора по воспитательной работе", "DepartmentName": "Отдел воспитательной работы" },
+      { "PostName": "Педагог-организатор", "DepartmentName": "Отдел воспитательной работы" },
+      { "PostName": "Куратор студенческих групп", "DepartmentName": "Отдел воспитательной работы" },
+      
+      { "PostName": "Специалист по работе со студентами", "DepartmentName": "Отдел по работе со студентами" },
+      { "PostName": "Классный руководитель", "DepartmentName": "Отдел по работе со студентами" },
+      { "PostName": "Социальный педагог", "DepartmentName": "Отдел по работе со студентами" },
+      
+      { "PostName": "Пресс-секретарь", "DepartmentName": "Пресс-служба колледжа" },
+      { "PostName": "SMM-специалист", "DepartmentName": "Пресс-служба колледжа" },
+      { "PostName": "Контент-менеджер", "DepartmentName": "Пресс-служба колледжа" },
+      
+      { "PostName": "Руководитель культурно-массового отдела", "DepartmentName": "Культурно-массовый отдел" },
+      { "PostName": "Организатор мероприятий", "DepartmentName": "Культурно-массовый отдел" },
+      { "PostName": "Хореограф-постановщик", "DepartmentName": "Культурно-массовый отдел" }
+    ]
+  }
+}

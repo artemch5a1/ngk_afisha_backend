@@ -1,0 +1,58 @@
+version: "3.9"
+
+services:
+  identity-service:
+    build:
+      context: ..
+      dockerfile: docker/IdentityService.Dockerfile
+    ports:
+      - "${IDENTITY_SERVICE_PORT:-5000}:8080"  # локальный порт по умолчанию 5000
+    env_file:
+      - .env
+    environment:
+      # Подключение к Postgres
+      - ConnectionStrings__IdentityServiceDbContext=Host=postgres;Port=5432;Username=${IDENTITY_POSTGRES_USER};Password=${IDENTITY_POSTGRES_PASSWORD};Database=${IDENTITY_POSTGRES_DB}
+
+      # JWT
+      - Jwt__PrivateKey=${IDENTITY_JWT_PRIVATE_KEY}
+      - Jwt__PublicKey=${IDENTITY_JWT_PUBLIC_KEY}
+      - Jwt__Issuer=${IDENTITY_JWT_ISSUER}
+      - Jwt__Expires=${IDENTITY_JWT_EXPIRES}
+
+      # Админ (для IdentityService)
+      - AdminCred__Email=${IDENTITY_ADMIN_EMAIL}
+      - AdminCred__Password=${IDENTITY_ADMIN_PASSWORD}
+
+      # Общие
+      - IncludeDocumentationInRelease=${INCLUDE_DOCS}
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  postgres:
+    image: postgres:latest
+    container_name: identityservice_postgres
+    ports:
+      - "${POSTGRES_PORT:-5434}:5432"  # локальный порт по умолчанию 5432
+    environment:
+      POSTGRES_DB: ${IDENTITY_POSTGRES_DB}
+      POSTGRES_USER: ${IDENTITY_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${IDENTITY_POSTGRES_PASSWORD}
+    volumes:
+      - identityservice-postgres-data:/var/lib/postgresql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${IDENTITY_POSTGRES_USER}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  identityservice-postgres-data:

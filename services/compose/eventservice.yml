@@ -1,0 +1,75 @@
+version: "3.9"
+
+services:
+  event-service:
+    build:
+      context: ..
+      dockerfile: docker/EventService.Dockerfile
+    ports:
+      - "${EVENT_SERVICE_PORT:-5001}:8080"  # локальный порт по умолчанию 5001
+    env_file:
+      - .env
+    environment:
+      # Подключение к Postgres
+      - ConnectionStrings__EventServiceDbContext=Host=postgres;Port=5432;Username=${EVENT_POSTGRES_USER};Password=${EVENT_POSTGRES_PASSWORD};Database=${EVENT_POSTGRES_DB}
+      
+      # JWT
+      - Jwt__PublicKey=${EVENT_JWT_PUBLIC_KEY}
+      - Jwt__Issuer=${EVENT_JWT_ISSUER}
+      - Jwt__Expires=${EVENT_JWT_EXPIRES}
+      
+      # Admin (если нужен)
+      - AdminCred__Email=${EVENT_ADMIN_EMAIL}
+      - AdminCred__Password=${EVENT_ADMIN_PASSWORD}
+      
+      # S3
+      - S3Storage__BucketName=${EVENT_S3_BUCKET_NAME}
+      - S3Storage__AccessKey=${EVENT_S3_ACCESS_KEY}
+      - S3Storage__SecretKey=${EVENT_S3_SECRET_KEY}
+      - S3Storage__ServiceUrl=${EVENT_S3_SERVICE_URL}
+      - S3Storage__ServiceUrlBounded=${EVENT_S3_SERVICE_URL_BOUNDED}
+      
+      # Event Settings
+      - EventSettings__TimeActiveDownloadLinkInMilliSeconds=${EVENT_TIME_ACTIVE_DOWNLOAD_LINK_MS}
+      - EventSettings__TimeActiveUploadLinkInMilliSeconds=${EVENT_TIME_ACTIVE_UPLOAD_LINK_MS}
+      
+      # Общие
+      - IncludeDocumentationInRelease=${INCLUDE_DOCS}
+    networks:
+      - shared-net
+      - default 
+      
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  postgres:
+    image: postgres:latest
+    container_name: eventservice_postgres
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"  # локальный порт по умолчанию 5433
+    environment:
+      POSTGRES_DB: ${EVENT_POSTGRES_DB}
+      POSTGRES_USER: ${EVENT_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${EVENT_POSTGRES_PASSWORD}
+    volumes:
+      - eventservice-postgres-data:/var/lib/postgresql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${EVENT_POSTGRES_USER}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+networks:
+  shared-net:
+    external: true
+
+volumes:
+  eventservice-postgres-data:
