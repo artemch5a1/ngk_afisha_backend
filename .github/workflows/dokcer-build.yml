@@ -18,36 +18,24 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Copy .env.example
-        working-directory: ngk_afisha_backend/services
-        run: |
-          cp .env.example .env
+        working-directory: services
+        run: cp .env.example .env
 
       - name: Build Docker Compose services
-        working-directory: ngk_afisha_backend/services
-        run: |
-          echo "📦 Building all containers..."
-          docker compose -f compose/all.yml build
+        working-directory: services
+        run: docker compose -f compose/all.yml build
 
       - name: Start containers for healthcheck
-        working-directory: ngk_afisha_backend/services
-        run: |
-          echo "🚀 Starting containers..."
-          docker compose -f compose/all.yml up -d
+        working-directory: services
+        run: docker compose -f compose/all.yml up -d
 
       - name: Run healthchecks
-        working-directory: ngk_afisha_backend/services
+        working-directory: services
         run: |
-          echo "🩺 Checking container health..."
           unhealthy=$(docker ps --filter "health=unhealthy" --format "{{.Names}}")
           if [ -n "$unhealthy" ]; then
             echo "❌ Unhealthy containers: $unhealthy"
             docker compose -f compose/all.yml logs
             exit 1
           fi
-          echo "✅ All containers healthy"
-
-      - name: Tear down containers
-        working-directory: ngk_afisha_backend/services
-        if: always()
-        run: |
-          docker compose -f compose/all.yml down -v
+          echo "✅
