@@ -1,0 +1,52 @@
+name: Docker Build + Healthcheck
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Compose v2
+        uses: docker/setup-buildx-action@v3
+
+      - name: Copy .env.example
+        run: |
+          cp ngk_afisha_backend/services/.env.example ngk_afisha_backend/services/.env
+
+      - name: Build Docker Compose services
+        working-directory: ngk_afisha_backend/services
+        run: |
+          echo "📦 Building all containers..."
+          docker compose -f services/compose/all.yml build
+
+      - name: Start containers for healthcheck
+        working-directory: ngk_afisha_backend/services
+        run: |
+          echo "🚀 Starting containers..."
+          docker compose -f services/compose/all.yml up -d
+
+      - name: Run healthchecks
+        working-directory: ngk_afisha_backend/services
+        run: |
+          echo "🩺 Checking container health..."
+          unhealthy=$(docker ps --filter "health=unhealthy" --format "{{.Names}}")
+          if [ -n "$unhealthy" ]; then
+            echo "❌ Unhealthy containers: $unhealthy"
+            docker compose -f services/compose/all.yml logs
+            exit 1
+          fi
+          echo "✅ All containers healthy"
+
+      - name: Tear down containers
+        working-directory: ngk_afisha_backend/services
+        if: always()
+        run: |
+          docker compose -f services/compose/all.yml down -v
