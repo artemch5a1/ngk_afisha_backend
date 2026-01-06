@@ -1,4 +1,4 @@
-name: Build and Test Microservices
+name: Build and Test ASP.NET Core Microservices
 
 on:
   push:
@@ -10,61 +10,39 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: ngk
-          POSTGRES_PASSWORD: ngk123
-          POSTGRES_DB: ngkafisha
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U ngk -d ngkafisha || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-      minio:
-        image: minio/minio
-        env:
-          MINIO_ROOT_USER: minio
-          MINIO_ROOT_PASSWORD: minio123
-        ports:
-          - 9000:9000
-        options: >-
-          --health-cmd "curl -f http://localhost:9000/minio/health/live || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-          server /data
-
     steps:
+      # 1. Получаем код
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2. Устанавливаем .NET SDK
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '9.0.x'
 
-      - name: Restore .NET dependencies
+      # 3. Восстанавливаем зависимости всех сервисов
+      - name: Restore dependencies
         run: |
           dotnet restore services/src/EventService/EventService.sln
           dotnet restore services/src/IdentityService/IdentityService.sln
 
+      # 4. Сборка EventService
       - name: Build EventService
         run: |
           dotnet build services/src/EventService/EventService.sln --configuration Release --no-restore
 
+      # 5. Сборка IdentityService
       - name: Build IdentityService
         run: |
           dotnet build services/src/IdentityService/IdentityService.sln --configuration Release --no-restore
 
-      - name: Run EventService Unit Tests
+      # 6. Unit-тесты EventService
+      - name: Test EventService
         run: |
           dotnet test services/src/EventService/EventService.UnitTests/EventService.UnitTests.csproj --no-restore --verbosity normal
 
-      - name: Run IdentityService Unit Tests
+      # 7. Unit-тесты IdentityService
+      - name: Test IdentityService
         run: |
           dotnet test services/src/IdentityService/IdentityService.UnitTests/IdentityService.UnitTests.csproj --no-restore --verbosity normal
