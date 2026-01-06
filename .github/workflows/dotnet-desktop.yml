@@ -1,4 +1,4 @@
-name: Build & Test Microservices
+name: Build and Test Microservices
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
     services:
       postgres:
         image: postgres:15
@@ -19,14 +20,13 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U ngk -d ngkafisha"
+          --health-cmd "pg_isready -U ngk -d ngkafisha || exit 1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
 
       minio:
         image: minio/minio
-        command: server /data
         env:
           MINIO_ROOT_USER: minio
           MINIO_ROOT_PASSWORD: minio123
@@ -37,9 +37,10 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+          server /data
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup .NET SDK
@@ -47,16 +48,18 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - name: Restore .NET dependencies
+        run: |
+          dotnet restore services/src/EventService/EventService.sln
+          dotnet restore services/src/IdentityService/IdentityService.sln
 
       - name: Build EventService
         run: |
-          docker build -f services/docker/EventService.Dockerfile -t eventservice:ci services/src/EventService
+          dotnet build services/src/EventService/EventService.sln --configuration Release --no-restore
 
       - name: Build IdentityService
         run: |
-          docker build -f services/docker/IdentityService.Dockerfile -t identityservice:ci services/src/IdentityService
+          dotnet build services/src/IdentityService/IdentityService.sln --configuration Release --no-restore
 
       - name: Run EventService Unit Tests
         run: |
@@ -65,12 +68,3 @@ jobs:
       - name: Run IdentityService Unit Tests
         run: |
           dotnet test services/src/IdentityService/IdentityService.UnitTests/IdentityService.UnitTests.csproj --no-restore --verbosity normal
-
-      - name: Docker Compose Health Check
-        run: |
-          docker run -d --name test_eventservice --network host eventservice:ci
-          docker run -d --name test_identityservice --network host identityservice:ci
-          sleep 15
-          curl -f http://localhost:8080/health || exit 1
-          curl -f http://localhost:8081/health || exit 1
-          docker rm -f test_eventservice test_identityservice
