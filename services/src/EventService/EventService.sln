@@ -12,8 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventService.UnitTests", "E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{ADAEFD1C-57AB-402B-A050-F8D94CA2B837}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose.yml = docker-compose.yml
-		Dockerfile = Dockerfile
+		..\..\docker\EventService.Dockerfile = ..\..\docker\EventService.Dockerfile
+		..\..\compose\eventservice.yml = ..\..\compose\eventservice.yml
 	EndProjectSection
 EndProject
 Global

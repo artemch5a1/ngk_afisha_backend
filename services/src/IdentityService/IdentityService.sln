@@ -15,8 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService.UnitTests",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{C5C3B25B-063C-43D7-B328-1D1B561F5A0C}"
 	ProjectSection(SolutionItems) = preProject
-		Dockerfile = Dockerfile
-		docker-compose.yml = docker-compose.yml
+		..\..\docker\IdentityService.Dockerfile = ..\..\docker\IdentityService.Dockerfile
+		..\..\compose\identityservice.yml = ..\..\compose\identityservice.yml
 	EndProjectSection
 EndProject
 Global
