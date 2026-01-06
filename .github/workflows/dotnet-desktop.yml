@@ -1,0 +1,48 @@
+name: Build and Test ASP.NET Core Microservices
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Получаем код
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Устанавливаем .NET SDK
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      # 3. Восстанавливаем зависимости всех сервисов
+      - name: Restore dependencies
+        run: |
+          dotnet restore services/src/EventService/EventService.sln
+          dotnet restore services/src/IdentityService/IdentityService.sln
+
+      # 4. Сборка EventService
+      - name: Build EventService
+        run: |
+          dotnet build services/src/EventService/EventService.sln --configuration Release --no-restore
+
+      # 5. Сборка IdentityService
+      - name: Build IdentityService
+        run: |
+          dotnet build services/src/IdentityService/IdentityService.sln --configuration Release --no-restore
+
+      # 6. Unit-тесты EventService
+      - name: Test EventService
+        run: |
+          dotnet test services/src/EventService/EventService.UnitTests/EventService.UnitTests/EventService.UnitTests.csproj --no-restore --verbosity normal
+
+      # 7. Unit-тесты IdentityService
+      - name: Test IdentityService
+        run: |
+          dotnet test services/src/IdentityService/IdentityService.UnitTests/IdentityService.UnitTests.csproj --no-restore --verbosity normal
