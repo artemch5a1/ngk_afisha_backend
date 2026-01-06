@@ -23,11 +23,11 @@ jobs:
 
       - name: Build Docker Compose services
         working-directory: services
-        run: docker compose -f compose/all.yml build
+        run: docker compose --env-file .env -f compose/all.yml build
 
       - name: Start containers for healthcheck
         working-directory: services
-        run: docker compose -f compose/all.yml up -d
+        run: docker compose --env-file .env -f compose/all.yml up -d
 
       - name: Run healthchecks
         working-directory: services
@@ -35,7 +35,12 @@ jobs:
           unhealthy=$(docker ps --filter "health=unhealthy" --format "{{.Names}}")
           if [ -n "$unhealthy" ]; then
             echo "❌ Unhealthy containers: $unhealthy"
-            docker compose -f compose/all.yml logs
+            docker compose --env-file .env -f compose/all.yml logs
             exit 1
           fi
-          echo "✅
+          echo "✅ All containers healthy"
+
+      - name: Tear down containers
+        working-directory: services
+        if: always()
+        run: docker compose --env-file .env -f compose/all.yml down -v
