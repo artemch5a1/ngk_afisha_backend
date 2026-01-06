@@ -3,6 +3,7 @@ using IdentityService.Application.Extensions.DI;
 using IdentityService.Infrastructure.Data.Database;
 using IdentityService.Infrastructure.Extensions.DI;
 using IdentityService.Infrastructure.Implementations.Data.Database;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -68,6 +69,11 @@ builder.Services.AddServices()
 
 WebApplication app = builder.Build();
 
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
 app.MapFallback("/error", () => Results.Problem());
 app.UseExceptionHandler("/error");
 
@@ -86,7 +92,7 @@ if (app.Environment.IsDevelopment() || includeDocumentationInRelease)
     app.MapGet("/", () => Results.Redirect("/swagger/index.html")).ExcludeFromDescription();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

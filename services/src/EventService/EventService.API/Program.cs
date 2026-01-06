@@ -2,6 +2,7 @@ using EventService.API.Extensions.DI;
 using EventService.Application.Extensions.DI;
 using EventService.Infrastructure.Data.Database;
 using EventService.Infrastructure.Extensions.DI;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -67,6 +68,11 @@ builder.Services
 
 var app = builder.Build();
 
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
 app.MapFallback("/error", () => Results.Problem());
 app.UseExceptionHandler("/error");
 
@@ -85,7 +91,7 @@ if (app.Environment.IsDevelopment() || includeDocumentationInRelease)
     app.MapGet("/", () => Results.Redirect("/swagger/index.html")).ExcludeFromDescription();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
