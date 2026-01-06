@@ -1,0 +1,158 @@
+version: "3.9"
+
+services:
+  # =====================
+  # MinIO (S3)
+  # =====================
+  minio:
+    image: minio/minio
+    environment:
+      MINIO_ROOT_USER: ${EVENT_S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${EVENT_S3_SECRET_KEY}
+    ports:
+      - "${MINIO_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      retries: 5
+
+  minio-init:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+        mc alias set local ${EVENT_S3_SERVICE_URL_BOUNDED} ${EVENT_S3_ACCESS_KEY} ${EVENT_S3_SECRET_KEY} &&
+        mc mb --ignore-existing local/${EVENT_S3_BUCKET_NAME}
+      "
+
+  # =====================
+  # IdentityService
+  # =====================
+  identity-service:
+    build:
+      context: ..
+      dockerfile: docker/IdentityService.Dockerfile
+    ports:
+      - "${IDENTITY_SERVICE_PORT:-5000}:8080"
+    environment:
+      ConnectionStrings__IdentityServiceDbContext: >
+        Host=identity-postgres;
+        Port=5432;
+        Username=${IDENTITY_POSTGRES_USER};
+        Password=${IDENTITY_POSTGRES_PASSWORD};
+        Database=${IDENTITY_POSTGRES_DB}
+
+      Jwt__PrivateKey: ${IDENTITY_JWT_PRIVATE_KEY}
+      Jwt__PublicKey: ${IDENTITY_JWT_PUBLIC_KEY}
+      Jwt__Issuer: ${IDENTITY_JWT_ISSUER}
+      Jwt__Expires: ${IDENTITY_JWT_EXPIRES}
+
+      AdminCred__Email: ${IDENTITY_ADMIN_EMAIL}
+      AdminCred__Password: ${IDENTITY_ADMIN_PASSWORD}
+
+      IncludeDocumentationInRelease: ${INCLUDE_DOCS}
+    depends_on:
+      identity-postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  identity-postgres:
+    image: postgres:latest
+    ports:
+      - "${IDENTITY_POSTGRES_PORT:-5434}:5432"
+    environment:
+      POSTGRES_DB: ${IDENTITY_POSTGRES_DB}
+      POSTGRES_USER: ${IDENTITY_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${IDENTITY_POSTGRES_PASSWORD}
+    volumes:
+      - identityservice-postgres-data:/var/lib/postgresql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${IDENTITY_POSTGRES_USER}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # =====================
+  # EventService
+  # =====================
+  event-service:
+    build:
+      context: ..
+      dockerfile: docker/EventService.Dockerfile
+    ports:
+      - "${EVENT_SERVICE_PORT:-5001}:8080"
+    environment:
+      ConnectionStrings__EventServiceDbContext: >
+        Host=event-postgres;
+        Port=5432;
+        Username=${EVENT_POSTGRES_USER};
+        Password=${EVENT_POSTGRES_PASSWORD};
+        Database=${EVENT_POSTGRES_DB}
+
+      Jwt__PublicKey: ${EVENT_JWT_PUBLIC_KEY}
+      Jwt__Issuer: ${EVENT_JWT_ISSUER}
+      Jwt__Expires: ${EVENT_JWT_EXPIRES}
+
+      AdminCred__Email: ${EVENT_ADMIN_EMAIL}
+      AdminCred__Password: ${EVENT_ADMIN_PASSWORD}
+
+      S3Storage__BucketName: ${EVENT_S3_BUCKET_NAME}
+      S3Storage__AccessKey: ${EVENT_S3_ACCESS_KEY}
+      S3Storage__SecretKey: ${EVENT_S3_SECRET_KEY}
+      S3Storage__ServiceUrl: ${EVENT_S3_SERVICE_URL}
+      S3Storage__ServiceUrlBounded: ${EVENT_S3_SERVICE_URL_BOUNDED}
+
+      EventSettings__TimeActiveDownloadLinkInMilliSeconds: ${EVENT_TIME_ACTIVE_DOWNLOAD_LINK_MS}
+      EventSettings__TimeActiveUploadLinkInMilliSeconds: ${EVENT_TIME_ACTIVE_UPLOAD_LINK_MS}
+
+      IncludeDocumentationInRelease: ${INCLUDE_DOCS}
+    depends_on:
+      event-postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  event-postgres:
+    image: postgres:latest
+    ports:
+      - "${EVENT_POSTGRES_PORT:-5433}:5432"
+    environment:
+      POSTGRES_DB: ${EVENT_POSTGRES_DB}
+      POSTGRES_USER: ${EVENT_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${EVENT_POSTGRES_PASSWORD}
+    volumes:
+      - eventservice-postgres-data:/var/lib/postgresql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${EVENT_POSTGRES_USER}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+# =====================
+# Volumes
+# =====================
+
+volumes:
+  minio-data:
+  identityservice-postgres-data:
+  eventservice-postgres-data:
+
