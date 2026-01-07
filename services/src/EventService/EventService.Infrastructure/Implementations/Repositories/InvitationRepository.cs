@@ -43,6 +43,7 @@ public class InvitationRepository : IInvitationRepository
                     .Include(x => x.Event)
                     .ThenInclude(x => x.Type)
                     .Include(x => x.Role)
+                    .OrderBy(x => x.DeadLine)
                     .ToListAsync(cancellationToken)
                 :
                 await _db.Invitations
@@ -57,6 +58,7 @@ public class InvitationRepository : IInvitationRepository
                     .Include(x => x.Event)
                     .ThenInclude(x => x.Type)
                     .Include(x => x.Role)
+                    .OrderBy(x => x.DeadLine)
                     .ToListAsync(cancellationToken);
 
             return _invitationMapper.ToListDomain(entities);
@@ -83,6 +85,7 @@ public class InvitationRepository : IInvitationRepository
                     .Include(x => x.Event)
                     .ThenInclude(x => x.Type)
                     .Include(x => x.Role)
+                    .OrderBy(x => x.DeadLine)
                     .ToListAsync(cancellationToken)
                 :
                 await _db.Invitations
@@ -96,6 +99,7 @@ public class InvitationRepository : IInvitationRepository
                     .Include(x => x.Event)
                     .ThenInclude(x => x.Type)
                     .Include(x => x.Role)
+                    .OrderBy(x => x.DeadLine)
                     .ToListAsync(cancellationToken);
 
             return _invitationMapper.ToListDomain(entities);
@@ -155,6 +159,7 @@ public class InvitationRepository : IInvitationRepository
                     .Include(x => x.Event)
                     .ThenInclude(x => x.Type)
                     .Include(x => x.Role)
+                    .OrderBy(x => x.DeadLine)
                     .ToListAsync(cancellationToken)
                 :
                 await _db.Invitations
@@ -169,6 +174,7 @@ public class InvitationRepository : IInvitationRepository
                     .Include(x => x.Event)
                     .ThenInclude(x => x.Type)
                     .Include(x => x.Role)
+                    .OrderBy(x => x.DeadLine)
                     .ToListAsync(cancellationToken);
 
             return _invitationMapper.ToListDomain(entities);
@@ -196,6 +202,7 @@ public class InvitationRepository : IInvitationRepository
                     .Include(x => x.Event)
                     .ThenInclude(x => x.Type)
                     .Include(x => x.Role)
+                    .OrderBy(x => x.DeadLine)
                     .ToListAsync(cancellationToken)
                 :
                 await _db.Invitations
@@ -210,6 +217,7 @@ public class InvitationRepository : IInvitationRepository
                     .Include(x => x.Event)
                     .ThenInclude(x => x.Type)
                     .Include(x => x.Role)
+                    .OrderBy(x => x.DeadLine)
                     .ToListAsync(cancellationToken);
 
             return _invitationMapper.ToListDomain(entities);
