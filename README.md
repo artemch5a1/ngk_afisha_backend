@@ -70,6 +70,90 @@
 - `*.Infrastructure` — доступ к БД, интеграции, реализация репозиториев
 - `*.UnitTests` — модульные тесты
 
+### Диаграмма архитектуры (прод-окружение)
+
+Ниже представлена схема взаимодействия сервисов в продакшене и маршрутизация запросов через nginx reverse proxy:
+
+```mermaid
+graph TB
+    subgraph "Внешние клиенты"
+        Client[Клиентские приложения<br/>Web / Mobile]
+        Admin[Администраторы]
+    end
+
+    subgraph "Nginx Reverse Proxy"
+        Nginx[Nginx<br/>Маршрутизация по доменам]
+    end
+
+    subgraph "Docker Network (прод-окружение)"
+        subgraph "Identity Service"
+            IdentityAPI[Identity Service API<br/>:8080]
+            IdentityDB[(PostgreSQL<br/>Identity DB)]
+        end
+
+        subgraph "Event Service"
+            EventAPI[Event Service API<br/>:8080]
+            EventDB[(PostgreSQL<br/>Event DB)]
+        end
+
+        subgraph "MinIO (S3)"
+            MinIOAPI[MinIO API<br/>:9000]
+            MinIOConsole[MinIO Console<br/>:9001]
+            MinIOStorage[(S3 Storage<br/>Bucket: ngkafisha)]
+        end
+    end
+
+    %% Внешние запросы через nginx
+    Client -->|identity.ngkapi.ru| Nginx
+    Client -->|events.ngkapi.ru| Nginx
+    Admin -->|console.storage.ngkapi.ru| Nginx
+    Admin -->|storage.ngkapi.ru/login| Nginx
+
+    %% Маршрутизация nginx
+    Nginx -->|/ → Identity Service| IdentityAPI
+    Nginx -->|/ → Event Service| EventAPI
+    Nginx -->|/ → MinIO Console| MinIOConsole
+    Nginx -->|/ → MinIO API| MinIOAPI
+
+    %% Взаимодействие сервисов
+    IdentityAPI <-->|Чтение/запись| IdentityDB
+    EventAPI <-->|Чтение/запись| EventDB
+    EventAPI -->|Валидация JWT<br/>публичный ключ| IdentityAPI
+    EventAPI <-->|Загрузка/скачивание файлов| MinIOAPI
+    MinIOAPI <-->|Хранение| MinIOStorage
+
+    %% Стили
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef proxy fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef service fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef database fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    classDef storage fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+
+    class Client,Admin external
+    class Nginx proxy
+    class IdentityAPI,EventAPI,MinIOAPI,MinIOConsole service
+    class IdentityDB,EventDB database
+    class MinIOStorage storage
+```
+
+**Описание взаимодействия:**
+
+1. **Внешний доступ:**
+   - Все запросы извне проходят через **nginx reverse proxy**, который маршрутизирует по доменам:
+     - `identity.ngkapi.ru` → Identity Service
+     - `events.ngkapi.ru` → Event Service
+     - `console.storage.ngkapi.ru` → MinIO Console
+     - `storage.ngkapi.ru` → MinIO API
+
+2. **Взаимодействие сервисов:**
+   - **Identity Service** управляет пользователями и выдаёт JWT-токены
+   - **Event Service** валидирует JWT-токены через публичный ключ Identity Service (без прямых HTTP-вызовов)
+   - **Event Service** использует MinIO для хранения файлов (афиши, вложения)
+   - Каждый сервис имеет свою изолированную PostgreSQL БД
+
+3. **Внутренняя сеть:**
+   - Все сервисы находятся в одной Docker-сети и обращаются друг к другу по внутренним именам (например, `minio:9000`)
+
 ---
 
 ## ✅ Требования
