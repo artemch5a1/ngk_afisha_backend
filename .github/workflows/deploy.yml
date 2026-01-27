@@ -4,6 +4,16 @@ on:
   push:
     branches:
       - main
+    paths:
+      # Исходники backend-сервисов
+      - 'services/**'
+      # Общие Dockerfile-ы и любые докерфайлы в проекте
+      - 'Dockerfile'
+      - '**/Dockerfile'
+      - '**/docker-compose*.yml'
+      - '**/compose*.yml'
+      # Настройки самого workflow для деплоя
+      - '.github/workflows/deploy.yml'
 
 jobs:
   deploy:
