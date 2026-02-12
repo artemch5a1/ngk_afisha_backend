@@ -12,14 +12,10 @@ public class DepartmentEntity : IEntity<DepartmentEntity, Department>
     [Column("title")]
     public string Title { get; set; } = null!;
 
-
     public List<PostEntity> Posts { get; set; } = null!;
 
-    internal DepartmentEntity()
-    {
-        
-    }
-    
+    internal DepartmentEntity() { }
+
     private DepartmentEntity(Department department)
     {
         Title = department.Title;

@@ -12,19 +12,27 @@ public class UpdateEventTypeHandler : IRequestHandler<UpdateEventTypeCommand, Re
 
     private readonly ILogger<UpdateEventTypeHandler> _logger;
 
-
-    public UpdateEventTypeHandler(IEventTypeService eventTypeService, ILogger<UpdateEventTypeHandler> logger)
+    public UpdateEventTypeHandler(
+        IEventTypeService eventTypeService,
+        ILogger<UpdateEventTypeHandler> logger
+    )
     {
         _eventTypeService = eventTypeService;
         _logger = logger;
     }
 
-    public async Task<Result<int>> Handle(UpdateEventTypeCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        UpdateEventTypeCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = 
-                await _eventTypeService.UpdateEventType(request.TypeId, request.Title, cancellationToken);
+            bool result = await _eventTypeService.UpdateEventType(
+                request.TypeId,
+                request.Title,
+                cancellationToken
+            );
 
             return result
                 ? Result<int>.Success(request.TypeId)

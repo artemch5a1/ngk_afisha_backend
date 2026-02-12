@@ -9,8 +9,8 @@ public class GroupDto
     public int Course { get; set; }
 
     public int NumberGroup { get; set; }
-    
-    public int SpecialtyId { get; set;  }
+
+    public int SpecialtyId { get; set; }
 
     public SpecialtyDto Specialty { get; set; } = null!;
 

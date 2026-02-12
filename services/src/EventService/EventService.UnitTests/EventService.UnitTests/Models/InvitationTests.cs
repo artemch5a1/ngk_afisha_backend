@@ -24,7 +24,8 @@ namespace EventService.UnitTests.Models
                 _shortDesc,
                 _desc,
                 3,
-                _deadline);
+                _deadline
+            );
 
             // Assert
             invitation.Should().NotBeNull();
@@ -39,29 +40,53 @@ namespace EventService.UnitTests.Models
         [InlineData(-1)]
         public void Create_Should_Throw_When_RequiredMember_Less_Than_1(int required)
         {
-            Action act = () => Invitation.Create(Guid.NewGuid(), _eventId, _roleId, _shortDesc, _desc, required, _deadline);
-            act.Should().Throw<DomainException>()
-                .WithMessage("*должно быть больше 0*");
+            Action act = () =>
+                Invitation.Create(
+                    Guid.NewGuid(),
+                    _eventId,
+                    _roleId,
+                    _shortDesc,
+                    _desc,
+                    required,
+                    _deadline
+                );
+            act.Should().Throw<DomainException>().WithMessage("*должно быть больше 0*");
         }
 
         [Fact]
         public void Create_Should_Throw_When_ShortDescription_Too_Short()
         {
             var shortDesc = new string('a', 5);
-            Action act = () => Invitation.Create(Guid.NewGuid(), _eventId, _roleId, shortDesc, _desc, 2, _deadline);
+            Action act = () =>
+                Invitation.Create(
+                    Guid.NewGuid(),
+                    _eventId,
+                    _roleId,
+                    shortDesc,
+                    _desc,
+                    2,
+                    _deadline
+                );
 
-            act.Should().Throw<DomainException>()
-                .WithMessage("*Короткое описание события*");
+            act.Should().Throw<DomainException>().WithMessage("*Короткое описание события*");
         }
 
         [Fact]
         public void Create_Should_Throw_When_Description_Too_Long()
         {
             var desc = new string('b', 800);
-            Action act = () => Invitation.Create(Guid.NewGuid(), _eventId, _roleId, _shortDesc, desc, 2, _deadline);
+            Action act = () =>
+                Invitation.Create(
+                    Guid.NewGuid(),
+                    _eventId,
+                    _roleId,
+                    _shortDesc,
+                    desc,
+                    2,
+                    _deadline
+                );
 
-            act.Should().Throw<DomainException>()
-                .WithMessage("*Описание события*");
+            act.Should().Throw<DomainException>().WithMessage("*Описание события*");
         }
 
         [Fact]
@@ -85,19 +110,25 @@ namespace EventService.UnitTests.Models
 
             Action act = () => invitation.TakeRequest(studentId);
 
-            act.Should().Throw<DomainException>()
-                .WithMessage("*уже подал заявку*");
+            act.Should().Throw<DomainException>().WithMessage("*уже подал заявку*");
         }
 
         [Fact]
         public void TakeRequest_Should_Throw_When_Deadline_Passed()
         {
-            var invitation = Invitation.Create(Guid.NewGuid(), _eventId, _roleId, _shortDesc, _desc, 2, DateTime.UtcNow.AddSeconds(-1));
+            var invitation = Invitation.Create(
+                Guid.NewGuid(),
+                _eventId,
+                _roleId,
+                _shortDesc,
+                _desc,
+                2,
+                DateTime.UtcNow.AddSeconds(-1)
+            );
 
             Action act = () => invitation.TakeRequest(Guid.NewGuid());
 
-            act.Should().Throw<DomainException>()
-                .WithMessage("*Время для подачи заявок окончено*");
+            act.Should().Throw<DomainException>().WithMessage("*Время для подачи заявок окончено*");
         }
 
         [Fact]
@@ -136,8 +167,7 @@ namespace EventService.UnitTests.Models
 
             Action act = () => invitation.AcceptRequest(studentId);
 
-            act.Should().Throw<DomainException>()
-                .WithMessage("*уже одобрена*");
+            act.Should().Throw<DomainException>().WithMessage("*уже одобрена*");
         }
 
         [Fact]
@@ -146,8 +176,7 @@ namespace EventService.UnitTests.Models
             var invitation = CreateDefaultInvitation();
             Action act = () => invitation.AcceptRequest(Guid.NewGuid());
 
-            act.Should().Throw<DomainException>()
-                .WithMessage("*Заявка не найдена*");
+            act.Should().Throw<DomainException>().WithMessage("*Заявка не найдена*");
         }
 
         [Fact]
@@ -159,7 +188,7 @@ namespace EventService.UnitTests.Models
 
             invitation.TakeRequest(student1);
             invitation.AcceptRequest(student1);
-            
+
             Action act = () => invitation.TakeRequest(student2);
 
             act.Should().Throw<DomainException>();
@@ -174,7 +203,8 @@ namespace EventService.UnitTests.Models
                 _shortDesc,
                 _desc,
                 required,
-                _deadline);
+                _deadline
+            );
         }
     }
 }

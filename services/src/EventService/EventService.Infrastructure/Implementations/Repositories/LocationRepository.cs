@@ -19,30 +19,31 @@ public class LocationRepository : ILocationRepository
 
     private readonly IEntityMapper<LocationEntity, Location> _entityMapper;
 
-
     public LocationRepository(
-        EventServiceDbContext db, 
-        ILogger<LocationRepository> logger, 
-        IEntityMapper<LocationEntity, Location> entityMapper)
+        EventServiceDbContext db,
+        ILogger<LocationRepository> logger,
+        IEntityMapper<LocationEntity, Location> entityMapper
+    )
     {
         _db = db;
         _logger = logger;
         _entityMapper = entityMapper;
     }
 
-    public async Task<List<Location>> GetAll(PaginationContract? contract = null, CancellationToken cancellationToken = default)
+    public async Task<List<Location>> GetAll(
+        PaginationContract? contract = null,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
-            List<LocationEntity> locations = contract is null ? 
-                await _db.Locations
-                .OrderBy(x => x.Title)
-                .ToListAsync(cancellationToken) :
-                await _db.Locations
-                .OrderBy(x => x.Title)
-                .Skip(contract.Skip)
-                .Take(contract.Take)
-                .ToListAsync(cancellationToken) ;
+            List<LocationEntity> locations = contract is null
+                ? await _db.Locations.OrderBy(x => x.Title).ToListAsync(cancellationToken)
+                : await _db
+                    .Locations.OrderBy(x => x.Title)
+                    .Skip(contract.Skip)
+                    .Take(contract.Take)
+                    .ToListAsync(cancellationToken);
 
             return _entityMapper.ToListDomain(locations);
         }
@@ -57,12 +58,14 @@ public class LocationRepository : ILocationRepository
     {
         try
         {
-            LocationEntity? location = await _db.Locations
-                .FirstOrDefaultAsync(x => x.LocationId == id, cancellationToken);
+            LocationEntity? location = await _db.Locations.FirstOrDefaultAsync(
+                x => x.LocationId == id,
+                cancellationToken
+            );
 
             if (location is null)
                 return null;
-            
+
             return _entityMapper.ToDomain(location);
         }
         catch (Exception ex)
@@ -76,12 +79,11 @@ public class LocationRepository : ILocationRepository
     {
         try
         {
-            LocationEntity? location = await _db.Locations
-                .FindAsync(id, cancellationToken);
+            LocationEntity? location = await _db.Locations.FindAsync(id, cancellationToken);
 
             if (location is null)
                 return null;
-            
+
             return _entityMapper.ToDomain(location);
         }
         catch (Exception ex)
@@ -91,18 +93,22 @@ public class LocationRepository : ILocationRepository
         }
     }
 
-    public async Task<Location> Create(Location model, CancellationToken cancellationToken = default)
+    public async Task<Location> Create(
+        Location model,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
             LocationEntity location = _entityMapper.ToEntity(model);
 
-            EntityEntry<LocationEntity> locationCreated = 
-                await _db.Locations
-                    .AddAsync(location, cancellationToken);
+            EntityEntry<LocationEntity> locationCreated = await _db.Locations.AddAsync(
+                location,
+                cancellationToken
+            );
 
             await _db.SaveChangesAsync(cancellationToken);
-            
+
             return _entityMapper.ToDomain(locationCreated.Entity);
         }
         catch (Exception ex)
@@ -116,12 +122,12 @@ public class LocationRepository : ILocationRepository
     {
         try
         {
-            int result = await _db.Locations
-                .Where(x => x.LocationId == model.LocationId)
+            int result = await _db
+                .Locations.Where(x => x.LocationId == model.LocationId)
                 .ExecuteUpdateAsync(
-                    x => x
-                        .SetProperty(i => i.Title, i => model.Title)
-                        .SetProperty(i => i.Address, i => model.Address),
+                    x =>
+                        x.SetProperty(i => i.Title, i => model.Title)
+                            .SetProperty(i => i.Address, i => model.Address),
                     cancellationToken
                 );
 
@@ -138,8 +144,8 @@ public class LocationRepository : ILocationRepository
     {
         try
         {
-            int result = await _db.Locations
-                .Where(x => x.LocationId == id)
+            int result = await _db
+                .Locations.Where(x => x.LocationId == id)
                 .ExecuteDeleteAsync(cancellationToken);
 
             return result > 0;

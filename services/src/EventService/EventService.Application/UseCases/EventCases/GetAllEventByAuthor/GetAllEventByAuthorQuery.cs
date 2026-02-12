@@ -5,4 +5,5 @@ using MediatR;
 
 namespace EventService.Application.UseCases.EventCases.GetAllEventByAuthor;
 
-public record GetAllEventByAuthorQuery(Guid AuthorId, PaginationContract? Contract) : IRequest<Result<List<Event>>>;
+public record GetAllEventByAuthorQuery(Guid AuthorId, PaginationContract? Contract)
+    : IRequest<Result<List<Event>>>;

@@ -19,7 +19,10 @@ public class GetAllGroupHandler : IRequestHandler<GetAllGroupQuery, Result<List<
         _logger = logger;
     }
 
-    public async Task<Result<List<Group>>> Handle(GetAllGroupQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Group>>> Handle(
+        GetAllGroupQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
@@ -31,7 +34,8 @@ public class GetAllGroupHandler : IRequestHandler<GetAllGroupQuery, Result<List<
         {
             _logger.LogWarning(ex, "Ошибка базы данных при получении всех групп");
 
-            return Result<List<Group>>.Failure(ex);;
+            return Result<List<Group>>.Failure(ex);
+            ;
         }
         catch (DomainException ex)
         {

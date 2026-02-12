@@ -33,7 +33,7 @@ public class InvitationEntity : IEntity<InvitationEntity, Invitation>
 
     [Column("accepted_member")]
     public int AcceptedMember { get; set; } = 0;
-    
+
     [Column("dead_line")]
     public DateTime DeadLine { get; set; }
 
@@ -42,10 +42,7 @@ public class InvitationEntity : IEntity<InvitationEntity, Invitation>
 
     public ICollection<MemberEntity> Members { get; set; } = new List<MemberEntity>();
 
-    internal InvitationEntity()
-    {
-        
-    }
+    internal InvitationEntity() { }
 
     private InvitationEntity(Invitation invitation)
     {
@@ -58,22 +55,23 @@ public class InvitationEntity : IEntity<InvitationEntity, Invitation>
         AcceptedMember = invitation.AcceptedMember;
         DeadLine = invitation.DeadLine;
         Status = (int)invitation.Status;
-        
+
         Members = invitation.Members.Select(MemberEntity.ToEntity).ToList();
     }
 
     public Invitation ToDomain()
     {
         return Invitation.Restore(
-            InvitationId, 
-            EventId, 
-            RoleId, 
-            ShortDescription, 
-            Description, 
+            InvitationId,
+            EventId,
+            RoleId,
+            ShortDescription,
+            Description,
             RequiredMember,
-            AcceptedMember, 
-            DeadLine, 
-            (InvitationStatus)Status);
+            AcceptedMember,
+            DeadLine,
+            (InvitationStatus)Status
+        );
     }
 
     public static InvitationEntity ToEntity(Invitation domain)

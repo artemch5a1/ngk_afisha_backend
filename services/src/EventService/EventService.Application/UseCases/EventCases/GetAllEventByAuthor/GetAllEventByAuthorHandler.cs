@@ -9,7 +9,8 @@ using Microsoft.Extensions.Options;
 
 namespace EventService.Application.UseCases.EventCases.GetAllEventByAuthor;
 
-public class GetAllEventByAuthorHandler : IRequestHandler<GetAllEventByAuthorQuery, Result<List<Event>>>
+public class GetAllEventByAuthorHandler
+    : IRequestHandler<GetAllEventByAuthorQuery, Result<List<Event>>>
 {
     private readonly IEventService _eventService;
 
@@ -18,12 +19,13 @@ public class GetAllEventByAuthorHandler : IRequestHandler<GetAllEventByAuthorQue
     private readonly IStorageService _storageService;
 
     private readonly EventSetting _eventSetting;
-    
+
     public GetAllEventByAuthorHandler(
-        IEventService eventService, 
+        IEventService eventService,
         ILogger<GetAllEventByAuthorHandler> logger,
-        IStorageService storageService, 
-        IOptions<EventSetting> eventSetting)
+        IStorageService storageService,
+        IOptions<EventSetting> eventSetting
+    )
     {
         _eventService = eventService;
         _logger = logger;
@@ -31,22 +33,29 @@ public class GetAllEventByAuthorHandler : IRequestHandler<GetAllEventByAuthorQue
         _eventSetting = eventSetting.Value;
     }
 
-
-    public async Task<Result<List<Event>>> Handle(GetAllEventByAuthorQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Event>>> Handle(
+        GetAllEventByAuthorQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            List<Event> result = await _eventService.GetAllEventByAuthorId(request.AuthorId ,request.Contract, cancellationToken);
+            List<Event> result = await _eventService.GetAllEventByAuthorId(
+                request.AuthorId,
+                request.Contract,
+                cancellationToken
+            );
 
             foreach (Event @event in result)
             {
-                string url = await _storageService
-                    .GenerateDownloadUrlAsync(@event.PreviewUrl, 
-                        TimeSpan.FromMinutes(_eventSetting.TimeActiveDownloadLinkInMilliSeconds));
-                
+                string url = await _storageService.GenerateDownloadUrlAsync(
+                    @event.PreviewUrl,
+                    TimeSpan.FromMinutes(_eventSetting.TimeActiveDownloadLinkInMilliSeconds)
+                );
+
                 @event.SetDownloadUrl(url);
             }
-            
+
             return Result<List<Event>>.Success(result);
         }
         catch (Exception ex)

@@ -19,8 +19,11 @@ public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, Result<User>
         _logger = logger;
         _userService = userService;
     }
-    
-    public async Task<Result<User>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+
+    public async Task<Result<User>> Handle(
+        GetUserByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

@@ -7,7 +7,7 @@ namespace EventService.Infrastructure.Data.Services.Seeding;
 public class DatabaseSeeder : IStartupService
 {
     public int Order => 1;
-    
+
     private readonly IServiceProvider _serviceProvider;
 
     public DatabaseSeeder(IServiceProvider serviceProvider)

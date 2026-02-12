@@ -8,11 +8,11 @@ public class StudentMapper : IEntityMapper<StudentEntity, Student>
 {
     public void BeforeMapping(ref Student domain, StudentEntity entity)
     {
-       if(entity.User is not null)
-           AddUserNavigation(ref domain, entity.User);
-       
-       if(entity.Group is not null)
-           AddGroupNavigation(ref domain, entity.Group);
+        if (entity.User is not null)
+            AddUserNavigation(ref domain, entity.User);
+
+        if (entity.Group is not null)
+            AddGroupNavigation(ref domain, entity.Group);
     }
 
     private void AddUserNavigation(ref Student domain, UserEntity user)
@@ -23,10 +23,10 @@ public class StudentMapper : IEntityMapper<StudentEntity, Student>
     private void AddGroupNavigation(ref Student domain, GroupEntity group)
     {
         Group groupDomain = group.ToDomain();
-        
-        if(group.Specialty is not null)
+
+        if (group.Specialty is not null)
             AddSpecialityNavigation(ref groupDomain, group.Specialty);
-        
+
         domain.AddGroupNavigation(groupDomain);
     }
 

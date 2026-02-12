@@ -48,8 +48,7 @@ public sealed class Result<T>
     /// Возвращает первое сообщение об ошибке или пустую строку, если ошибок нет.
     /// </summary>
     public string FirstMessage => ErrorMessages.FirstOrDefault() ?? string.Empty;
-    
-    
+
     /// <summary>
     /// Создаёт успешный результат с указанным значением.
     /// </summary>
@@ -63,8 +62,8 @@ public sealed class Result<T>
     /// <param name="message">Сообщение об ошибке.</param>
     /// <param name="errorType">Тип ошибки.</param>
     /// <returns>Экземпляр <see cref="Result{T}"/> с ошибкой.</returns>
-    public static Result<T> Failure(string message, ApiErrorType errorType)
-        => new Result<T>(default, false, [message], errorType);
+    public static Result<T> Failure(string message, ApiErrorType errorType) =>
+        new Result<T>(default, false, [message], errorType);
 
     /// <summary>
     /// Создаёт результат с ошибкой и массивом сообщений.
@@ -72,8 +71,8 @@ public sealed class Result<T>
     /// <param name="messages">Массив сообщений об ошибках.</param>
     /// <param name="errorType">Тип ошибки.</param>
     /// <returns>Экземпляр <see cref="Result{T}"/> с ошибкой.</returns>
-    public static Result<T> Failure(string[] messages, ApiErrorType errorType) 
-        => new Result<T>(default, false, messages, errorType);
+    public static Result<T> Failure(string[] messages, ApiErrorType errorType) =>
+        new Result<T>(default, false, messages, errorType);
 
     /// <summary>
     /// Создаёт результат с ошибкой на основе исключения.
@@ -84,16 +83,28 @@ public sealed class Result<T>
     {
         return ex switch
         {
-            DomainException domainException => new Result<T>(default, false, [domainException.Message],
-                ApiErrorType.BadRequest),
-            
-            DatabaseException databaseException => new Result<T>(default, false, [databaseException.Message],
-                databaseException.ErrorType),
-            
-            NotFoundException notFoundException => new Result<T>(default, false, [notFoundException.Message],
-                ApiErrorType.NotFound),
-            
-            _ => new Result<T>(default, false, [ex.Message], ApiErrorType.InternalServerError)
+            DomainException domainException => new Result<T>(
+                default,
+                false,
+                [domainException.Message],
+                ApiErrorType.BadRequest
+            ),
+
+            DatabaseException databaseException => new Result<T>(
+                default,
+                false,
+                [databaseException.Message],
+                databaseException.ErrorType
+            ),
+
+            NotFoundException notFoundException => new Result<T>(
+                default,
+                false,
+                [notFoundException.Message],
+                ApiErrorType.NotFound
+            ),
+
+            _ => new Result<T>(default, false, [ex.Message], ApiErrorType.InternalServerError),
         };
     }
 }

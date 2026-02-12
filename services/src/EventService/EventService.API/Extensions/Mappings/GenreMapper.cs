@@ -9,21 +9,17 @@ public static class GenreMapper
 {
     public static GenreDto ToDto(this Genre genre)
     {
-        return new GenreDto()
-        {
-            GenreId = genre.GenreId,
-            Title = genre.Title
-        };
+        return new GenreDto() { GenreId = genre.GenreId, Title = genre.Title };
     }
 
-    public static List<GenreDto> ToListDto(this List<Genre> genres)
-        => genres.Select(x => x.ToDto()).ToList();
+    public static List<GenreDto> ToListDto(this List<Genre> genres) =>
+        genres.Select(x => x.ToDto()).ToList();
 
     public static UpdateGenreCommand ToCommand(this UpdateGenreDto dto)
     {
         return new UpdateGenreCommand(dto.GenreId, dto.Title);
     }
-    
+
     public static CreateGenreCommand ToCommand(this CreateGenreDto dto)
     {
         return new CreateGenreCommand(dto.Title);

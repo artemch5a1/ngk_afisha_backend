@@ -15,18 +15,25 @@ public class GetDepartmentByIdHandler : IRequestHandler<GetDepartmentByIdQuery, 
     private readonly ILogger<GetDepartmentByIdHandler> _logger;
 
     public GetDepartmentByIdHandler(
-        IDepartmentService departmentService, 
-        ILogger<GetDepartmentByIdHandler> logger)
+        IDepartmentService departmentService,
+        ILogger<GetDepartmentByIdHandler> logger
+    )
     {
         _departmentService = departmentService;
         _logger = logger;
     }
 
-    public async Task<Result<Department>> Handle(GetDepartmentByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Department>> Handle(
+        GetDepartmentByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            Department? result = await _departmentService.GetDepartmentById(request.DepartmentId, cancellationToken);
+            Department? result = await _departmentService.GetDepartmentById(
+                request.DepartmentId,
+                cancellationToken
+            );
 
             if (result is null)
                 return Result<Department>.Failure("Отдел не найден", ApiErrorType.NotFound);

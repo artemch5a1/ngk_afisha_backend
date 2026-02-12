@@ -7,12 +7,14 @@ namespace EventService.Domain.Abstractions.Infrastructure.Repositories.Repositor
 public interface IMemberRepository : IReadable<Member, (Guid invitationId, Guid studentId)>
 {
     Task<List<Member>> GetAllByAuthor(
-        Guid authorId, 
-        PaginationContract? contract = null,  
-        CancellationToken cancellationToken = default);
+        Guid authorId,
+        PaginationContract? contract = null,
+        CancellationToken cancellationToken = default
+    );
 
     Task<List<Member>> GetAllByStudent(
-        Guid studentId, 
-        PaginationContract? contract = null, 
-        CancellationToken cancellationToken = default);
+        Guid studentId,
+        PaginationContract? contract = null,
+        CancellationToken cancellationToken = default
+    );
 }

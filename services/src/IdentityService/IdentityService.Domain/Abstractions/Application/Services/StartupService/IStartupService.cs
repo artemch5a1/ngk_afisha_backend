@@ -3,6 +3,6 @@
 public interface IStartupService
 {
     int Order { get; }
-    
+
     Task InvokeAsync(CancellationToken ct = default);
 }

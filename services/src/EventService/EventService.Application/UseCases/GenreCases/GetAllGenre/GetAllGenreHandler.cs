@@ -12,26 +12,29 @@ public class GetAllGenreHandler : IRequestHandler<GetAllGenreQuery, Result<List<
 
     private readonly ILogger<GetAllGenreHandler> _logger;
 
-
     public GetAllGenreHandler(IGenreService genreService, ILogger<GetAllGenreHandler> logger)
     {
         _genreService = genreService;
         _logger = logger;
     }
 
-
-    public async Task<Result<List<Genre>>> Handle(GetAllGenreQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Genre>>> Handle(
+        GetAllGenreQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            List<Genre> location = 
-                await _genreService.GetAllGenre(request.Contract, cancellationToken);
+            List<Genre> location = await _genreService.GetAllGenre(
+                request.Contract,
+                cancellationToken
+            );
 
             return Result<List<Genre>>.Success(location);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex,"Ошбика при получении всех жанров");
+            _logger.LogWarning(ex, "Ошбика при получении всех жанров");
 
             return Result<List<Genre>>.Failure(ex);
         }

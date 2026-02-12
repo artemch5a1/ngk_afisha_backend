@@ -11,24 +11,26 @@ using Microsoft.Extensions.Options;
 
 namespace EventService.Application.UseCases.EventCases.CreateDefaultEvents;
 
-public class CreateDefaultEventsHandler : IRequestHandler<CreateDefaultEventsCommand, Result<List<CreatedEvent>>>
+public class CreateDefaultEventsHandler
+    : IRequestHandler<CreateDefaultEventsCommand, Result<List<CreatedEvent>>>
 {
     private readonly IEventService _eventService;
 
     private readonly List<DefaultEvent> _defaultEvent;
-    
+
     private readonly ILogger<CreateDefaultEventsHandler> _logger;
-    
+
     private readonly IStorageService _storageService;
-    
+
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateDefaultEventsHandler(
-        IEventService eventService, 
-        IOptions<DefaultEventOptions> options, 
-        ILogger<CreateDefaultEventsHandler> logger, 
+        IEventService eventService,
+        IOptions<DefaultEventOptions> options,
+        ILogger<CreateDefaultEventsHandler> logger,
         IStorageService storageService,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork
+    )
     {
         _eventService = eventService;
         _defaultEvent = options.Value.DefaultEvents;
@@ -38,23 +40,26 @@ public class CreateDefaultEventsHandler : IRequestHandler<CreateDefaultEventsCom
     }
 
     public async Task<Result<List<CreatedEvent>>> Handle(
-        CreateDefaultEventsCommand request, CancellationToken cancellationToken
-        )
+        CreateDefaultEventsCommand request,
+        CancellationToken cancellationToken
+    )
     {
-        if(await _eventService.IsEventsExist(cancellationToken))
-            return Result<List<CreatedEvent>>
-                .Failure("Нельзя добавить дефолтные события, если база не пустая", ApiErrorType.BadRequest);
-        
+        if (await _eventService.IsEventsExist(cancellationToken))
+            return Result<List<CreatedEvent>>.Failure(
+                "Нельзя добавить дефолтные события, если база не пустая",
+                ApiErrorType.BadRequest
+            );
+
         await _unitOfWork.BeginTransactionAsync(cancellationToken);
-        
+
         try
         {
             List<CreatedEvent> createdEvents = new List<CreatedEvent>();
-            
+
             foreach (var defaultEvent in _defaultEvent)
             {
                 DateTime dateStart = GenerateRandomDate().ToUniversalTime();
-                
+
                 Event result = await _eventService.CreateEvent(
                     defaultEvent.Title,
                     defaultEvent.ShortDescription,
@@ -65,21 +70,23 @@ public class CreateDefaultEventsHandler : IRequestHandler<CreateDefaultEventsCom
                     defaultEvent.TypeId,
                     defaultEvent.MinAge,
                     request.AuthorId,
-                    cancellationToken);
-                
+                    cancellationToken
+                );
+
                 byte[] fileBytes = LoadImageFromAssembly(defaultEvent.ImagePath);
 
                 await _storageService.UploadFileAsync(
                     fileBytes,
                     result.PreviewUrl,
                     "image/jpeg",
-                    cancellationToken);
-                
-                createdEvents.Add(new CreatedEvent(result,""));
+                    cancellationToken
+                );
+
+                createdEvents.Add(new CreatedEvent(result, ""));
             }
 
             await _unitOfWork.CommitAsync(cancellationToken);
-            
+
             return Result<List<CreatedEvent>>.Success(createdEvents);
         }
         catch (Exception ex)
@@ -89,7 +96,7 @@ public class CreateDefaultEventsHandler : IRequestHandler<CreateDefaultEventsCom
             return Result<List<CreatedEvent>>.Failure(ex);
         }
     }
-    
+
     private static DateTime GenerateRandomDate()
     {
         DateTime now = DateTime.Now;

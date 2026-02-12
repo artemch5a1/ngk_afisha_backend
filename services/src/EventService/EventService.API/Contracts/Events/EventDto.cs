@@ -16,11 +16,11 @@ public class EventDto
     public string Description { get; set; } = null!;
 
     public DateTime DateStart { get; set; }
-    
+
     public int LocationId { get; set; }
 
     public LocationDto Location { get; set; } = null!;
-    
+
     public int GenreId { get; set; }
 
     public GenreDto Genre { get; set; } = null!;

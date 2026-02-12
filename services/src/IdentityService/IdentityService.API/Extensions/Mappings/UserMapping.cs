@@ -16,12 +16,12 @@ public static class UserMapping
             Surname = user.Surname,
             Name = user.Name,
             Patronymic = user.Patronymic,
-            BirthDate = user.BirthDate
+            BirthDate = user.BirthDate,
         };
 
         return dto;
     }
-    
+
     public static List<UserDto> ToListDto(this List<User> users)
     {
         return users.Select(x => x.ToDto()).ToList();
@@ -32,12 +32,18 @@ public static class UserMapping
         return new UpdateUserCommand(userId, dto.Surname, dto.Name, dto.Patronymic, dto.DateBirth);
     }
 
-    public static UpdateStudentProfileCommand ToCommand(this UpdateStudentProfileDto dto, Guid studentId)
+    public static UpdateStudentProfileCommand ToCommand(
+        this UpdateStudentProfileDto dto,
+        Guid studentId
+    )
     {
         return new UpdateStudentProfileCommand(studentId, dto.NewGroupId);
     }
-    
-    public static UpdatePublisherProfileCommand ToCommand(this UpdatePublisherProfileDto dto, Guid studentId)
+
+    public static UpdatePublisherProfileCommand ToCommand(
+        this UpdatePublisherProfileDto dto,
+        Guid studentId
+    )
     {
         return new UpdatePublisherProfileCommand(studentId, dto.NewPostId);
     }

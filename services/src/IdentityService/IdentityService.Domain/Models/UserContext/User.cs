@@ -8,19 +8,19 @@ namespace IdentityService.Domain.Models.UserContext;
 public class User
 {
     private const int MaxSurnameCount = 255;
-    
+
     private const int MaxPatronymicCount = 255;
-    
+
     private const int MaxNameCount = 255;
-    
+
     private const int MinSurnameCount = 1;
-    
+
     private const int MinPatronymicCount = 1;
-    
+
     private const int MinNameCount = 1;
-    
+
     private const int MinAge = 14;
-    
+
     private User(Guid userId, string surname, string name, string? patronymic, DateOnly birthDate)
     {
         Surname = surname;
@@ -56,17 +56,24 @@ public class User
     /// <returns>Возвращает созданный экземпляр пользователя</returns>
     /// <exception cref="DomainException">Выбрасывается при попытке создать
     /// невалидную модель</exception>
-    public static User CreateStudent(Guid userId, string surname, string name, string? patronymic, DateOnly birthDate, int groupId)
+    public static User CreateStudent(
+        Guid userId,
+        string surname,
+        string name,
+        string? patronymic,
+        DateOnly birthDate,
+        int groupId
+    )
     {
         User student = CreateUser(userId, surname, name, patronymic, birthDate);
-        
+
         Student studentProfile = Student.Create(userId, groupId);
 
         student.StudentProfile = studentProfile;
-        
+
         return student;
     }
-    
+
     /// <summary>
     /// Метод для создания нового пользователя (публикатора) (инкапсулирует в себе валидацию)
     /// </summary>
@@ -79,24 +86,37 @@ public class User
     /// <returns>Возвращает созданный экземпляр пользователя</returns>
     /// <exception cref="DomainException">Выбрасывается при попытке создать
     /// невалидную модель</exception>
-    public static User CreatePublisher(Guid userId, string surname, string name, string? patronymic, DateOnly birthDate, int postId)
+    public static User CreatePublisher(
+        Guid userId,
+        string surname,
+        string name,
+        string? patronymic,
+        DateOnly birthDate,
+        int postId
+    )
     {
         User publisher = CreateUser(userId, surname, name, patronymic, birthDate);
-        
+
         Publisher publisherProfile = Publisher.Create(userId, postId);
 
         publisher.PublisherProfile = publisherProfile;
-        
+
         return publisher;
     }
-    
-    private static User CreateUser(Guid userId, string surname, string name, string? patronymic, DateOnly birthDate)
+
+    private static User CreateUser(
+        Guid userId,
+        string surname,
+        string name,
+        string? patronymic,
+        DateOnly birthDate
+    )
     {
         if (string.IsNullOrWhiteSpace(patronymic))
             patronymic = null;
-        
+
         ExecuteValidation(surname, name, patronymic, birthDate);
-            
+
         return new User(userId, surname, name, patronymic, birthDate);
     }
 
@@ -123,18 +143,19 @@ public class User
     /// <exception cref="InvalidDataException">Выбрасывается при некорректности критических
     /// полей. Ответсвтенность лежит на Infrastructure</exception>
     internal static User Restore(
-        Guid userId, 
-        string surname, 
-        string name, 
-        string? patronymic, 
-        DateOnly birthDate)
+        Guid userId,
+        string surname,
+        string name,
+        string? patronymic,
+        DateOnly birthDate
+    )
     {
         if (userId == Guid.Empty)
             throw new InvalidDataException("AccountId не может быть пустым");
 
         return new User(userId, surname, name, patronymic, birthDate);
     }
-    
+
     /// <summary>
     /// Валидация. Бизнес правила модели.
     /// </summary>
@@ -143,25 +164,44 @@ public class User
     /// <param name="patronymic">Отчество</param>
     /// <param name="birthDate">Дата рождения</param>
     /// <exception cref="DomainException">Выбрасывается при провальной валидации</exception>
-    private static void ExecuteValidation(string surname, string name, string? patronymic, DateOnly birthDate)
+    private static void ExecuteValidation(
+        string surname,
+        string name,
+        string? patronymic,
+        DateOnly birthDate
+    )
     {
-        if (string.IsNullOrWhiteSpace(surname) || surname.Length < MinSurnameCount || surname.Length > MaxSurnameCount)
-            throw new DomainException
-                ($"Фамилия должна содержать больше {MinSurnameCount} и меньше {MaxSurnameCount} символов");
-        
-        if (string.IsNullOrWhiteSpace(name) || name.Length < MinNameCount || name.Length > MaxNameCount)
-            throw new DomainException
-                ($"Имя должно содержать больше {MinNameCount} и меньше {MaxNameCount} символов");
-        
-        if(patronymic is not null && (patronymic.Length < MinPatronymicCount || patronymic.Length > MaxPatronymicCount))
-            throw new DomainException
-                ($"Отчество должно содержать больше {MinPatronymicCount} и меньше {MaxPatronymicCount} символов");
+        if (
+            string.IsNullOrWhiteSpace(surname)
+            || surname.Length < MinSurnameCount
+            || surname.Length > MaxSurnameCount
+        )
+            throw new DomainException(
+                $"Фамилия должна содержать больше {MinSurnameCount} и меньше {MaxSurnameCount} символов"
+            );
+
+        if (
+            string.IsNullOrWhiteSpace(name)
+            || name.Length < MinNameCount
+            || name.Length > MaxNameCount
+        )
+            throw new DomainException(
+                $"Имя должно содержать больше {MinNameCount} и меньше {MaxNameCount} символов"
+            );
+
+        if (
+            patronymic is not null
+            && (patronymic.Length < MinPatronymicCount || patronymic.Length > MaxPatronymicCount)
+        )
+            throw new DomainException(
+                $"Отчество должно содержать больше {MinPatronymicCount} и меньше {MaxPatronymicCount} символов"
+            );
 
         int age = CalculateAge(birthDate);
-        
-        if(age > 99)
+
+        if (age > 99)
             throw new DomainException($"Некорректная дата рождения");
-        
+
         if (age < MinAge)
             throw new DomainException($"Пользователь должен быть не младше {MinAge} лет");
     }
@@ -181,7 +221,7 @@ public class User
     ///     возраст уменьшается на 1.</description>
     ///   </item>
     ///   <item>
-    ///     <description>Таким образом, возраст считается достигнутым только на следующий день после даты рождения 
+    ///     <description>Таким образом, возраст считается достигнутым только на следующий день после даты рождения
     ///     (норма ГК РФ, ст. 191).</description>
     ///   </item>
     /// </list>
@@ -191,16 +231,18 @@ public class User
     {
         var today = DateTime.UtcNow;
         var age = today.Year - birthDate.Year;
-        
-        if (today.Month < birthDate.Month || 
-            (today.Month == birthDate.Month && today.Day <= birthDate.Day))
+
+        if (
+            today.Month < birthDate.Month
+            || (today.Month == birthDate.Month && today.Day <= birthDate.Day)
+        )
         {
             age--;
         }
-    
+
         return age;
     }
-    
+
     /// <summary>
     /// Обноваление профиля студента
     /// </summary>
@@ -213,7 +255,7 @@ public class User
 
         StudentProfile.UpdateStudent(newGroupId);
     }
-    
+
     /// <summary>
     /// Обноваление профиля публикатора
     /// </summary>
@@ -226,7 +268,7 @@ public class User
 
         PublisherProfile.UpdatePublisher(newPostId);
     }
-    
+
     /// <summary>
     /// Добавление навигационного свойства на профиль студента
     /// </summary>
@@ -257,7 +299,7 @@ public class User
     {
         if (string.IsNullOrEmpty(patronymic))
             patronymic = null;
-        
+
         ExecuteValidation(surname, name, patronymic, birthDate);
 
         Surname = surname;

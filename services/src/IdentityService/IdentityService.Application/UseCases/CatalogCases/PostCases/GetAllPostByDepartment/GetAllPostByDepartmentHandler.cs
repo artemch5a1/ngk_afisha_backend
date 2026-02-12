@@ -7,26 +7,33 @@ using Microsoft.Extensions.Logging;
 
 namespace IdentityService.Application.UseCases.CatalogCases.PostCases.GetAllPostByDepartment;
 
-public class GetAllPostByDepartmentHandler : IRequestHandler<GetAllPostByDepartmentQuery, Result<List<Post>>>
+public class GetAllPostByDepartmentHandler
+    : IRequestHandler<GetAllPostByDepartmentQuery, Result<List<Post>>>
 {
     private readonly IPostService _postService;
 
     private readonly ILogger<GetAllPostByDepartmentHandler> _logger;
 
-
     public GetAllPostByDepartmentHandler(
-        IPostService postService, 
-        ILogger<GetAllPostByDepartmentHandler> logger)
+        IPostService postService,
+        ILogger<GetAllPostByDepartmentHandler> logger
+    )
     {
         _postService = postService;
         _logger = logger;
     }
 
-    public async Task<Result<List<Post>>> Handle(GetAllPostByDepartmentQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Post>>> Handle(
+        GetAllPostByDepartmentQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            List<Post> result = await _postService.GetAllPostByDepartmentId(request.DepartmentId, cancellationToken);
+            List<Post> result = await _postService.GetAllPostByDepartmentId(
+                request.DepartmentId,
+                cancellationToken
+            );
 
             return Result<List<Post>>.Success(result);
         }

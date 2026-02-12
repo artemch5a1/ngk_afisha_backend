@@ -7,6 +7,5 @@ public class UpcomingEventsSpecification : ISpecification<Event>
 {
     public string Name => "UpcomingEvents";
 
-    public bool IsSatisfiedBy(Event item)
-        => item.DateStart > DateTime.UtcNow;
+    public bool IsSatisfiedBy(Event item) => item.DateStart > DateTime.UtcNow;
 }

@@ -15,25 +15,26 @@ public class SpecialtyRepository : ISpecialtyRepository
     private readonly IdentityServiceDbContext _db;
 
     private readonly ILogger<SpecialtyRepository> _logger;
-    
+
     private readonly IEntityMapper<SpecialtyEntity, Specialty> _specialtyMapper;
-    
+
     public SpecialtyRepository(
-        IdentityServiceDbContext db, 
-        ILogger<SpecialtyRepository> logger, 
-        IEntityMapper<SpecialtyEntity, Specialty> specialtyMapper)
+        IdentityServiceDbContext db,
+        ILogger<SpecialtyRepository> logger,
+        IEntityMapper<SpecialtyEntity, Specialty> specialtyMapper
+    )
     {
         _db = db;
         _logger = logger;
         _specialtyMapper = specialtyMapper;
     }
-    
+
     public async Task<List<Specialty>> GetAll(CancellationToken cancellationToken = default)
     {
         try
         {
-            List<SpecialtyEntity> entities = await _db.Specialties
-                .AsNoTracking()
+            List<SpecialtyEntity> entities = await _db
+                .Specialties.AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             return _specialtyMapper.ToListDomain(entities);
@@ -54,13 +55,13 @@ public class SpecialtyRepository : ISpecialtyRepository
     {
         try
         {
-            SpecialtyEntity? entity = await _db.Specialties
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.SpecialtyId == id,cancellationToken);
+            SpecialtyEntity? entity = await _db
+                .Specialties.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.SpecialtyId == id, cancellationToken);
 
             if (entity is null)
                 return null;
-            
+
             return _specialtyMapper.ToDomain(entity);
         }
         catch (DbUpdateException ex)
@@ -79,12 +80,11 @@ public class SpecialtyRepository : ISpecialtyRepository
     {
         try
         {
-            SpecialtyEntity? entity = await _db.Specialties
-                .FindAsync(id, cancellationToken);
+            SpecialtyEntity? entity = await _db.Specialties.FindAsync(id, cancellationToken);
 
             if (entity is null)
                 return null;
-            
+
             return _specialtyMapper.ToDomain(entity);
         }
         catch (DbUpdateException ex)
@@ -99,13 +99,19 @@ public class SpecialtyRepository : ISpecialtyRepository
         }
     }
 
-    public async Task<Specialty> Create(Specialty model, CancellationToken cancellationToken = default)
+    public async Task<Specialty> Create(
+        Specialty model,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
             SpecialtyEntity entity = _specialtyMapper.ToEntity(model);
 
-            EntityEntry<SpecialtyEntity> result = await _db.Specialties.AddAsync(entity, cancellationToken);
+            EntityEntry<SpecialtyEntity> result = await _db.Specialties.AddAsync(
+                entity,
+                cancellationToken
+            );
 
             await _db.SaveChangesAsync(cancellationToken);
 
@@ -127,12 +133,12 @@ public class SpecialtyRepository : ISpecialtyRepository
     {
         try
         {
-            int result = await _db.Specialties
-                .Where(x => x.SpecialtyId == model.SpecialtyId)
+            int result = await _db
+                .Specialties.Where(x => x.SpecialtyId == model.SpecialtyId)
                 .ExecuteUpdateAsync(
-                x => x
-                    .SetProperty(i => i.SpecialtyTitle, i => model.SpecialtyTitle), 
-                cancellationToken);
+                    x => x.SetProperty(i => i.SpecialtyTitle, i => model.SpecialtyTitle),
+                    cancellationToken
+                );
 
             return result > 0;
         }
@@ -152,8 +158,8 @@ public class SpecialtyRepository : ISpecialtyRepository
     {
         try
         {
-            int result = await _db.Specialties
-                .Where(x => x.SpecialtyId == id)
+            int result = await _db
+                .Specialties.Where(x => x.SpecialtyId == id)
                 .ExecuteDeleteAsync(cancellationToken);
 
             return result > 0;

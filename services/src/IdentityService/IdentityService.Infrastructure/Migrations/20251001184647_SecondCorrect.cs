@@ -14,15 +14,14 @@ namespace IdentityService.Infrastructure.Migrations
                 name: "IX_Accounts_Email",
                 table: "Accounts",
                 column: "Email",
-                unique: true);
+                unique: true
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_Accounts_Email",
-                table: "Accounts");
+            migrationBuilder.DropIndex(name: "IX_Accounts_Email", table: "Accounts");
         }
     }
 }

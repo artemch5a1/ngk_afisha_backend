@@ -12,20 +12,27 @@ public class UpdateGroupHandler : IRequestHandler<UpdateGroupCommand, Result<int
     private readonly IGroupService _groupService;
 
     private readonly ILogger<UpdateGroupHandler> _logger;
-    
+
     public UpdateGroupHandler(IGroupService groupService, ILogger<UpdateGroupHandler> logger)
     {
         _groupService = groupService;
         _logger = logger;
     }
 
-
-    public async Task<Result<int>> Handle(UpdateGroupCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        UpdateGroupCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = await _groupService.UpdateGroup(request.GroupId, request.Course, request.NumberGroup,
-                request.SpecialtyId, cancellationToken);
+            bool result = await _groupService.UpdateGroup(
+                request.GroupId,
+                request.Course,
+                request.NumberGroup,
+                request.SpecialtyId,
+                cancellationToken
+            );
 
             return result
                 ? Result<int>.Success(request.GroupId)

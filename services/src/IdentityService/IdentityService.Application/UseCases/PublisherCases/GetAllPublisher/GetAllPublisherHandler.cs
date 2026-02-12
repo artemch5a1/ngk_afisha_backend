@@ -11,14 +11,20 @@ public class GetAllPublisherHandler : IRequestHandler<GetAllPublisherQuery, Resu
     private readonly IPublisherService _publisherService;
 
     private readonly ILogger<GetAllPublisherHandler> _logger;
-    
-    public GetAllPublisherHandler(IPublisherService publisherService, ILogger<GetAllPublisherHandler> logger)
+
+    public GetAllPublisherHandler(
+        IPublisherService publisherService,
+        ILogger<GetAllPublisherHandler> logger
+    )
     {
         _publisherService = publisherService;
         _logger = logger;
     }
 
-    public async Task<Result<List<Publisher>>> Handle(GetAllPublisherQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Publisher>>> Handle(
+        GetAllPublisherQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

@@ -14,18 +14,26 @@ public class UpdateDepartmentHandler : IRequestHandler<UpdateDepartmentCommand, 
     private readonly ILogger<UpdateDepartmentHandler> _logger;
 
     public UpdateDepartmentHandler(
-        IDepartmentService departmentService, 
-        ILogger<UpdateDepartmentHandler> logger)
+        IDepartmentService departmentService,
+        ILogger<UpdateDepartmentHandler> logger
+    )
     {
         _departmentService = departmentService;
         _logger = logger;
     }
 
-    public async Task<Result<int>> Handle(UpdateDepartmentCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        UpdateDepartmentCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = await _departmentService.UpdateDepartment(request.DepartmentId, request.DepartmentTitle, cancellationToken);
+            bool result = await _departmentService.UpdateDepartment(
+                request.DepartmentId,
+                request.DepartmentTitle,
+                cancellationToken
+            );
 
             return result
                 ? Result<int>.Success(request.DepartmentId)

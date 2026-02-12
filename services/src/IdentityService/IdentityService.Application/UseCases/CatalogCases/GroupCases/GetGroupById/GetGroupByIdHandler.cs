@@ -19,8 +19,11 @@ public class GetGroupByIdHandler : IRequestHandler<GetGroupByIdQuery, Result<Gro
         _groupService = groupService;
         _logger = logger;
     }
-    
-    public async Task<Result<Group>> Handle(GetGroupByIdQuery request, CancellationToken cancellationToken)
+
+    public async Task<Result<Group>> Handle(
+        GetGroupByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
@@ -35,7 +38,8 @@ public class GetGroupByIdHandler : IRequestHandler<GetGroupByIdQuery, Result<Gro
         {
             _logger.LogWarning(ex, "Ошибка базы данных при получении группы по id");
 
-            return Result<Group>.Failure(ex);;
+            return Result<Group>.Failure(ex);
+            ;
         }
         catch (DomainException ex)
         {

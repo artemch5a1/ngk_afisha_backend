@@ -12,19 +12,20 @@ public class DeleteGenreHandler : IRequestHandler<DeleteGenreCommand, Result<int
 
     private readonly ILogger<DeleteGenreHandler> _logger;
 
-
     public DeleteGenreHandler(IGenreService genreService, ILogger<DeleteGenreHandler> logger)
     {
         _genreService = genreService;
         _logger = logger;
     }
 
-    public async Task<Result<int>> Handle(DeleteGenreCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        DeleteGenreCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = 
-                await _genreService.DeleteGenre(request.GenreId, cancellationToken);
+            bool result = await _genreService.DeleteGenre(request.GenreId, cancellationToken);
 
             return result
                 ? Result<int>.Success(request.GenreId)

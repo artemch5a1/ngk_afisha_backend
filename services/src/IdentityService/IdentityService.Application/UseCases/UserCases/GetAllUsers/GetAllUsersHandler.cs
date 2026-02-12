@@ -12,14 +12,17 @@ public class GetAllUsersHandler : IRequestHandler<GetAllUsersQuery, Result<List<
     private readonly ILogger<GetAllUsersHandler> _logger;
 
     private readonly IUserService _userService;
-    
+
     public GetAllUsersHandler(ILogger<GetAllUsersHandler> logger, IUserService userService)
     {
         _logger = logger;
         _userService = userService;
     }
-    
-    public async Task<Result<List<User>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
+
+    public async Task<Result<List<User>>> Handle(
+        GetAllUsersQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

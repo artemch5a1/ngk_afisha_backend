@@ -13,21 +13,32 @@ public class GetEventRoleByIdHandler : IRequestHandler<GetEventRoleByIdQuery, Re
 
     private readonly ILogger<GetEventRoleByIdHandler> _logger;
 
-
-    public GetEventRoleByIdHandler(IEventRoleService eventRoleService, ILogger<GetEventRoleByIdHandler> logger)
+    public GetEventRoleByIdHandler(
+        IEventRoleService eventRoleService,
+        ILogger<GetEventRoleByIdHandler> logger
+    )
     {
         _eventRoleService = eventRoleService;
         _logger = logger;
     }
 
-    public async Task<Result<EventRole>> Handle(GetEventRoleByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<EventRole>> Handle(
+        GetEventRoleByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            EventRole? eventRole = await _eventRoleService.GetEventRoleById(request.EventRoleId, cancellationToken);
+            EventRole? eventRole = await _eventRoleService.GetEventRoleById(
+                request.EventRoleId,
+                cancellationToken
+            );
 
             if (eventRole is null)
-                return Result<EventRole>.Failure(["Такой роли не существует"], ApiErrorType.NotFound);
+                return Result<EventRole>.Failure(
+                    ["Такой роли не существует"],
+                    ApiErrorType.NotFound
+                );
 
             return Result<EventRole>.Success(eventRole);
         }

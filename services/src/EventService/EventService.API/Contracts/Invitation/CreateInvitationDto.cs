@@ -11,6 +11,6 @@ public class CreateInvitationDto
     public string Description { get; set; } = null!;
 
     public int RequiredMember { get; set; }
-    
+
     public DateTime DeadLine { get; set; }
 }

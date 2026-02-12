@@ -24,60 +24,78 @@ public class GroupActionsController : ControllerBase
     {
         _mediator = mediator;
     }
-    
+
     [HttpPost("CreateGroup")]
     [Authorize(Policy = PolicyNames.AdminOnly)]
-    public async Task<ActionResult<GroupDto>> CreateGroup([FromBody] CreateGroupDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult<GroupDto>> CreateGroup(
+        [FromBody] CreateGroupDto dto,
+        CancellationToken cancellationToken
+    )
     {
-        Result<Group> result = 
-            await _mediator.Send(dto.ToCommand(), cancellationToken);
+        Result<Group> result = await _mediator.Send(dto.ToCommand(), cancellationToken);
 
         return result.ToActionResult(x => x.ToDto());
     }
 
     [HttpPut("UpdateGroup")]
     [Authorize(Policy = PolicyNames.AdminOnly)]
-    public async Task<ActionResult<int>> UpdateGroup([FromBody] UpdateGroupDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult<int>> UpdateGroup(
+        [FromBody] UpdateGroupDto dto,
+        CancellationToken cancellationToken
+    )
     {
-        Result<int> result =
-            await _mediator.Send(dto.ToCommand(), cancellationToken);
+        Result<int> result = await _mediator.Send(dto.ToCommand(), cancellationToken);
 
         return result.ToActionResult();
     }
 
     [HttpDelete("DeleteGroup/{groupId:int}")]
     [Authorize(Policy = PolicyNames.AdminOnly)]
-    public async Task<ActionResult<int>> DeleteGroup(int groupId, CancellationToken cancellationToken)
+    public async Task<ActionResult<int>> DeleteGroup(
+        int groupId,
+        CancellationToken cancellationToken
+    )
     {
-        Result<int> result =
-            await _mediator.Send(new DeleteGroupCommand(groupId), cancellationToken);
+        Result<int> result = await _mediator.Send(
+            new DeleteGroupCommand(groupId),
+            cancellationToken
+        );
 
         return result.ToActionResult();
     }
 
     [HttpGet("GetGroupById/{id:int}")]
-    public async Task<ActionResult<GroupDto>> GetGroupById(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<GroupDto>> GetGroupById(
+        int id,
+        CancellationToken cancellationToken
+    )
     {
-        Result<Group> result = 
-            await _mediator.Send(new GetGroupByIdQuery(id), cancellationToken);
+        Result<Group> result = await _mediator.Send(new GetGroupByIdQuery(id), cancellationToken);
 
         return result.ToActionResult(x => x.ToDto());
     }
-    
+
     [HttpGet("GetAllGroup")]
     public async Task<ActionResult<List<GroupDto>>> GetAllGroup(CancellationToken cancellationToken)
     {
-        Result<List<Group>> result = 
-            await _mediator.Send(new GetAllGroupQuery(), cancellationToken);
+        Result<List<Group>> result = await _mediator.Send(
+            new GetAllGroupQuery(),
+            cancellationToken
+        );
 
         return result.ToActionResult(x => x.ToListDto());
     }
-    
+
     [HttpGet("GetAllGroupBySpecialty/{specialtyId:int}")]
-    public async Task<ActionResult<List<GroupDto>>> GetAllGroupBySpecialty(int specialtyId, CancellationToken cancellationToken)
+    public async Task<ActionResult<List<GroupDto>>> GetAllGroupBySpecialty(
+        int specialtyId,
+        CancellationToken cancellationToken
+    )
     {
-        Result<List<Group>> result = 
-            await _mediator.Send(new GetAllGroupBySpecialtyQuery(specialtyId), cancellationToken);
+        Result<List<Group>> result = await _mediator.Send(
+            new GetAllGroupBySpecialtyQuery(specialtyId),
+            cancellationToken
+        );
 
         return result.ToActionResult(x => x.ToListDto());
     }

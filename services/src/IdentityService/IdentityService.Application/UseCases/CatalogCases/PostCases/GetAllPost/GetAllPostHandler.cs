@@ -19,7 +19,10 @@ public class GetAllPostHandler : IRequestHandler<GetAllPostQuery, Result<List<Po
         _logger = logger;
     }
 
-    public async Task<Result<List<Post>>> Handle(GetAllPostQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Post>>> Handle(
+        GetAllPostQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

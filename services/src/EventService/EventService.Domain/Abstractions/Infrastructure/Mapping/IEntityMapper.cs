@@ -7,7 +7,7 @@ namespace EventService.Domain.Abstractions.Infrastructure.Mapping;
 /// </summary>
 /// <typeparam name="TEntity">Тип сущности (Должен реализовывать <see cref="IEntity{TEntity,TDomain}"/>)</typeparam>
 /// <typeparam name="TDomain">Тип доменной модели</typeparam>
-public interface IEntityMapper<TEntity, TDomain> 
+public interface IEntityMapper<TEntity, TDomain>
     where TEntity : IEntity<TEntity, TDomain>
 {
     /// <summary>
@@ -19,9 +19,9 @@ public interface IEntityMapper<TEntity, TDomain>
     TDomain ToDomain(TEntity entity)
     {
         TDomain domain = entity.ToDomain();
-        
+
         BeforeMapping(ref domain, entity);
-        
+
         return domain;
     }
 

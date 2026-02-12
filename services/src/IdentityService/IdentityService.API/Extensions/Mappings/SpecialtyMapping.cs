@@ -12,10 +12,10 @@ public static class SpecialtyMapping
         return new SpecialtyDto()
         {
             SpecialtyId = specialty.SpecialtyId,
-            SpecialtyTitle = specialty.SpecialtyTitle
+            SpecialtyTitle = specialty.SpecialtyTitle,
         };
     }
-    
+
     public static List<SpecialtyDto> ToListDto(this List<Specialty> specialty)
     {
         return specialty.Select(x => x.ToDto()).ToList();

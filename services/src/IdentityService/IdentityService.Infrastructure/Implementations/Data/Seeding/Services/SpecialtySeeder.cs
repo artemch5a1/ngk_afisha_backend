@@ -12,10 +12,8 @@ public class SpecialtySeeder : ISeedService
     private readonly IdentityServiceDbContext _db;
 
     private readonly List<SpecialtySeed> _specialtySeeds;
-    
-    public SpecialtySeeder(
-        IdentityServiceDbContext db, 
-        IOptions<SpecialtySeedOption> options)
+
+    public SpecialtySeeder(IdentityServiceDbContext db, IOptions<SpecialtySeedOption> options)
     {
         _db = db;
         _specialtySeeds = options.Value.SpecialtySeed;
@@ -25,17 +23,17 @@ public class SpecialtySeeder : ISeedService
 
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
-        if(await _db.Specialties.AnyAsync(cancellationToken))
+        if (await _db.Specialties.AnyAsync(cancellationToken))
             return;
-        
+
         foreach (SpecialtySeed specialty in _specialtySeeds)
         {
-            await _db.Specialties.AddAsync(new SpecialtyEntity()
-            {
-                SpecialtyTitle = specialty.SpecialtyTitle,
-            }, cancellationToken);
+            await _db.Specialties.AddAsync(
+                new SpecialtyEntity() { SpecialtyTitle = specialty.SpecialtyTitle },
+                cancellationToken
+            );
         }
-        
+
         await _db.SaveChangesAsync(cancellationToken);
     }
 }

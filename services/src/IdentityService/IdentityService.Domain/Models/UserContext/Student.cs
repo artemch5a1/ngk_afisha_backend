@@ -18,7 +18,7 @@ public class Student
     public int GroupId { get; private set; }
 
     public Group? Group { get; private set; } = null;
-    
+
     /// <summary>
     /// Создание профиля студента
     /// </summary>
@@ -40,7 +40,7 @@ public class Student
     {
         return new Student(studentId, groupId);
     }
-    
+
     /// <summary>
     /// Смена группы студента
     /// </summary>

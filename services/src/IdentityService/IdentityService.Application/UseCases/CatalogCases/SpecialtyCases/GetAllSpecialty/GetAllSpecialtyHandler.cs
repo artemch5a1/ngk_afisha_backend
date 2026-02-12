@@ -12,14 +12,20 @@ public class GetAllSpecialtyHandler : IRequestHandler<GetAllSpecialtyQuery, Resu
     private readonly ISpecialtyService _specialtyService;
 
     private readonly ILogger<GetAllSpecialtyHandler> _logger;
-    
-    public GetAllSpecialtyHandler(ISpecialtyService specialtyService, ILogger<GetAllSpecialtyHandler> logger)
+
+    public GetAllSpecialtyHandler(
+        ISpecialtyService specialtyService,
+        ILogger<GetAllSpecialtyHandler> logger
+    )
     {
         _specialtyService = specialtyService;
         _logger = logger;
     }
 
-    public async Task<Result<List<Specialty>>> Handle(GetAllSpecialtyQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Specialty>>> Handle(
+        GetAllSpecialtyQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
@@ -37,7 +43,8 @@ public class GetAllSpecialtyHandler : IRequestHandler<GetAllSpecialtyQuery, Resu
         {
             _logger.LogWarning(ex, "Ошибка базы данных при получении всех специальностей");
 
-            return Result<List<Specialty>>.Failure(ex);;
+            return Result<List<Specialty>>.Failure(ex);
+            ;
         }
         catch (Exception ex)
         {

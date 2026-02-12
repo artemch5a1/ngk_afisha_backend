@@ -9,7 +9,8 @@ using Microsoft.Extensions.Options;
 
 namespace EventService.Application.UseCases.InvitationCases.GetAllInvitationByAuthor;
 
-public class GetAllInvitationByAuthorHandler : IRequestHandler<GetAllInvitationByAuthorQuery, Result<List<Invitation>>>
+public class GetAllInvitationByAuthorHandler
+    : IRequestHandler<GetAllInvitationByAuthorQuery, Result<List<Invitation>>>
 {
     private readonly IInvitationService _invitationService;
 
@@ -18,12 +19,13 @@ public class GetAllInvitationByAuthorHandler : IRequestHandler<GetAllInvitationB
     private readonly IStorageService _storageService;
 
     private readonly EventSetting _eventSetting;
-    
+
     public GetAllInvitationByAuthorHandler(
-        IInvitationService invitationService, 
+        IInvitationService invitationService,
         ILogger<GetAllInvitationByAuthorHandler> logger,
-        IStorageService storageService, 
-        IOptions<EventSetting> eventSetting)
+        IStorageService storageService,
+        IOptions<EventSetting> eventSetting
+    )
     {
         _invitationService = invitationService;
         _logger = logger;
@@ -31,28 +33,35 @@ public class GetAllInvitationByAuthorHandler : IRequestHandler<GetAllInvitationB
         _eventSetting = eventSetting.Value;
     }
 
-    public async Task<Result<List<Invitation>>> Handle(GetAllInvitationByAuthorQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Invitation>>> Handle(
+        GetAllInvitationByAuthorQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            List<Invitation> invitations =
-                await _invitationService.GetAllInvitationByAuthor(request.AuthorId, request.Contract, cancellationToken);
+            List<Invitation> invitations = await _invitationService.GetAllInvitationByAuthor(
+                request.AuthorId,
+                request.Contract,
+                cancellationToken
+            );
 
             foreach (Event @event in invitations.Select(i => i.Event))
             {
-                string url = await _storageService
-                    .GenerateDownloadUrlAsync(@event.PreviewUrl, 
-                        TimeSpan.FromMinutes(_eventSetting.TimeActiveDownloadLinkInMilliSeconds));
-                
+                string url = await _storageService.GenerateDownloadUrlAsync(
+                    @event.PreviewUrl,
+                    TimeSpan.FromMinutes(_eventSetting.TimeActiveDownloadLinkInMilliSeconds)
+                );
+
                 @event.SetDownloadUrl(url);
             }
-            
+
             return Result<List<Invitation>>.Success(invitations);
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Ошибка при получении пригалшений");
-            
+
             return Result<List<Invitation>>.Failure(ex);
         }
     }

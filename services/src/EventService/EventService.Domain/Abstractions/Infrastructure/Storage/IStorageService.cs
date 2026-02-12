@@ -7,6 +7,11 @@ public interface IStorageService
     Task<string> GenerateDownloadUrlAsync(string key, TimeSpan expiresIn);
 
     Task DeleteAsync(string key);
-    
-    Task<string> UploadFileAsync(byte[] content, string fileName, string contentType, CancellationToken cancellationToken = default);
+
+    Task<string> UploadFileAsync(
+        byte[] content,
+        string fileName,
+        string contentType,
+        CancellationToken cancellationToken = default
+    );
 }

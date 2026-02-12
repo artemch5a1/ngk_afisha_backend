@@ -7,27 +7,27 @@ namespace IdentityService.Infrastructure.Implementations.Transactions;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly IdentityServiceDbContext _db;
-    
+
     private IDbContextTransaction? _transaction;
 
     public UnitOfWork(IdentityServiceDbContext db)
     {
         _db = db;
     }
-    
+
     public async Task BeginTransactionAsync()
     {
         if (_transaction != null)
             throw new InvalidOperationException("Transaction already started");
-            
+
         _transaction = await _db.Database.BeginTransactionAsync();
     }
 
     public async Task<int> CommitAsync()
-    {    
+    {
         if (_transaction is null)
             throw new InvalidOperationException("Transaction not started");
-        
+
         try
         {
             var result = await _db.SaveChangesAsync();
@@ -50,9 +50,9 @@ public class UnitOfWork : IUnitOfWork
     {
         if (_transaction is null)
             return;
-        
+
         await _transaction.RollbackAsync();
-        await _transaction.DisposeAsync(); 
+        await _transaction.DisposeAsync();
         _transaction = null;
     }
 }

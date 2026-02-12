@@ -13,24 +13,35 @@ public class UpdateSpecialtyHandler : IRequestHandler<UpdateSpecialtyCommand, Re
 
     private readonly ILogger<UpdateSpecialtyHandler> _logger;
 
-
-    public UpdateSpecialtyHandler(ISpecialtyService specialtyService, ILogger<UpdateSpecialtyHandler> logger)
+    public UpdateSpecialtyHandler(
+        ISpecialtyService specialtyService,
+        ILogger<UpdateSpecialtyHandler> logger
+    )
     {
         _specialtyService = specialtyService;
         _logger = logger;
     }
 
-
-    public async Task<Result<int>> Handle(UpdateSpecialtyCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        UpdateSpecialtyCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = await _specialtyService.UpdateSpecialty(request.SpecialtyId, request.NewSpecialtyTitle, cancellationToken);
-            
+            bool result = await _specialtyService.UpdateSpecialty(
+                request.SpecialtyId,
+                request.NewSpecialtyTitle,
+                cancellationToken
+            );
+
             if (result)
                 return Result<int>.Success(request.SpecialtyId);
-            
-            return Result<int>.Failure(["Не удалось обновить специальность"], ApiErrorType.BadRequest);
+
+            return Result<int>.Failure(
+                ["Не удалось обновить специальность"],
+                ApiErrorType.BadRequest
+            );
         }
         catch (DomainException ex)
         {

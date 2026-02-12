@@ -16,15 +16,21 @@ public class DeleteEventHandler : IRequestHandler<DeleteEventCommand, Result<Gui
     private readonly ILogger<DeleteEventHandler> _logger;
     private readonly IStorageService _storageService;
 
-    public DeleteEventHandler(IEventService eventService, ILogger<DeleteEventHandler> logger, IStorageService storageService)
+    public DeleteEventHandler(
+        IEventService eventService,
+        ILogger<DeleteEventHandler> logger,
+        IStorageService storageService
+    )
     {
         _eventService = eventService;
         _logger = logger;
         _storageService = storageService;
     }
 
-
-    public async Task<Result<Guid>> Handle(DeleteEventCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(
+        DeleteEventCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
@@ -34,14 +40,14 @@ public class DeleteEventHandler : IRequestHandler<DeleteEventCommand, Result<Gui
                 throw new NotFoundException("Событие", request.EventId);
 
             string key = @event.PreviewUrl;
-            
+
             bool result = await _eventService.DeleteEvent(request.EventId, cancellationToken);
 
             await _storageService.DeleteAsync(key);
-            
-            return result ? 
-                Result<Guid>.Success(request.EventId) : 
-                Result<Guid>.Failure(["Ошибка удаления"], ApiErrorType.BadRequest);
+
+            return result
+                ? Result<Guid>.Success(request.EventId)
+                : Result<Guid>.Failure(["Ошибка удаления"], ApiErrorType.BadRequest);
         }
         catch (Exception ex)
         {

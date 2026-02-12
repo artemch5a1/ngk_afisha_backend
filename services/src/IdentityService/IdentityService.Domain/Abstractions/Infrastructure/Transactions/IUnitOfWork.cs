@@ -9,13 +9,13 @@ public interface IUnitOfWork
     /// Начать транзакцию
     /// </summary>
     Task BeginTransactionAsync();
-    
+
     /// <summary>
     /// Применить изменения к базе данных
     /// </summary>
     /// <returns>Количество измененых строк</returns>
     Task<int> CommitAsync();
-    
+
     /// <summary>
     /// Откат транзакции
     /// </summary>

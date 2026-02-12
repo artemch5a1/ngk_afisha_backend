@@ -10,20 +10,29 @@ namespace IdentityService.Application.UseCases.StudentCases.GetStudentById;
 public class GetStudentByIdHandler : IRequestHandler<GetStudentByIdQuery, Result<Student>>
 {
     private readonly IStudentService _studentService;
-    
+
     private readonly ILogger<GetStudentByIdHandler> _logger;
 
-    public GetStudentByIdHandler(IStudentService studentService, ILogger<GetStudentByIdHandler> logger)
+    public GetStudentByIdHandler(
+        IStudentService studentService,
+        ILogger<GetStudentByIdHandler> logger
+    )
     {
         _studentService = studentService;
         _logger = logger;
     }
 
-    public async Task<Result<Student>> Handle(GetStudentByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Student>> Handle(
+        GetStudentByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            Student? result = await _studentService.GetStudentById(request.StudentId, cancellationToken);
+            Student? result = await _studentService.GetStudentById(
+                request.StudentId,
+                cancellationToken
+            );
 
             if (result is null)
                 return Result<Student>.Failure(["Студент не найден"], ApiErrorType.NotFound);

@@ -25,28 +25,34 @@ public static class ServiceCollectionExtensions
 
         serviceCollection.AddScoped<IEventRoleService, EventRoleService>();
 
-
-        
         serviceCollection.AddScoped<IMemberService, MemberService>();
-        
+
         return serviceCollection;
     }
-    
-    public static IServiceCollection AddMediatr(this IServiceCollection serviceCollection, IConfiguration configuration)
+
+    public static IServiceCollection AddMediatr(
+        this IServiceCollection serviceCollection,
+        IConfiguration configuration
+    )
     {
-        serviceCollection.AddMediatR(cfg => 
-            cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly));
-        
+        serviceCollection.AddMediatR(cfg =>
+            cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly)
+        );
+
         serviceCollection.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
         serviceCollection.Configure<EventSetting>(opt =>
         {
-            opt.TimeActiveDownloadLinkInMilliSeconds = int.Parse(configuration["EventSettings:TimeActiveDownloadLinkInMilliSeconds"]!);
-            opt.TimeActiveUploadLinkInMilliSeconds = int.Parse(configuration["EventSettings:TimeActiveUploadLinkInMilliSeconds"]!);
+            opt.TimeActiveDownloadLinkInMilliSeconds = int.Parse(
+                configuration["EventSettings:TimeActiveDownloadLinkInMilliSeconds"]!
+            );
+            opt.TimeActiveUploadLinkInMilliSeconds = int.Parse(
+                configuration["EventSettings:TimeActiveUploadLinkInMilliSeconds"]!
+            );
         });
-        
+
         serviceCollection.Configure<DefaultEventOptions>(configuration.GetSection("SeedData"));
-        
+
         return serviceCollection;
     }
 }

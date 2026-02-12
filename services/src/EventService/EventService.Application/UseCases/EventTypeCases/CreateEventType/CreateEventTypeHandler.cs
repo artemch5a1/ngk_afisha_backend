@@ -12,18 +12,26 @@ public class CreateEventTypeHandler : IRequestHandler<CreateEventTypeCommand, Re
 
     private readonly ILogger<CreateEventTypeHandler> _logger;
 
-
-    public CreateEventTypeHandler(IEventTypeService eventTypeService, ILogger<CreateEventTypeHandler> logger)
+    public CreateEventTypeHandler(
+        IEventTypeService eventTypeService,
+        ILogger<CreateEventTypeHandler> logger
+    )
     {
         _eventTypeService = eventTypeService;
         _logger = logger;
     }
 
-    public async Task<Result<EventType>> Handle(CreateEventTypeCommand request, CancellationToken cancellationToken)
+    public async Task<Result<EventType>> Handle(
+        CreateEventTypeCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            EventType location = await _eventTypeService.CreateEventType(request.Title, cancellationToken);
+            EventType location = await _eventTypeService.CreateEventType(
+                request.Title,
+                cancellationToken
+            );
 
             return Result<EventType>.Success(location);
         }

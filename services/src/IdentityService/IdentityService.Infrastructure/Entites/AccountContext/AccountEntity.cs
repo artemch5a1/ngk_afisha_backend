@@ -21,7 +21,7 @@ public class AccountEntity : IEntity<AccountEntity, Account>
 
     [Column("role")]
     public int Role { get; set; }
-    
+
     internal AccountEntity() { }
 
     internal AccountEntity(string email, string passwordHash)
@@ -40,7 +40,7 @@ public class AccountEntity : IEntity<AccountEntity, Account>
         CreatedDate = account.CreatedDate;
         Role = (int)account.AccountRole;
     }
-    
+
     public Account ToDomain()
     {
         return Account.Restore(AccountId, Email, PasswordHash, CreatedDate, (Role)Role);

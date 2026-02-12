@@ -12,20 +12,17 @@ public class StudentEntity : IEntity<StudentEntity, Student>
         GroupId = student.GroupId;
     }
 
-    internal StudentEntity()
-    {
-        
-    }
-    
+    internal StudentEntity() { }
+
     [Column("student_id")]
     public Guid StudentId;
-    
+
     [ForeignKey(nameof(StudentId))]
     public UserEntity User { get; set; } = null!;
 
     [Column("group_id")]
     public int GroupId { get; set; }
-    
+
     [ForeignKey(nameof(GroupId))]
     public GroupEntity Group { get; set; } = null!;
 

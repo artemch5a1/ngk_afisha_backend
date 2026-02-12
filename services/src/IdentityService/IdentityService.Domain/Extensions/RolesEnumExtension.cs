@@ -6,7 +6,7 @@ namespace IdentityService.Domain.Extensions;
 /// <summary>
 /// Методы расширения для получения строки из роли и роли из строки
 /// </summary>
-public static class RolesEnumExtension 
+public static class RolesEnumExtension
 {
     public static string GetString(this Role role)
     {
@@ -17,9 +17,9 @@ public static class RolesEnumExtension
     {
         FieldInfo[] fields = typeof(Role).GetFields();
 
-        foreach (FieldInfo field in fields) 
+        foreach (FieldInfo field in fields)
         {
-            if(field?.ToString()?.ToLowerInvariant() == role.ToLowerInvariant())
+            if (field?.ToString()?.ToLowerInvariant() == role.ToLowerInvariant())
             {
                 object? res = field.GetValue(null) ?? null;
                 return res == null ? null : (Role)res;

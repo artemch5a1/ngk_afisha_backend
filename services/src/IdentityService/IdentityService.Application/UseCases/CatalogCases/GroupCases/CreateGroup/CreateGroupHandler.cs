@@ -18,12 +18,20 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result<Gro
         _groupService = groupService;
         _logger = logger;
     }
-    
-    public async Task<Result<Group>> Handle(CreateGroupCommand request, CancellationToken cancellationToken)
+
+    public async Task<Result<Group>> Handle(
+        CreateGroupCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            Group result = await _groupService.CreateGroup(request.Course, request.NumberGroup, request.SpecialtyId, cancellationToken);
+            Group result = await _groupService.CreateGroup(
+                request.Course,
+                request.NumberGroup,
+                request.SpecialtyId,
+                cancellationToken
+            );
 
             return Result<Group>.Success(result);
         }
@@ -31,7 +39,8 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupCommand, Result<Gro
         {
             _logger.LogWarning(ex, "Ошибка базы данных при создании группы");
 
-            return Result<Group>.Failure(ex);;
+            return Result<Group>.Failure(ex);
+            ;
         }
         catch (DomainException ex)
         {

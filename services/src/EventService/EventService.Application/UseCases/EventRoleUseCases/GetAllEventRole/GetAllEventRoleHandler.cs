@@ -12,19 +12,26 @@ public class GetAllEventRoleHandler : IRequestHandler<GetAllEventRoleQuery, Resu
 
     private readonly ILogger<GetAllEventRoleHandler> _logger;
 
-
-    public GetAllEventRoleHandler(IEventRoleService eventRoleService, ILogger<GetAllEventRoleHandler> logger)
+    public GetAllEventRoleHandler(
+        IEventRoleService eventRoleService,
+        ILogger<GetAllEventRoleHandler> logger
+    )
     {
         _eventRoleService = eventRoleService;
         _logger = logger;
     }
 
-    public async Task<Result<List<EventRole>>> Handle(GetAllEventRoleQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<EventRole>>> Handle(
+        GetAllEventRoleQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            List<EventRole> eventRoles = 
-                await _eventRoleService.GetAllEventRoles(request.Contract, cancellationToken);
+            List<EventRole> eventRoles = await _eventRoleService.GetAllEventRoles(
+                request.Contract,
+                cancellationToken
+            );
 
             return Result<List<EventRole>>.Success(eventRoles);
         }

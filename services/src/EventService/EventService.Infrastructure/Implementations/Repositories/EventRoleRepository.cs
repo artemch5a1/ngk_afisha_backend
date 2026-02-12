@@ -20,26 +20,28 @@ public class EventRoleRepository : IEventRoleRepository
     private readonly IEntityMapper<EventRoleEntity, EventRole> _roleMapper;
 
     public EventRoleRepository(
-        EventServiceDbContext db, 
-        ILogger<EventRoleRepository> logger, 
-        IEntityMapper<EventRoleEntity, EventRole> roleMapper)
+        EventServiceDbContext db,
+        ILogger<EventRoleRepository> logger,
+        IEntityMapper<EventRoleEntity, EventRole> roleMapper
+    )
     {
         _db = db;
         _logger = logger;
         _roleMapper = roleMapper;
     }
 
-    public async Task<List<EventRole>> GetAll(PaginationContract? contract = null, CancellationToken cancellationToken = default)
+    public async Task<List<EventRole>> GetAll(
+        PaginationContract? contract = null,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
-            List<EventRoleEntity> entities = contract is null ?
-                await _db.EventRoles
-                    .AsNoTracking()
-                    .ToListAsync(cancellationToken) :
-                await _db.EventRoles
-                    .AsNoTracking().
-                    Skip(contract.Skip)
+            List<EventRoleEntity> entities = contract is null
+                ? await _db.EventRoles.AsNoTracking().ToListAsync(cancellationToken)
+                : await _db
+                    .EventRoles.AsNoTracking()
+                    .Skip(contract.Skip)
                     .Take(contract.Take)
                     .ToListAsync(cancellationToken);
 
@@ -56,10 +58,9 @@ public class EventRoleRepository : IEventRoleRepository
     {
         try
         {
-            EventRoleEntity? entity = 
-                await _db.EventRoles
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.EventRoleId == id ,cancellationToken);
+            EventRoleEntity? entity = await _db
+                .EventRoles.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.EventRoleId == id, cancellationToken);
 
             if (entity is null)
                 return null;
@@ -77,9 +78,7 @@ public class EventRoleRepository : IEventRoleRepository
     {
         try
         {
-            EventRoleEntity? entity = 
-                await _db.EventRoles
-                    .FindAsync(id ,cancellationToken);
+            EventRoleEntity? entity = await _db.EventRoles.FindAsync(id, cancellationToken);
 
             if (entity is null)
                 return null;
@@ -93,13 +92,19 @@ public class EventRoleRepository : IEventRoleRepository
         }
     }
 
-    public async Task<EventRole> Create(EventRole model, CancellationToken cancellationToken = default)
+    public async Task<EventRole> Create(
+        EventRole model,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
             EventRoleEntity entity = _roleMapper.ToEntity(model);
 
-            EntityEntry<EventRoleEntity> result = await _db.EventRoles.AddAsync(entity, cancellationToken);
+            EntityEntry<EventRoleEntity> result = await _db.EventRoles.AddAsync(
+                entity,
+                cancellationToken
+            );
 
             await _db.SaveChangesAsync(cancellationToken);
 
@@ -116,12 +121,12 @@ public class EventRoleRepository : IEventRoleRepository
     {
         try
         {
-            int result = await _db.EventRoles
-                .Where(x => x.EventRoleId == model.EventRoleId)
+            int result = await _db
+                .EventRoles.Where(x => x.EventRoleId == model.EventRoleId)
                 .ExecuteUpdateAsync(
-                    x => x
-                        .SetProperty(i => i.Title, i => model.Title)
-                        .SetProperty(i => i.Description, i => model.Description),
+                    x =>
+                        x.SetProperty(i => i.Title, i => model.Title)
+                            .SetProperty(i => i.Description, i => model.Description),
                     cancellationToken
                 );
 
@@ -138,8 +143,8 @@ public class EventRoleRepository : IEventRoleRepository
     {
         try
         {
-            int result = await _db.EventRoles
-                .Where(x => x.EventRoleId == id)
+            int result = await _db
+                .EventRoles.Where(x => x.EventRoleId == id)
                 .ExecuteDeleteAsync(cancellationToken);
 
             return result > 0;

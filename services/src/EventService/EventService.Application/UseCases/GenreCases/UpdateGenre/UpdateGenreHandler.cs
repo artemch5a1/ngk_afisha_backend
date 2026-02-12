@@ -12,19 +12,24 @@ public class UpdateGenreHandler : IRequestHandler<UpdateGenreCommand, Result<int
 
     private readonly ILogger<UpdateGenreHandler> _logger;
 
-
     public UpdateGenreHandler(IGenreService genreService, ILogger<UpdateGenreHandler> logger)
     {
         _genreService = genreService;
         _logger = logger;
     }
 
-    public async Task<Result<int>> Handle(UpdateGenreCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        UpdateGenreCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = 
-                await _genreService.UpdateGenre(request.GenreId, request.Title, cancellationToken);
+            bool result = await _genreService.UpdateGenre(
+                request.GenreId,
+                request.Title,
+                cancellationToken
+            );
 
             return result
                 ? Result<int>.Success(request.GenreId)

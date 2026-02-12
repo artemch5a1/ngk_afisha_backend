@@ -6,5 +6,8 @@ public interface IPublisherService
 {
     Task<List<Publisher>> GetAllPublisher(CancellationToken cancellationToken = default);
 
-    Task<Publisher?> GetPublisherById(Guid publisherId, CancellationToken cancellationToken = default);
+    Task<Publisher?> GetPublisherById(
+        Guid publisherId,
+        CancellationToken cancellationToken = default
+    );
 }

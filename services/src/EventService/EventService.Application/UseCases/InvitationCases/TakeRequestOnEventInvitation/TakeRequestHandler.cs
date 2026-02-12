@@ -12,24 +12,25 @@ public class TakeRequestHandler : IRequestHandler<TakeRequestCommand, Result<Gui
 
     private readonly ILogger<TakeRequestHandler> _logger;
 
-
-    public TakeRequestHandler(
-        IEventService eventService, 
-        ILogger<TakeRequestHandler> logger)
+    public TakeRequestHandler(IEventService eventService, ILogger<TakeRequestHandler> logger)
     {
         _eventService = eventService;
         _logger = logger;
     }
 
-    public async Task<Result<Guid>> Handle(TakeRequestCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(
+        TakeRequestCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
             bool result = await _eventService.TakeRequestOnInvitation(
-                request.EventId, 
-                request.InvitationId, 
+                request.EventId,
+                request.InvitationId,
                 request.StudentId,
-                cancellationToken);
+                cancellationToken
+            );
 
             return result
                 ? Result<Guid>.Success(request.InvitationId)

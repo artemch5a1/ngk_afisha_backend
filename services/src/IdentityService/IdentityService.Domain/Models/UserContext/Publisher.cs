@@ -7,7 +7,7 @@ public class Publisher
 {
     public Guid PublisherId { get; private set; }
 
-    public int PostId { get; private set;  }
+    public int PostId { get; private set; }
 
     public Post Post { get; private set; } = null!;
 
@@ -29,7 +29,7 @@ public class Publisher
     {
         return new Publisher(publisherId, postId);
     }
-    
+
     /// <summary>
     /// Восстановление профиля из БД
     /// </summary>
@@ -58,7 +58,7 @@ public class Publisher
     {
         Post = post;
     }
-    
+
     /// <summary>
     /// Добавление навигиационного поля пользователя
     /// </summary>

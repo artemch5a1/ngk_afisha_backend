@@ -17,7 +17,7 @@ namespace EventService.UnitTests.Services
             _eventRepositoryMock = new Mock<IEventRepository>();
             _service = new EventServiceCore(_eventRepositoryMock.Object);
         }
-        
+
         private static Event CreateValidEvent(Guid? authorId = null)
         {
             return Event.Create(
@@ -26,7 +26,10 @@ namespace EventService.UnitTests.Services
                 "Valid short description",
                 "This is a valid long description with more than 35 characters.",
                 DateTime.UtcNow.AddDays(2),
-                1, 1, 1, 18,
+                1,
+                1,
+                1,
+                18,
                 authorId ?? Guid.NewGuid(),
                 "preview.png"
             );
@@ -61,7 +64,8 @@ namespace EventService.UnitTests.Services
         public async Task GetEventById_ShouldReturnEvent()
         {
             var ev = CreateValidEvent();
-            _eventRepositoryMock.Setup(r => r.GetById(ev.EventId, It.IsAny<CancellationToken>()))
+            _eventRepositoryMock
+                .Setup(r => r.GetById(ev.EventId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(ev);
 
             var result = await _service.GetEventById(ev.EventId);
@@ -93,7 +97,10 @@ namespace EventService.UnitTests.Services
 
             Assert.NotNull(result);
             Assert.Equal(ev.Title, result.Title);
-            _eventRepositoryMock.Verify(r => r.Create(It.IsAny<Event>(), It.IsAny<CancellationToken>()), Times.Once);
+            _eventRepositoryMock.Verify(
+                r => r.Create(It.IsAny<Event>(), It.IsAny<CancellationToken>()),
+                Times.Once
+            );
         }
 
         [Fact]
@@ -105,28 +112,44 @@ namespace EventService.UnitTests.Services
                     "short desc", // too short
                     "desc", // too short
                     DateTime.UtcNow.AddDays(-1), // past date
-                    1, 1, 1, 99, // invalid age
+                    1,
+                    1,
+                    1,
+                    99, // invalid age
                     Guid.NewGuid()
-                ));
+                )
+            );
         }
 
         [Fact]
         public async Task CreateInvitation_ShouldThrow_WhenEventNotFound()
         {
-            _eventRepositoryMock.Setup(r => r.GetById(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            _eventRepositoryMock
+                .Setup(r => r.GetById(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Event?)null);
 
             await Assert.ThrowsAsync<NotFoundException>(() =>
-                _service.CreateInvitation(Guid.NewGuid(), Guid.NewGuid(), 1, "short", "desc", 2, DateTime.UtcNow));
+                _service.CreateInvitation(
+                    Guid.NewGuid(),
+                    Guid.NewGuid(),
+                    1,
+                    "short",
+                    "desc",
+                    2,
+                    DateTime.UtcNow
+                )
+            );
         }
 
         [Fact]
         public async Task CreateInvitation_ShouldReturnInvitation_WhenValid()
         {
             var ev = CreateValidEvent();
-            _eventRepositoryMock.Setup(r => r.GetById(ev.EventId, It.IsAny<CancellationToken>()))
+            _eventRepositoryMock
+                .Setup(r => r.GetById(ev.EventId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(ev);
-            _eventRepositoryMock.Setup(r => r.UpdateEventAggregate(ev, It.IsAny<CancellationToken>()))
+            _eventRepositoryMock
+                .Setup(r => r.UpdateEventAggregate(ev, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             var result = await _service.CreateInvitation(
@@ -141,56 +164,96 @@ namespace EventService.UnitTests.Services
 
             Assert.NotNull(result);
             Assert.Equal(ev.EventId, result.EventId);
-            _eventRepositoryMock.Verify(r => r.UpdateEventAggregate(It.IsAny<Event>(), It.IsAny<CancellationToken>()), Times.Once);
+            _eventRepositoryMock.Verify(
+                r => r.UpdateEventAggregate(It.IsAny<Event>(), It.IsAny<CancellationToken>()),
+                Times.Once
+            );
         }
 
         [Fact]
         public async Task CreateInvitation_ShouldThrow_WhenUpdateFails()
         {
             var ev = CreateValidEvent();
-            _eventRepositoryMock.Setup(r => r.GetById(ev.EventId, It.IsAny<CancellationToken>()))
+            _eventRepositoryMock
+                .Setup(r => r.GetById(ev.EventId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(ev);
-            _eventRepositoryMock.Setup(r => r.UpdateEventAggregate(It.IsAny<Event>(), It.IsAny<CancellationToken>()))
+            _eventRepositoryMock
+                .Setup(r =>
+                    r.UpdateEventAggregate(It.IsAny<Event>(), It.IsAny<CancellationToken>())
+                )
                 .ReturnsAsync(false);
 
             await Assert.ThrowsAsync<DomainException>(() =>
-                _service.CreateInvitation(ev.EventId, ev.Author, 1, "Valid short", "Valid desc more than 35 chars", 2, DateTime.UtcNow.AddDays(1)));
+                _service.CreateInvitation(
+                    ev.EventId,
+                    ev.Author,
+                    1,
+                    "Valid short",
+                    "Valid desc more than 35 chars",
+                    2,
+                    DateTime.UtcNow.AddDays(1)
+                )
+            );
         }
 
         [Fact]
         public async Task UpdateEvent_ShouldThrow_WhenEventNotFound()
         {
-            _eventRepositoryMock.Setup(r => r.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            _eventRepositoryMock
+                .Setup(r => r.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Event?)null);
 
             await Assert.ThrowsAsync<NotFoundException>(() =>
-                _service.UpdateEvent(Guid.NewGuid(), Guid.NewGuid(), "title", "short", "desc",
-                    DateTime.UtcNow, 1, 1, 1, 18));
+                _service.UpdateEvent(
+                    Guid.NewGuid(),
+                    Guid.NewGuid(),
+                    "title",
+                    "short",
+                    "desc",
+                    DateTime.UtcNow,
+                    1,
+                    1,
+                    1,
+                    18
+                )
+            );
         }
 
         [Fact]
         public async Task UpdateEvent_ShouldUpdate_WhenValid()
         {
             var ev = CreateValidEvent();
-            _eventRepositoryMock.Setup(r => r.FindAsync(ev.EventId, It.IsAny<CancellationToken>()))
+            _eventRepositoryMock
+                .Setup(r => r.FindAsync(ev.EventId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(ev);
-            _eventRepositoryMock.Setup(r => r.Update(It.IsAny<Event>(), It.IsAny<CancellationToken>()))
+            _eventRepositoryMock
+                .Setup(r => r.Update(It.IsAny<Event>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             var result = await _service.UpdateEvent(
-                ev.Author, ev.EventId, "Updated title", "Updated short description",
+                ev.Author,
+                ev.EventId,
+                "Updated title",
+                "Updated short description",
                 "Updated valid long description exceeding 35 chars",
                 DateTime.UtcNow.AddDays(5),
-                2, 2, 2, 16
+                2,
+                2,
+                2,
+                16
             );
-            
-            _eventRepositoryMock.Verify(r => r.Update(It.IsAny<Event>(), It.IsAny<CancellationToken>()), Times.Once);
+
+            _eventRepositoryMock.Verify(
+                r => r.Update(It.IsAny<Event>(), It.IsAny<CancellationToken>()),
+                Times.Once
+            );
         }
 
         [Fact]
         public async Task DeleteEvent_ShouldReturnTrue_WhenRepositorySucceeds()
         {
-            _eventRepositoryMock.Setup(r => r.Delete(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            _eventRepositoryMock
+                .Setup(r => r.Delete(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             var result = await _service.DeleteEvent(Guid.NewGuid());
@@ -201,11 +264,13 @@ namespace EventService.UnitTests.Services
         [Fact]
         public async Task DeleteInvitation_ShouldThrow_WhenEventNotFound()
         {
-            _eventRepositoryMock.Setup(r => r.GetById(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            _eventRepositoryMock
+                .Setup(r => r.GetById(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Event?)null);
 
             await Assert.ThrowsAsync<NotFoundException>(() =>
-                _service.DeleteInvitation(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()));
+                _service.DeleteInvitation(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid())
+            );
         }
     }
 }

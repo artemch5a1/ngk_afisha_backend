@@ -12,10 +12,7 @@ public class GenreEntity : IEntity<GenreEntity, Genre>
     [Column("title")]
     public string Title { get; set; } = null!;
 
-    internal GenreEntity()
-    {
-        
-    }
+    internal GenreEntity() { }
 
     private GenreEntity(Genre genre)
     {

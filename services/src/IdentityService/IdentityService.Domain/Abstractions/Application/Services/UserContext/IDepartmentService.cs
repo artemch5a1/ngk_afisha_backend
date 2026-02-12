@@ -10,7 +10,11 @@ public interface IDepartmentService
 
     Task<Department> CreateDepartment(string title, CancellationToken cancellationToken = default);
 
-    Task<bool> UpdateDepartment(int departmentId, string newDepartmentTitle, CancellationToken cancellationToken = default);
+    Task<bool> UpdateDepartment(
+        int departmentId,
+        string newDepartmentTitle,
+        CancellationToken cancellationToken = default
+    );
 
     Task<bool> DeleteDepartment(int departmentId, CancellationToken cancellationToken = default);
 }

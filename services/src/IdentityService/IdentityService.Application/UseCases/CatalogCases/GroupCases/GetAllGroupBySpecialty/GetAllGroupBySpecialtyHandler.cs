@@ -7,23 +7,33 @@ using Microsoft.Extensions.Logging;
 
 namespace IdentityService.Application.UseCases.CatalogCases.GroupCases.GetAllGroupBySpecialty;
 
-public class GetAllGroupBySpecialtyHandler : IRequestHandler<GetAllGroupBySpecialtyQuery, Result<List<Group>>>
+public class GetAllGroupBySpecialtyHandler
+    : IRequestHandler<GetAllGroupBySpecialtyQuery, Result<List<Group>>>
 {
     private readonly IGroupService _groupService;
 
     private readonly ILogger<GetAllGroupBySpecialtyHandler> _logger;
-    
-    public GetAllGroupBySpecialtyHandler(IGroupService groupService, ILogger<GetAllGroupBySpecialtyHandler> logger)
+
+    public GetAllGroupBySpecialtyHandler(
+        IGroupService groupService,
+        ILogger<GetAllGroupBySpecialtyHandler> logger
+    )
     {
         _groupService = groupService;
         _logger = logger;
     }
 
-    public async Task<Result<List<Group>>> Handle(GetAllGroupBySpecialtyQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Group>>> Handle(
+        GetAllGroupBySpecialtyQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            List<Group> result = await _groupService.GetAllGroupSpecialtyId(request.SpecialtyId, cancellationToken);
+            List<Group> result = await _groupService.GetAllGroupSpecialtyId(
+                request.SpecialtyId,
+                cancellationToken
+            );
 
             return Result<List<Group>>.Success(result);
         }
@@ -31,7 +41,8 @@ public class GetAllGroupBySpecialtyHandler : IRequestHandler<GetAllGroupBySpecia
         {
             _logger.LogWarning(ex, "Ошибка базы данных при получении всех групп по специальности");
 
-            return Result<List<Group>>.Failure(ex);;
+            return Result<List<Group>>.Failure(ex);
+            ;
         }
         catch (DomainException ex)
         {

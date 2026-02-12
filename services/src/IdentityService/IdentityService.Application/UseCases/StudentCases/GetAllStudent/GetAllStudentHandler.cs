@@ -12,13 +12,19 @@ public class GetAllStudentHandler : IRequestHandler<GetAllStudentQuery, Result<L
 
     private readonly ILogger<GetAllStudentHandler> _logger;
 
-    public GetAllStudentHandler(IStudentService studentService, ILogger<GetAllStudentHandler> logger)
+    public GetAllStudentHandler(
+        IStudentService studentService,
+        ILogger<GetAllStudentHandler> logger
+    )
     {
         _studentService = studentService;
         _logger = logger;
     }
 
-    public async Task<Result<List<Student>>> Handle(GetAllStudentQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Student>>> Handle(
+        GetAllStudentQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

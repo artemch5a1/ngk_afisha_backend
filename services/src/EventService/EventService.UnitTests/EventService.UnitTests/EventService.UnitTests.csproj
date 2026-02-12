@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -28,5 +27,4 @@
     <ProjectReference Include="..\..\EventService.Domain\EventService.Domain.csproj" />
     <ProjectReference Include="..\..\EventService.Infrastructure\EventService.Infrastructure.csproj" />
   </ItemGroup>
-
 </Project>

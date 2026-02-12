@@ -18,27 +18,29 @@ public class GenreRepository : IGenreRepository
     private readonly ILogger<GenreRepository> _logger;
 
     private readonly IEntityMapper<GenreEntity, Genre> _entityMapper;
-    
+
     public GenreRepository(
-        EventServiceDbContext db, 
-        ILogger<GenreRepository> logger, 
-        IEntityMapper<GenreEntity, Genre> entityMapper)
+        EventServiceDbContext db,
+        ILogger<GenreRepository> logger,
+        IEntityMapper<GenreEntity, Genre> entityMapper
+    )
     {
         _db = db;
         _logger = logger;
         _entityMapper = entityMapper;
     }
 
-    public async Task<List<Genre>> GetAll(PaginationContract? contract = null, CancellationToken cancellationToken = default)
+    public async Task<List<Genre>> GetAll(
+        PaginationContract? contract = null,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
-            List<GenreEntity> result = contract is null ? 
-                await _db.Genres
-                    .OrderBy(x => x.Title)
-                    .ToListAsync(cancellationToken) : 
-                await _db.Genres
-                    .Skip(contract.Skip)
+            List<GenreEntity> result = contract is null
+                ? await _db.Genres.OrderBy(x => x.Title).ToListAsync(cancellationToken)
+                : await _db
+                    .Genres.Skip(contract.Skip)
                     .Take(contract.Take)
                     .OrderBy(x => x.Title)
                     .ToListAsync(cancellationToken);
@@ -48,7 +50,7 @@ public class GenreRepository : IGenreRepository
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Ошибка получения жанров");
-            
+
             throw ex.HandleException();
         }
     }
@@ -57,18 +59,20 @@ public class GenreRepository : IGenreRepository
     {
         try
         {
-            GenreEntity? result = await _db.Genres
-                .FirstOrDefaultAsync(x => x.GenreId == id, cancellationToken);
+            GenreEntity? result = await _db.Genres.FirstOrDefaultAsync(
+                x => x.GenreId == id,
+                cancellationToken
+            );
 
             if (result is null)
                 return null;
-            
+
             return _entityMapper.ToDomain(result);
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Ошибка получения жанра по id");
-            
+
             throw ex.HandleException();
         }
     }
@@ -77,18 +81,17 @@ public class GenreRepository : IGenreRepository
     {
         try
         {
-            GenreEntity? result = await _db.Genres
-                .FindAsync(id, cancellationToken);
+            GenreEntity? result = await _db.Genres.FindAsync(id, cancellationToken);
 
             if (result is null)
                 return null;
-            
+
             return _entityMapper.ToDomain(result);
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Ошибка получения жанра по ключу");
-            
+
             throw ex.HandleException();
         }
     }
@@ -99,17 +102,19 @@ public class GenreRepository : IGenreRepository
         {
             GenreEntity eventTypeEntity = _entityMapper.ToEntity(model);
 
-            EntityEntry<GenreEntity> createdResult =
-                await _db.Genres.AddAsync(eventTypeEntity, cancellationToken);
-            
+            EntityEntry<GenreEntity> createdResult = await _db.Genres.AddAsync(
+                eventTypeEntity,
+                cancellationToken
+            );
+
             await _db.SaveChangesAsync(cancellationToken);
-            
+
             return _entityMapper.ToDomain(createdResult.Entity);
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Ошибка создания жанра");
-            
+
             throw ex.HandleException();
         }
     }
@@ -118,11 +123,10 @@ public class GenreRepository : IGenreRepository
     {
         try
         {
-            int result = await _db.Genres
-                .Where(x => x.GenreId == model.GenreId)
+            int result = await _db
+                .Genres.Where(x => x.GenreId == model.GenreId)
                 .ExecuteUpdateAsync(
-                    x => x
-                        .SetProperty(i => i.Title, i => model.Title),
+                    x => x.SetProperty(i => i.Title, i => model.Title),
                     cancellationToken
                 );
 
@@ -131,7 +135,7 @@ public class GenreRepository : IGenreRepository
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Ошибка обновления жанра");
-            
+
             throw ex.HandleException();
         }
     }
@@ -140,8 +144,8 @@ public class GenreRepository : IGenreRepository
     {
         try
         {
-            int result = await _db.Genres
-                .Where(x => x.GenreId == id)
+            int result = await _db
+                .Genres.Where(x => x.GenreId == id)
                 .ExecuteDeleteAsync(cancellationToken);
 
             return result > 0;
@@ -149,7 +153,7 @@ public class GenreRepository : IGenreRepository
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Ошибка удаления жанра");
-            
+
             throw ex.HandleException();
         }
     }

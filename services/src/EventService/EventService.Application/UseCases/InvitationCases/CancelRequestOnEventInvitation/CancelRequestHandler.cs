@@ -13,24 +13,25 @@ public class CancelRequestHandler : IRequestHandler<CancelRequestCommand, Result
 
     private readonly ILogger<TakeRequestHandler> _logger;
 
-
-    public CancelRequestHandler(
-        IEventService eventService, 
-        ILogger<TakeRequestHandler> logger)
+    public CancelRequestHandler(IEventService eventService, ILogger<TakeRequestHandler> logger)
     {
         _eventService = eventService;
         _logger = logger;
     }
 
-    public async Task<Result<Guid>> Handle(CancelRequestCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(
+        CancelRequestCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
             bool result = await _eventService.CancelRequestOnInvitation(
-                request.EventId, 
-                request.InvitationId, 
+                request.EventId,
+                request.InvitationId,
                 request.StudentId,
-                cancellationToken);
+                cancellationToken
+            );
 
             return result
                 ? Result<Guid>.Success(request.InvitationId)

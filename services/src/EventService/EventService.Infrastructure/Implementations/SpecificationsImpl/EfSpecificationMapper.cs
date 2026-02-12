@@ -13,7 +13,9 @@ public class EfSpecificationMapper
         _serviceProvider = serviceProvider;
     }
 
-    public Expression<Func<TEntity, bool>> ResolveEfSpecification<TDomain, TEntity>(ISpecification<TDomain> domainSpecification)
+    public Expression<Func<TEntity, bool>> ResolveEfSpecification<TDomain, TEntity>(
+        ISpecification<TDomain> domainSpecification
+    )
     {
         IEfSpecificationHandler<TDomain, TEntity> handler = _serviceProvider
             .GetServices<IEfSpecificationHandler<TDomain, TEntity>>()

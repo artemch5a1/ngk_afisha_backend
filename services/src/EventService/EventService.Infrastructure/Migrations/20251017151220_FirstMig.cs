@@ -19,22 +19,25 @@ namespace EventService.Infrastructure.Migrations
                     Title = table.Column<string>(type: "text", nullable: false),
                     ShortDescription = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    DateStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DateStart = table.Column<DateTime>(
+                        type: "timestamp with time zone",
+                        nullable: false
+                    ),
                     MinAge = table.Column<int>(type: "integer", nullable: false),
                     Author = table.Column<Guid>(type: "uuid", nullable: false),
-                    PreviewUrl = table.Column<string>(type: "text", nullable: false)
+                    PreviewUrl = table.Column<string>(type: "text", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_events", x => x.EventId);
-                });
+                }
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "events");
+            migrationBuilder.DropTable(name: "events");
         }
     }
 }

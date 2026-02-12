@@ -8,7 +8,7 @@ namespace IdentityService.Application.Services.UserContext;
 public class GroupService : IGroupService
 {
     private readonly IGroupRepository _groupRepository;
-    
+
     public GroupService(IGroupRepository groupRepository)
     {
         _groupRepository = groupRepository;
@@ -19,24 +19,38 @@ public class GroupService : IGroupService
         return await _groupRepository.GetAll(cancellationToken);
     }
 
-    public async Task<List<Group>> GetAllGroupSpecialtyId(int specialtyId, CancellationToken cancellationToken = default)
+    public async Task<List<Group>> GetAllGroupSpecialtyId(
+        int specialtyId,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _groupRepository.GetAllBySpecialtyId(specialtyId, cancellationToken);
     }
-    
+
     public async Task<Group?> GetGroupById(int id, CancellationToken cancellationToken = default)
     {
         return await _groupRepository.GetById(id, cancellationToken);
     }
 
-    public async Task<Group> CreateGroup(int course, int numberGroup, int specialtyId, CancellationToken cancellationToken = default)
+    public async Task<Group> CreateGroup(
+        int course,
+        int numberGroup,
+        int specialtyId,
+        CancellationToken cancellationToken = default
+    )
     {
         Group group = Group.CreateGroup(course, numberGroup, specialtyId);
 
         return await _groupRepository.Create(group, cancellationToken);
     }
 
-    public async Task<bool> UpdateGroup(int groupId, int newCourse, int newNumberGroup, int newSpecialtyId, CancellationToken cancellationToken = default)
+    public async Task<bool> UpdateGroup(
+        int groupId,
+        int newCourse,
+        int newNumberGroup,
+        int newSpecialtyId,
+        CancellationToken cancellationToken = default
+    )
     {
         Group? group = await _groupRepository.FindAsync(groupId, cancellationToken);
 

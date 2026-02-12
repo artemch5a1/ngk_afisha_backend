@@ -19,12 +19,13 @@ public class UpdateEventHandler : IRequestHandler<UpdateEventCommand, Result<Upd
     private readonly IStorageService _storageService;
 
     private readonly EventSetting _eventSetting;
-    
+
     public UpdateEventHandler(
-        IEventService eventService, 
-        ILogger<UpdateEventHandler> logger, 
+        IEventService eventService,
+        ILogger<UpdateEventHandler> logger,
         IStorageService storageService,
-        IOptions<EventSetting> eventOptions)
+        IOptions<EventSetting> eventOptions
+    )
     {
         _eventService = eventService;
         _logger = logger;
@@ -32,8 +33,10 @@ public class UpdateEventHandler : IRequestHandler<UpdateEventCommand, Result<Upd
         _eventSetting = eventOptions.Value;
     }
 
-
-    public async Task<Result<UpdatedEvent>> Handle(UpdateEventCommand request, CancellationToken cancellationToken)
+    public async Task<Result<UpdatedEvent>> Handle(
+        UpdateEventCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
@@ -48,11 +51,14 @@ public class UpdateEventHandler : IRequestHandler<UpdateEventCommand, Result<Upd
                 request.GenreId,
                 request.TypeId,
                 request.MinAge,
-                cancellationToken);
+                cancellationToken
+            );
 
-            string url = await _storageService.GenerateUploadUrlAsync(result.PreviewUrl, 
-                TimeSpan.FromMinutes(_eventSetting.TimeActiveUploadLinkInMilliSeconds));
-            
+            string url = await _storageService.GenerateUploadUrlAsync(
+                result.PreviewUrl,
+                TimeSpan.FromMinutes(_eventSetting.TimeActiveUploadLinkInMilliSeconds)
+            );
+
             return Result<UpdatedEvent>.Success(new UpdatedEvent(result, url));
         }
         catch (Exception ex)

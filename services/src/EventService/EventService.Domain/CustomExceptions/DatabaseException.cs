@@ -12,7 +12,8 @@ public class DatabaseException : Exception
     /// </summary>
     public ApiErrorType ErrorType { get; private set; }
 
-    public DatabaseException(string message, ApiErrorType errorType) : base(message)
+    public DatabaseException(string message, ApiErrorType errorType)
+        : base(message)
     {
         ErrorType = errorType;
     }

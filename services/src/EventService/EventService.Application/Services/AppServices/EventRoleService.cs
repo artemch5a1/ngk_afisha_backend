@@ -15,24 +15,39 @@ public class EventRoleService : IEventRoleService
         _eventRoleRepository = eventRoleRepository;
     }
 
-    public async Task<List<EventRole>> GetAllEventRoles(PaginationContract? contract, CancellationToken cancellationToken = default)
+    public async Task<List<EventRole>> GetAllEventRoles(
+        PaginationContract? contract,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _eventRoleRepository.GetAll(contract, cancellationToken);
     }
 
-    public async Task<EventRole?> GetEventRoleById(int eventRoleId, CancellationToken cancellationToken = default)
+    public async Task<EventRole?> GetEventRoleById(
+        int eventRoleId,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _eventRoleRepository.GetById(eventRoleId, cancellationToken);
     }
 
-    public async Task<EventRole> CreateEventRole(string title, string description, CancellationToken cancellationToken = default)
+    public async Task<EventRole> CreateEventRole(
+        string title,
+        string description,
+        CancellationToken cancellationToken = default
+    )
     {
         EventRole eventRole = EventRole.Create(title, description);
 
         return await _eventRoleRepository.Create(eventRole, cancellationToken);
     }
 
-    public async Task<bool> UpdateEventRole(int eventRoleId, string title, string description, CancellationToken cancellationToken = default)
+    public async Task<bool> UpdateEventRole(
+        int eventRoleId,
+        string title,
+        string description,
+        CancellationToken cancellationToken = default
+    )
     {
         EventRole? eventRole = await _eventRoleRepository.FindAsync(eventRoleId, cancellationToken);
 
@@ -44,7 +59,10 @@ public class EventRoleService : IEventRoleService
         return await _eventRoleRepository.Update(eventRole, cancellationToken);
     }
 
-    public async Task<bool> DeleteEventRole(int eventRoleId, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteEventRole(
+        int eventRoleId,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _eventRoleRepository.Delete(eventRoleId, cancellationToken);
     }

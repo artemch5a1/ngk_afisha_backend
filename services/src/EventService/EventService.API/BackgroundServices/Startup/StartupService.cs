@@ -19,8 +19,8 @@ public class StartupService : IHostedService
 
         using var scope = _serviceProvider.CreateScope();
 
-        var startupServices = scope.ServiceProvider
-            .GetRequiredService<IEnumerable<IStartupService>>()
+        var startupServices = scope
+            .ServiceProvider.GetRequiredService<IEnumerable<IStartupService>>()
             .OrderBy(x => x.Order);
 
         foreach (var service in startupServices)
@@ -28,7 +28,7 @@ public class StartupService : IHostedService
             _logger.LogInformation("Выполняется {Service}", service.GetType().Name);
             await service.InvokeAsync(cancellationToken);
         }
-        
+
         _logger.LogInformation("Инициализация завершена");
     }
 

@@ -12,19 +12,27 @@ public class CreateEventRoleHandler : IRequestHandler<CreateEventRoleCommand, Re
 
     private readonly ILogger<CreateEventRoleHandler> _logger;
 
-
-    public CreateEventRoleHandler(IEventRoleService eventRoleService, ILogger<CreateEventRoleHandler> logger)
+    public CreateEventRoleHandler(
+        IEventRoleService eventRoleService,
+        ILogger<CreateEventRoleHandler> logger
+    )
     {
         _eventRoleService = eventRoleService;
         _logger = logger;
     }
 
-    public async Task<Result<EventRole>> Handle(CreateEventRoleCommand request, CancellationToken cancellationToken)
+    public async Task<Result<EventRole>> Handle(
+        CreateEventRoleCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            EventRole eventRole =
-                await _eventRoleService.CreateEventRole(request.Title, request.Description, cancellationToken);
+            EventRole eventRole = await _eventRoleService.CreateEventRole(
+                request.Title,
+                request.Description,
+                cancellationToken
+            );
 
             return Result<EventRole>.Success(eventRole);
         }

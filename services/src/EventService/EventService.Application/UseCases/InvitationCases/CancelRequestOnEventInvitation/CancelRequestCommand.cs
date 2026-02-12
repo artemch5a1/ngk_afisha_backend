@@ -3,7 +3,5 @@ using MediatR;
 
 namespace EventService.Application.UseCases.InvitationCases.CancelRequestOnEventInvitation;
 
-public record CancelRequestCommand(
-    Guid EventId, 
-    Guid InvitationId, 
-    Guid StudentId) : IRequest<Result<Guid>>;
+public record CancelRequestCommand(Guid EventId, Guid InvitationId, Guid StudentId)
+    : IRequest<Result<Guid>>;

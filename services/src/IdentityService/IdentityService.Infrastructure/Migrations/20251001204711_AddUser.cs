@@ -19,7 +19,7 @@ namespace IdentityService.Infrastructure.Migrations
                     Surname = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Patronymic = table.Column<string>(type: "text", nullable: true),
-                    BirthDate = table.Column<DateOnly>(type: "date", nullable: false)
+                    BirthDate = table.Column<DateOnly>(type: "date", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -29,15 +29,16 @@ namespace IdentityService.Infrastructure.Migrations
                         column: x => x.UserId,
                         principalTable: "Accounts",
                         principalColumn: "AccountId",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Users");
+            migrationBuilder.DropTable(name: "Users");
         }
     }
 }

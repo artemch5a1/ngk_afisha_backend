@@ -7,103 +7,99 @@ namespace IdentityService.UnitTests.Models;
 public class DepartmentTests
 {
     [Fact]
-        public void CreateDepartment_ShouldCreateValidDepartment()
-        {
-            // Arrange
-            string title = "Отдел разработки";
+    public void CreateDepartment_ShouldCreateValidDepartment()
+    {
+        // Arrange
+        string title = "Отдел разработки";
 
-            // Act
-            var department = Department.CreateDepartment(title);
+        // Act
+        var department = Department.CreateDepartment(title);
 
-            // Assert
-            department.Should().NotBeNull();
-            department.Title.Should().Be(title);
-            department.DepartmentId.Should().Be(0); // устанавливается только при Restore
-        }
+        // Assert
+        department.Should().NotBeNull();
+        department.Title.Should().Be(title);
+        department.DepartmentId.Should().Be(0); // устанавливается только при Restore
+    }
 
-        [Fact]
-        public void CreateDepartment_ShouldThrow_WhenTitleIsEmpty()
-        {
-            // Arrange
-            string title = "";
+    [Fact]
+    public void CreateDepartment_ShouldThrow_WhenTitleIsEmpty()
+    {
+        // Arrange
+        string title = "";
 
-            // Act
-            Action act = () => Department.CreateDepartment(title);
+        // Act
+        Action act = () => Department.CreateDepartment(title);
 
-            // Assert
-            act.Should().Throw<DomainException>()
-               .WithMessage("*не может быть пустым*");
-        }
+        // Assert
+        act.Should().Throw<DomainException>().WithMessage("*не может быть пустым*");
+    }
 
-        [Fact]
-        public void CreateDepartment_ShouldThrow_WhenTitleTooLong()
-        {
-            // Arrange
-            string title = new string('A', 201);
+    [Fact]
+    public void CreateDepartment_ShouldThrow_WhenTitleTooLong()
+    {
+        // Arrange
+        string title = new string('A', 201);
 
-            // Act
-            Action act = () => Department.CreateDepartment(title);
+        // Act
+        Action act = () => Department.CreateDepartment(title);
 
-            // Assert
-            act.Should().Throw<DomainException>()
-               .WithMessage("*не может превышать*");
-        }
+        // Assert
+        act.Should().Throw<DomainException>().WithMessage("*не может превышать*");
+    }
 
-        [Fact]
-        public void Restore_ShouldReturnDepartmentWithId()
-        {
-            // Arrange
-            int id = 10;
-            string title = "Отдел тестирования";
+    [Fact]
+    public void Restore_ShouldReturnDepartmentWithId()
+    {
+        // Arrange
+        int id = 10;
+        string title = "Отдел тестирования";
 
-            // Act
-            var department = Department.Restore(id, title);
+        // Act
+        var department = Department.Restore(id, title);
 
-            // Assert
-            department.DepartmentId.Should().Be(id);
-            department.Title.Should().Be(title);
-        }
+        // Assert
+        department.DepartmentId.Should().Be(id);
+        department.Title.Should().Be(title);
+    }
 
-        [Fact]
-        public void UpdateDepartment_ShouldChangeTitle()
-        {
-            // Arrange
-            var department = Department.CreateDepartment("Отдел продаж");
-            string newTitle = "Отдел маркетинга";
+    [Fact]
+    public void UpdateDepartment_ShouldChangeTitle()
+    {
+        // Arrange
+        var department = Department.CreateDepartment("Отдел продаж");
+        string newTitle = "Отдел маркетинга";
 
-            // Act
-            department.UpdateDepartment(newTitle);
+        // Act
+        department.UpdateDepartment(newTitle);
 
-            // Assert
-            department.Title.Should().Be(newTitle);
-        }
+        // Assert
+        department.Title.Should().Be(newTitle);
+    }
 
-        [Fact]
-        public void UpdateDepartment_ShouldThrow_WhenTitleIsEmpty()
-        {
-            // Arrange
-            var department = Department.CreateDepartment("Отдел исследований");
+    [Fact]
+    public void UpdateDepartment_ShouldThrow_WhenTitleIsEmpty()
+    {
+        // Arrange
+        var department = Department.CreateDepartment("Отдел исследований");
 
-            // Act
-            Action act = () => department.UpdateDepartment("");
+        // Act
+        Action act = () => department.UpdateDepartment("");
 
-            // Assert
-            act.Should().Throw<DomainException>()
-               .WithMessage("*не может быть пустым*");
-        }
+        // Assert
+        act.Should().Throw<DomainException>().WithMessage("*не может быть пустым*");
+    }
 
-        [Fact]
-        public void UpdateDepartment_ShouldThrow_WhenTitleTooLong()
-        {
-            // Arrange
-            var department = Department.CreateDepartment("Отдел закупок");
-            string longTitle = new string('B', 250);
+    [Fact]
+    public void UpdateDepartment_ShouldThrow_WhenTitleTooLong()
+    {
+        // Arrange
+        var department = Department.CreateDepartment("Отдел закупок");
+        string longTitle = new string('B', 250);
 
-            // Act
-            Action act = () => department.UpdateDepartment(longTitle);
+        // Act
+        Action act = () => department.UpdateDepartment(longTitle);
 
-            // Assert
-            act.Should().Throw<DomainException>()
-               .WithMessage("*не может превышать*");
-        }
+        // Assert
+        act.Should().Throw<DomainException>().WithMessage("*не может превышать*");
+    }
 }

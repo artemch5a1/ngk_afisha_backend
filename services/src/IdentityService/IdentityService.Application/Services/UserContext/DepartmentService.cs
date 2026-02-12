@@ -14,36 +14,54 @@ public class DepartmentService : IDepartmentService
         _departmentRepository = departmentRepository;
     }
 
-    public async Task<List<Department>> GetAllDepartment(CancellationToken cancellationToken = default)
+    public async Task<List<Department>> GetAllDepartment(
+        CancellationToken cancellationToken = default
+    )
     {
         return await _departmentRepository.GetAll(cancellationToken);
     }
 
-    public async Task<Department?> GetDepartmentById(int id, CancellationToken cancellationToken = default)
+    public async Task<Department?> GetDepartmentById(
+        int id,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _departmentRepository.GetById(id, cancellationToken);
     }
 
-    public async Task<Department> CreateDepartment(string title, CancellationToken cancellationToken = default)
+    public async Task<Department> CreateDepartment(
+        string title,
+        CancellationToken cancellationToken = default
+    )
     {
         Department department = Department.CreateDepartment(title);
 
         return await _departmentRepository.Create(department, cancellationToken);
     }
 
-    public async Task<bool> UpdateDepartment(int departmentId, string newDepartmentTitle, CancellationToken cancellationToken = default)
+    public async Task<bool> UpdateDepartment(
+        int departmentId,
+        string newDepartmentTitle,
+        CancellationToken cancellationToken = default
+    )
     {
-        Department? department = await _departmentRepository.FindAsync(departmentId, cancellationToken);
-        
+        Department? department = await _departmentRepository.FindAsync(
+            departmentId,
+            cancellationToken
+        );
+
         if (department is null)
             throw new NotFoundException("Отдел", departmentId);
-        
+
         department.UpdateDepartment(newDepartmentTitle);
 
         return await _departmentRepository.Update(department, cancellationToken);
     }
 
-    public async Task<bool> DeleteDepartment(int departmentId, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteDepartment(
+        int departmentId,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _departmentRepository.Delete(departmentId, cancellationToken);
     }

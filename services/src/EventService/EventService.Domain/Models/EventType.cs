@@ -9,7 +9,7 @@ public class EventType
 {
     private const int MinTitleLength = 2;
     private const int MaxTitleLength = 45;
-    
+
     public int TypeId { get; private set; }
 
     public string Title { get; private set; }
@@ -29,17 +29,20 @@ public class EventType
     /// </exception>
     public static EventType Create(string title)
     {
-        if (string.IsNullOrWhiteSpace(title) || title.Length < MinTitleLength || title.Length > MaxTitleLength)
+        if (
+            string.IsNullOrWhiteSpace(title)
+            || title.Length < MinTitleLength
+            || title.Length > MaxTitleLength
+        )
         {
-            throw new DomainException(MaxMinMessage(
-                "Название типа события",  
-                MinTitleLength, 
-                MaxTitleLength));
+            throw new DomainException(
+                MaxMinMessage("Название типа события", MinTitleLength, MaxTitleLength)
+            );
         }
-        
+
         return new EventType(title);
     }
-    
+
     /// <summary>
     /// Восстанавливает существующий тип события (например, из базы данных).
     /// </summary>
@@ -48,15 +51,12 @@ public class EventType
     /// <returns>Восстановленный экземпляр <see cref="EventType"/>.</returns>
     internal static EventType Restore(int typeId, string title)
     {
-        return new EventType(title)
-        {
-            TypeId = typeId,
-        };
+        return new EventType(title) { TypeId = typeId };
     }
 
-    private static string MaxMinMessage(object someObject, int min, int max)
-        => $"{someObject} не должно быть меньше {min} или больше {max} символов";
-    
+    private static string MaxMinMessage(object someObject, int min, int max) =>
+        $"{someObject} не должно быть меньше {min} или больше {max} символов";
+
     /// <summary>
     /// Обновляет название типа события.
     /// </summary>
@@ -66,14 +66,17 @@ public class EventType
     /// </exception>
     public void UpdateEventType(string title)
     {
-        if (string.IsNullOrWhiteSpace(title) || title.Length < MinTitleLength || title.Length > MaxTitleLength)
+        if (
+            string.IsNullOrWhiteSpace(title)
+            || title.Length < MinTitleLength
+            || title.Length > MaxTitleLength
+        )
         {
-            throw new DomainException(MaxMinMessage(
-                "Название типа события",  
-                MinTitleLength, 
-                MaxTitleLength));
+            throw new DomainException(
+                MaxMinMessage("Название типа события", MinTitleLength, MaxTitleLength)
+            );
         }
-        
+
         Title = title;
     }
 }

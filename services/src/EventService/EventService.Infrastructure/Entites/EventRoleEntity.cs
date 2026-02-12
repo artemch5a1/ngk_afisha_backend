@@ -15,17 +15,13 @@ public class EventRoleEntity : IEntity<EventRoleEntity, EventRole>
     [Column("description")]
     public string Description { get; set; } = null!;
 
-    internal EventRoleEntity()
-    {
-        
-    }
+    internal EventRoleEntity() { }
 
     private EventRoleEntity(EventRole eventRole)
     {
         Title = eventRole.Title;
         Description = eventRole.Description;
     }
-
 
     public EventRole ToDomain()
     {

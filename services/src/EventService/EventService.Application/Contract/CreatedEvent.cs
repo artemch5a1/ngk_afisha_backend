@@ -17,13 +17,13 @@ public class CreatedEvent
     public int LocationId { get; set; }
 
     public Location Location { get; set; } = null!;
-    
+
     public int GenreId { get; set; }
-    
+
     public Genre Genre { get; set; } = null!;
-    
+
     public int TypeId { get; set; }
-    
+
     public EventType Type { get; set; } = null!;
 
     public int MinAge { get; set; }

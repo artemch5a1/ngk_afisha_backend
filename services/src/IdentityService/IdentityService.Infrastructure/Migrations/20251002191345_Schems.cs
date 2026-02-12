@@ -10,86 +10,72 @@ namespace IdentityService.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Users",
-                table: "Users");
+            migrationBuilder.DropPrimaryKey(name: "PK_Users", table: "Users");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Accounts",
-                table: "Accounts");
+            migrationBuilder.DropPrimaryKey(name: "PK_Accounts", table: "Accounts");
 
-            migrationBuilder.EnsureSchema(
-                name: "identity");
+            migrationBuilder.EnsureSchema(name: "identity");
 
-            migrationBuilder.EnsureSchema(
-                name: "profile");
+            migrationBuilder.EnsureSchema(name: "profile");
 
-            migrationBuilder.RenameTable(
-                name: "Users",
-                newName: "users",
-                newSchema: "profile");
+            migrationBuilder.RenameTable(name: "Users", newName: "users", newSchema: "profile");
 
             migrationBuilder.RenameTable(
                 name: "Accounts",
                 newName: "accounts",
-                newSchema: "identity");
+                newSchema: "identity"
+            );
 
             migrationBuilder.RenameIndex(
                 name: "IX_Accounts_Email",
                 schema: "identity",
                 table: "accounts",
-                newName: "IX_accounts_Email");
+                newName: "IX_accounts_Email"
+            );
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_users",
                 schema: "profile",
                 table: "users",
-                column: "UserId");
+                column: "UserId"
+            );
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_accounts",
                 schema: "identity",
                 table: "accounts",
-                column: "AccountId");
+                column: "AccountId"
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_users",
-                schema: "profile",
-                table: "users");
+            migrationBuilder.DropPrimaryKey(name: "PK_users", schema: "profile", table: "users");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_accounts",
                 schema: "identity",
-                table: "accounts");
+                table: "accounts"
+            );
 
-            migrationBuilder.RenameTable(
-                name: "users",
-                schema: "profile",
-                newName: "Users");
+            migrationBuilder.RenameTable(name: "users", schema: "profile", newName: "Users");
 
-            migrationBuilder.RenameTable(
-                name: "accounts",
-                schema: "identity",
-                newName: "Accounts");
+            migrationBuilder.RenameTable(name: "accounts", schema: "identity", newName: "Accounts");
 
             migrationBuilder.RenameIndex(
                 name: "IX_accounts_Email",
                 table: "Accounts",
-                newName: "IX_Accounts_Email");
+                newName: "IX_Accounts_Email"
+            );
 
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Users",
-                table: "Users",
-                column: "UserId");
+            migrationBuilder.AddPrimaryKey(name: "PK_Users", table: "Users", column: "UserId");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Accounts",
                 table: "Accounts",
-                column: "AccountId");
+                column: "AccountId"
+            );
         }
     }
 }

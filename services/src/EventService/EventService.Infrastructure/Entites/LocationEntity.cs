@@ -14,17 +14,14 @@ public class LocationEntity : IEntity<LocationEntity, Location>
 
     [Column("address")]
     public string Address { get; set; }
-    
+
     private LocationEntity(Location location)
     {
         Title = location.Title;
         Address = location.Address;
     }
 
-    internal LocationEntity()
-    {
-        
-    }
+    internal LocationEntity() { }
 
     public Location ToDomain()
     {

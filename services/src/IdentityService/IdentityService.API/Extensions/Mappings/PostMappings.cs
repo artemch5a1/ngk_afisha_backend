@@ -13,7 +13,7 @@ public static class PostMappings
         {
             PostId = post.PostId,
             Title = post.Title,
-            DepartmentId = post.DepartmentId
+            DepartmentId = post.DepartmentId,
         };
 
         if (post.Department is not null)
@@ -31,7 +31,7 @@ public static class PostMappings
     {
         return new CreatePostCommand(dto.Title, dto.DepartmentId);
     }
-    
+
     public static UpdatePostCommand ToCommand(this UpdatePostDto dto)
     {
         return new UpdatePostCommand(dto.PostId, dto.Title, dto.DepartmentId);

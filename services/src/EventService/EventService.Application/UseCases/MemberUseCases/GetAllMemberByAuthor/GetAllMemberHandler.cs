@@ -9,17 +9,21 @@ using Microsoft.Extensions.Options;
 
 namespace EventService.Application.UseCases.MemberUseCases.GetAllMemberByAuthor;
 
-public class GetAllMemberByAuthorHandler : IRequestHandler<GetAllMemberByAuthorQuery, Result<List<Member>>>
+public class GetAllMemberByAuthorHandler
+    : IRequestHandler<GetAllMemberByAuthorQuery, Result<List<Member>>>
 {
     private readonly IMemberService _memberService;
-    
+
     private readonly ILogger<GetAllMemberByAuthorHandler> _logger;
     private readonly IStorageService _storageService;
     private readonly EventSetting _eventSetting;
 
-    public GetAllMemberByAuthorHandler(IMemberService memberService, ILogger<GetAllMemberByAuthorHandler> logger, 
-        IStorageService storageService, 
-        IOptions<EventSetting> eventSetting)
+    public GetAllMemberByAuthorHandler(
+        IMemberService memberService,
+        ILogger<GetAllMemberByAuthorHandler> logger,
+        IStorageService storageService,
+        IOptions<EventSetting> eventSetting
+    )
     {
         _memberService = memberService;
         _logger = logger;
@@ -27,21 +31,29 @@ public class GetAllMemberByAuthorHandler : IRequestHandler<GetAllMemberByAuthorQ
         _eventSetting = eventSetting.Value;
     }
 
-    public async Task<Result<List<Member>>> Handle(GetAllMemberByAuthorQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Member>>> Handle(
+        GetAllMemberByAuthorQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            List<Member> members = await _memberService.GetAllMemberByAuthor(request.AuthorId, request.Contract, cancellationToken);
+            List<Member> members = await _memberService.GetAllMemberByAuthor(
+                request.AuthorId,
+                request.Contract,
+                cancellationToken
+            );
 
             foreach (Event @event in members.Select(i => i.Invitation.Event))
             {
-                string url = await _storageService
-                    .GenerateDownloadUrlAsync(@event.PreviewUrl, 
-                        TimeSpan.FromMinutes(_eventSetting.TimeActiveDownloadLinkInMilliSeconds));
-                
+                string url = await _storageService.GenerateDownloadUrlAsync(
+                    @event.PreviewUrl,
+                    TimeSpan.FromMinutes(_eventSetting.TimeActiveDownloadLinkInMilliSeconds)
+                );
+
                 @event.SetDownloadUrl(url);
             }
-            
+
             return Result<List<Member>>.Success(members);
         }
         catch (Exception ex)

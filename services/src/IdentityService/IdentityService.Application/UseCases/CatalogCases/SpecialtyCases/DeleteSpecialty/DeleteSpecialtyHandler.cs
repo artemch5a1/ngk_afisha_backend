@@ -13,22 +13,34 @@ public class DeleteSpecialtyHandler : IRequestHandler<DeleteSpecialtyCommand, Re
 
     private readonly ILogger<DeleteSpecialtyHandler> _logger;
 
-    public DeleteSpecialtyHandler(ISpecialtyService specialtyService, ILogger<DeleteSpecialtyHandler> logger)
+    public DeleteSpecialtyHandler(
+        ISpecialtyService specialtyService,
+        ILogger<DeleteSpecialtyHandler> logger
+    )
     {
         _specialtyService = specialtyService;
         _logger = logger;
     }
 
-    public async Task<Result<int>> Handle(DeleteSpecialtyCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        DeleteSpecialtyCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = await _specialtyService.DeleteSpecialty(request.SpecialtyId, cancellationToken);
-            
+            bool result = await _specialtyService.DeleteSpecialty(
+                request.SpecialtyId,
+                cancellationToken
+            );
+
             if (result)
                 return Result<int>.Success(request.SpecialtyId);
-            
-            return Result<int>.Failure(["Не удалось удалить специальность"], ApiErrorType.BadRequest);
+
+            return Result<int>.Failure(
+                ["Не удалось удалить специальность"],
+                ApiErrorType.BadRequest
+            );
         }
         catch (DomainException ex)
         {
@@ -39,10 +51,13 @@ public class DeleteSpecialtyHandler : IRequestHandler<DeleteSpecialtyCommand, Re
         catch (DatabaseException ex)
         {
             _logger.LogWarning(ex, "Ошибка базы данных при удалении специальности");
-            
-            if(ex.ErrorType == ApiErrorType.UnprocessableEntity)
-                return Result<int>.Failure(["Нельзя удалить используемую специальность"], ApiErrorType.UnprocessableEntity);
-            
+
+            if (ex.ErrorType == ApiErrorType.UnprocessableEntity)
+                return Result<int>.Failure(
+                    ["Нельзя удалить используемую специальность"],
+                    ApiErrorType.UnprocessableEntity
+                );
+
             return Result<int>.Failure(ex);
         }
         catch (Exception ex)

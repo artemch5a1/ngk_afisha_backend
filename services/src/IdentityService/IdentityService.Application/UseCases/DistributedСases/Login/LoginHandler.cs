@@ -17,26 +17,49 @@ public class LoginHandler : IRequestHandler<LoginCommand, Result<LoginResponse>>
     private readonly ILogger<LoginHandler> _logger;
 
     private readonly IAccessTokenProvider _accessTokenProvider;
-    
-    public LoginHandler(IAccountService accountService, ILogger<LoginHandler> logger, IAccessTokenProvider accessTokenProvider)
+
+    public LoginHandler(
+        IAccountService accountService,
+        ILogger<LoginHandler> logger,
+        IAccessTokenProvider accessTokenProvider
+    )
     {
         _accountService = accountService;
         _logger = logger;
         _accessTokenProvider = accessTokenProvider;
     }
-    
-    public async Task<Result<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
+
+    public async Task<Result<LoginResponse>> Handle(
+        LoginCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            Account? account = await _accountService.LoginAsync(request.Email, request.Password, cancellationToken);
+            Account? account = await _accountService.LoginAsync(
+                request.Email,
+                request.Password,
+                cancellationToken
+            );
 
             if (account is null)
-                return Result<LoginResponse>.Failure(["Неправильный логин или пароль"], ApiErrorType.BadRequest);
+                return Result<LoginResponse>.Failure(
+                    ["Неправильный логин или пароль"],
+                    ApiErrorType.BadRequest
+                );
 
-            string token = _accessTokenProvider.GenerateToken(account.AccountId, account.Email, account.AccountRole);
+            string token = _accessTokenProvider.GenerateToken(
+                account.AccountId,
+                account.Email,
+                account.AccountRole
+            );
 
-            LoginResponse response = new LoginResponse(account.AccountId, account.Email, account.AccountRole, token);
+            LoginResponse response = new LoginResponse(
+                account.AccountId,
+                account.Email,
+                account.AccountRole,
+                token
+            );
 
             return Result<LoginResponse>.Success(response);
         }

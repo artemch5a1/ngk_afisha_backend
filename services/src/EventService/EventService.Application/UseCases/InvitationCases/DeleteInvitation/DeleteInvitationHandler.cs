@@ -13,31 +13,39 @@ public class DeleteInvitationHandler : IRequestHandler<DeleteInvitationCommand, 
     private readonly ILogger<DeleteInvitationHandler> _logger;
 
     public DeleteInvitationHandler(
-        IEventService eventService, 
-        ILogger<DeleteInvitationHandler> logger)
+        IEventService eventService,
+        ILogger<DeleteInvitationHandler> logger
+    )
     {
         _eventService = eventService;
         _logger = logger;
     }
 
-    public async Task<Result<Guid>> Handle(DeleteInvitationCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(
+        DeleteInvitationCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
             bool result = await _eventService.DeleteInvitation(
-                request.EventId, 
+                request.EventId,
                 request.InvitationId,
-                request.CurrentUser, 
-                cancellationToken);
-            
+                request.CurrentUser,
+                cancellationToken
+            );
+
             return result
                 ? Result<Guid>.Success(request.InvitationId)
-                : Result<Guid>.Failure(["Ошибка при удалении пригалшения"], ApiErrorType.BadRequest);
+                : Result<Guid>.Failure(
+                    ["Ошибка при удалении пригалшения"],
+                    ApiErrorType.BadRequest
+                );
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Ошибка удаления приглашения");
-            
+
             return Result<Guid>.Failure(ex);
         }
     }

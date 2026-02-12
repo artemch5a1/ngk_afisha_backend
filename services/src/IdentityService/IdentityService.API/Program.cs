@@ -8,8 +8,7 @@ using Microsoft.OpenApi.Models;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration
-    .AddJsonFile("SeedData.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddJsonFile("SeedData.json", optional: false, reloadOnChange: true);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -17,7 +16,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddControllers();
 
-builder.Services.AddEndpointsApiExplorer();   // нужно для Swagger
+builder.Services.AddEndpointsApiExplorer(); // нужно для Swagger
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition(
@@ -51,7 +50,8 @@ builder.Services.AddSwaggerGen(options =>
     );
 });
 
-builder.Services.AddServices()
+builder
+    .Services.AddServices()
     .AddMediatr()
     .AddRepositories()
     .AddDataService()
@@ -65,19 +65,23 @@ builder.Services.AddServices()
     .AddApplicationDbContext(
         builder.Configuration.GetConnectionString(nameof(IdentityServiceDbContext)),
         builder.Configuration
-        );
+    );
 
 WebApplication app = builder.Build();
 
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-});
+app.UseForwardedHeaders(
+    new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+    }
+);
 
 app.MapFallback("/error", () => Results.Problem());
 app.UseExceptionHandler("/error");
 
-bool includeDocumentationInRelease = app.Configuration.GetValue<bool>("IncludeDocumentationInRelease");
+bool includeDocumentationInRelease = app.Configuration.GetValue<bool>(
+    "IncludeDocumentationInRelease"
+);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || includeDocumentationInRelease)

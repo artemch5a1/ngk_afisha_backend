@@ -11,7 +11,7 @@ public static class MemberMapper
         {
             InvitationId = member.InvitationId,
             StudentId = member.StudentId,
-            Status = member.Status
+            Status = member.Status,
         };
 
         if (member.Invitation is not null)
@@ -20,6 +20,6 @@ public static class MemberMapper
         return memberDto;
     }
 
-    public static List<MemberDto> ToListDto(this List<Member> members)
-        => members.Select(x => x.ToDto()).ToList();
+    public static List<MemberDto> ToListDto(this List<Member> members) =>
+        members.Select(x => x.ToDto()).ToList();
 }

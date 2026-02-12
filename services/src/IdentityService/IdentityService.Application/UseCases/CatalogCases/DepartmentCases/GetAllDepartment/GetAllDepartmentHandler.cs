@@ -7,21 +7,26 @@ using Microsoft.Extensions.Logging;
 
 namespace IdentityService.Application.UseCases.CatalogCases.DepartmentCases.GetAllDepartment;
 
-public class GetAllDepartmentHandler : IRequestHandler<GetAllDepartmentQuery, Result<List<Department>>>
+public class GetAllDepartmentHandler
+    : IRequestHandler<GetAllDepartmentQuery, Result<List<Department>>>
 {
     private readonly IDepartmentService _departmentService;
 
     private readonly ILogger<GetAllDepartmentHandler> _logger;
 
     public GetAllDepartmentHandler(
-        IDepartmentService departmentService, 
-        ILogger<GetAllDepartmentHandler> logger)
+        IDepartmentService departmentService,
+        ILogger<GetAllDepartmentHandler> logger
+    )
     {
         _departmentService = departmentService;
         _logger = logger;
     }
 
-    public async Task<Result<List<Department>>> Handle(GetAllDepartmentQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Department>>> Handle(
+        GetAllDepartmentQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

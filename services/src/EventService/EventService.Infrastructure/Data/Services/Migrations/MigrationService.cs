@@ -8,6 +8,6 @@ public class MigrationService(EventServiceDbContext db) : IStartupService
 {
     public int Order => 0;
 
-    public async Task InvokeAsync(CancellationToken ct = default) 
-        => await db.Database.MigrateAsync(ct);
+    public async Task InvokeAsync(CancellationToken ct = default) =>
+        await db.Database.MigrateAsync(ct);
 }

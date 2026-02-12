@@ -1,6 +1,6 @@
-﻿using EventService.Domain.Abstractions.Infrastructure.Storage;
-using Amazon.S3;
+﻿using Amazon.S3;
 using Amazon.S3.Model;
+using EventService.Domain.Abstractions.Infrastructure.Storage;
 using Microsoft.Extensions.Options;
 
 namespace EventService.Infrastructure.Implementations.Storage;
@@ -55,17 +55,9 @@ public class S3StorageService : IStorageService
     /// <returns>Экземпляр <see cref="IAmazonS3"/>.</returns>
     private static IAmazonS3 CreateS3Client(string serviceUrl, S3StorageSettings settings)
     {
-        var config = new AmazonS3Config
-        {
-            ServiceURL = serviceUrl,
-            ForcePathStyle = true
-        };
+        var config = new AmazonS3Config { ServiceURL = serviceUrl, ForcePathStyle = true };
 
-        return new AmazonS3Client(
-            settings.AccessKey,
-            settings.SecretKey,
-            config
-        );
+        return new AmazonS3Client(settings.AccessKey, settings.SecretKey, config);
     }
 
     /// <summary>
@@ -73,13 +65,13 @@ public class S3StorageService : IStorageService
     /// </summary>
     /// <param name="settings">Настройки подключения.</param>
     /// <returns>
-    ///     <c>true</c>, если сервис должен использовать один и тот же клиент 
+    ///     <c>true</c>, если сервис должен использовать один и тот же клиент
     ///     для внутренних операций и генерации URL; иначе <c>false</c>.
     /// </returns>
     private static bool ShouldUseSameClient(S3StorageSettings settings)
     {
         return string.IsNullOrWhiteSpace(settings.ServiceUrlBounded)
-               || settings.ServiceUrlBounded == settings.ServiceUrl;
+            || settings.ServiceUrlBounded == settings.ServiceUrl;
     }
 
     /// <summary>
@@ -121,7 +113,7 @@ public class S3StorageService : IStorageService
             Expires = DateTime.UtcNow.Add(expiresIn),
             Protocol = _s3ForeignClient.Config!.ServiceURL!.StartsWith("https://")
                 ? Protocol.HTTPS
-                : Protocol.HTTP
+                : Protocol.HTTP,
         };
 
         return await _s3ForeignClient.GetPreSignedURLAsync(request)!;
@@ -133,17 +125,17 @@ public class S3StorageService : IStorageService
     /// <param name="key">Ключ удаляемого объекта.</param>
     public async Task DeleteAsync(string key)
     {
-        var request = new DeleteObjectRequest
-        {
-            BucketName = _bucketName,
-            Key = key
-        };
+        var request = new DeleteObjectRequest { BucketName = _bucketName, Key = key };
 
         await _s3BoundedClient.DeleteObjectAsync(request)!;
     }
 
-    public async Task<string> UploadFileAsync(byte[] content, string fileName, string contentType,
-        CancellationToken cancellationToken = default)
+    public async Task<string> UploadFileAsync(
+        byte[] content,
+        string fileName,
+        string contentType,
+        CancellationToken cancellationToken = default
+    )
     {
         if (content is null || content.Length == 0)
             throw new ArgumentException("Файл пуст или отсутствует.", nameof(content));
@@ -162,7 +154,7 @@ public class S3StorageService : IStorageService
             Key = key,
             InputStream = stream,
             AutoCloseStream = true,
-            ContentType = contentType
+            ContentType = contentType,
         };
 
         await _s3BoundedClient.PutObjectAsync(request, cancellationToken);
