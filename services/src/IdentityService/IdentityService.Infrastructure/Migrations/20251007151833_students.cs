@@ -17,7 +17,7 @@ namespace IdentityService.Infrastructure.Migrations
                 columns: table => new
                 {
                     StudentId = table.Column<Guid>(type: "uuid", nullable: false),
-                    GroupId = table.Column<int>(type: "integer", nullable: false)
+                    GroupId = table.Column<int>(type: "integer", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -28,29 +28,31 @@ namespace IdentityService.Infrastructure.Migrations
                         principalSchema: "profile",
                         principalTable: "groups",
                         principalColumn: "GroupId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict
+                    );
                     table.ForeignKey(
                         name: "FK_students_users_StudentId",
                         column: x => x.StudentId,
                         principalSchema: "profile",
                         principalTable: "users",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_students_GroupId",
                 schema: "profile",
                 table: "students",
-                column: "GroupId");
+                column: "GroupId"
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "students",
-                schema: "profile");
+            migrationBuilder.DropTable(name: "students", schema: "profile");
         }
     }
 }

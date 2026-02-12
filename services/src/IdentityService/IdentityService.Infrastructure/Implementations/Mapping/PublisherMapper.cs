@@ -10,7 +10,7 @@ public class PublisherMapper : IEntityMapper<PublisherEntity, Publisher>
     {
         if (entity.User is not null)
             AddUserNavigation(ref domain, entity.User);
-        
+
         if (entity.Post is not null)
             AddPostNavigation(ref domain, entity.Post);
     }
@@ -18,24 +18,24 @@ public class PublisherMapper : IEntityMapper<PublisherEntity, Publisher>
     private void AddUserNavigation(ref Publisher domain, UserEntity entity)
     {
         User user = entity.ToDomain();
-        
+
         domain.AddUserNavigation(user);
     }
-    
+
     private void AddPostNavigation(ref Publisher domain, PostEntity entity)
     {
         Post post = entity.ToDomain();
-        
+
         if (entity.Department is not null)
             AddDepartmentNavigation(ref post, entity.Department);
-        
+
         domain.AddPostNavigation(post);
     }
-    
+
     private void AddDepartmentNavigation(ref Post domain, DepartmentEntity entity)
     {
         Department department = entity.ToDomain();
-        
+
         domain.AddDepartmentNavigation(department);
     }
 }

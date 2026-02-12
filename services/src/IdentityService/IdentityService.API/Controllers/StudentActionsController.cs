@@ -22,41 +22,38 @@ public class StudentActionsController : ControllerBase
     {
         _mediator = mediator;
     }
-    
+
     [HttpGet("GetAllStudent")]
     [Authorize(Policy = PolicyNames.AdminOnly)]
-    public async Task<ActionResult<List<StudentDto>>>  GetAllUsers(CancellationToken ct)
+    public async Task<ActionResult<List<StudentDto>>> GetAllUsers(CancellationToken ct)
     {
-        Result<List<Student>> result = 
-            await _mediator.Send(new GetAllStudentQuery(), ct);
-        
+        Result<List<Student>> result = await _mediator.Send(new GetAllStudentQuery(), ct);
+
         return result.ToActionResult(x => x.ToListDto());
     }
-    
+
     [HttpGet("GetStudentById/{studentId:Guid}")]
     [Authorize(Policy = PolicyNames.PublisherOrAdmin)]
-    public async Task<ActionResult<StudentDto>>  GetStudentById(Guid studentId, CancellationToken ct)
+    public async Task<ActionResult<StudentDto>> GetStudentById(Guid studentId, CancellationToken ct)
     {
-        Result<Student> result = 
-            await _mediator.Send(new GetStudentByIdQuery(studentId), ct);
-        
+        Result<Student> result = await _mediator.Send(new GetStudentByIdQuery(studentId), ct);
+
         return result.ToActionResult(x => x.ToDto());
     }
-    
+
     [HttpGet("CurrentStudent")]
     [Authorize(Policy = PolicyNames.UserOnly)]
-    public async Task<ActionResult<StudentDto>>  GetCurrentStudent(CancellationToken ct)
+    public async Task<ActionResult<StudentDto>> GetCurrentStudent(CancellationToken ct)
     {
         Result<Guid> studentId = User.ExtractGuid();
-        
+
         if (!studentId.IsSuccess)
         {
             return studentId.ToActionResult(x => new StudentDto());
         }
-        
-        Result<Student> result = 
-            await _mediator.Send(new GetStudentByIdQuery(studentId.Value), ct);
-        
+
+        Result<Student> result = await _mediator.Send(new GetStudentByIdQuery(studentId.Value), ct);
+
         return result.ToActionResult(x => x.ToDto());
     }
 }

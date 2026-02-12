@@ -12,18 +12,27 @@ public class GetPublisherByIdHandler : IRequestHandler<GetPublisherByIdQuery, Re
     private readonly IPublisherService _publisherService;
 
     private readonly ILogger<GetPublisherByIdHandler> _logger;
-    
-    public GetPublisherByIdHandler(IPublisherService publisherService, ILogger<GetPublisherByIdHandler> logger)
+
+    public GetPublisherByIdHandler(
+        IPublisherService publisherService,
+        ILogger<GetPublisherByIdHandler> logger
+    )
     {
         _publisherService = publisherService;
         _logger = logger;
     }
 
-    public async Task<Result<Publisher>> Handle(GetPublisherByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Publisher>> Handle(
+        GetPublisherByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            Publisher? result = await _publisherService.GetPublisherById(request.PublisherId, cancellationToken);
+            Publisher? result = await _publisherService.GetPublisherById(
+                request.PublisherId,
+                cancellationToken
+            );
 
             if (result is null)
                 return Result<Publisher>.Failure(["Публикатор не найден"], ApiErrorType.NotFound);

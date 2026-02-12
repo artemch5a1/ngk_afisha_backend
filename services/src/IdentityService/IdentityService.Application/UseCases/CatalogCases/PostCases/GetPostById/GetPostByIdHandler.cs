@@ -14,16 +14,16 @@ public class GetPostByIdHandler : IRequestHandler<GetPostByIdQuery, Result<Post>
 
     private readonly ILogger<GetPostByIdHandler> _logger;
 
-
-    public GetPostByIdHandler(
-        IPostService postService, 
-        ILogger<GetPostByIdHandler> logger)
+    public GetPostByIdHandler(IPostService postService, ILogger<GetPostByIdHandler> logger)
     {
         _postService = postService;
         _logger = logger;
     }
 
-    public async Task<Result<Post>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Post>> Handle(
+        GetPostByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

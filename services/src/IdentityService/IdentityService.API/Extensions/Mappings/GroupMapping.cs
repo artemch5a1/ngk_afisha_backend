@@ -15,8 +15,8 @@ public static class GroupMapping
             Course = group.Course,
             NumberGroup = group.NumberGroup,
             SpecialtyId = group.SpecialtyId,
-            
-            FullName = group.GetIdentityGroup()
+
+            FullName = group.GetIdentityGroup(),
         };
 
         if (group.Specialty is not null)
@@ -29,7 +29,7 @@ public static class GroupMapping
     {
         return groups.Select(x => x.ToDto()).ToList();
     }
-    
+
     public static CreateGroupCommand ToCommand(this CreateGroupDto dto)
     {
         return new CreateGroupCommand(dto.Course, dto.NumberGroup, dto.SpecialtyId);

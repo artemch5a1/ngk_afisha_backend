@@ -13,12 +13,17 @@ public class PublisherService : IPublisherService
         _publisherRepository = publisherRepository;
     }
 
-    public async Task<List<Publisher>> GetAllPublisher(CancellationToken cancellationToken = default)
+    public async Task<List<Publisher>> GetAllPublisher(
+        CancellationToken cancellationToken = default
+    )
     {
         return await _publisherRepository.GetAll(cancellationToken);
     }
 
-    public async Task<Publisher?> GetPublisherById(Guid publisherId, CancellationToken cancellationToken = default)
+    public async Task<Publisher?> GetPublisherById(
+        Guid publisherId,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _publisherRepository.GetById(publisherId, cancellationToken);
     }

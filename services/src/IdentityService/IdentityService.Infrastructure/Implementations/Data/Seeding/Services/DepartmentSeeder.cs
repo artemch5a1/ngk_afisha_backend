@@ -10,19 +10,17 @@ namespace IdentityService.Infrastructure.Implementations.Data.Seeding.Services;
 public class DepartmentSeeder : ISeedService
 {
     public int Order => 2;
-    
+
     private readonly IdentityServiceDbContext _db;
 
     private readonly List<DepartmentSeed> _departmentSeed;
-    
-    public DepartmentSeeder(
-        IdentityServiceDbContext db, 
-        IOptions<DepartmentSeedOptions> options)
+
+    public DepartmentSeeder(IdentityServiceDbContext db, IOptions<DepartmentSeedOptions> options)
     {
         _db = db;
         _departmentSeed = options.Value.DepartmentSeed;
     }
-    
+
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
         if (await _db.Departments.AnyAsync(cancellationToken))
@@ -30,13 +28,12 @@ public class DepartmentSeeder : ISeedService
 
         foreach (var departmentSeed in _departmentSeed)
         {
-            await _db.Departments.AddAsync(new DepartmentEntity()
-                {
-                    Title = departmentSeed.DepartmentName
-                }, cancellationToken
+            await _db.Departments.AddAsync(
+                new DepartmentEntity() { Title = departmentSeed.DepartmentName },
+                cancellationToken
             );
         }
-        
+
         await _db.SaveChangesAsync(cancellationToken);
     }
 }

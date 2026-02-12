@@ -24,27 +24,39 @@ public class PostService : IPostService
         return await _postRepository.GetById(id, cancellationToken);
     }
 
-    public async Task<List<Post>> GetAllPostByDepartmentId(int id, CancellationToken cancellationToken = default)
+    public async Task<List<Post>> GetAllPostByDepartmentId(
+        int id,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _postRepository.GetAllPostByDepartmentId(id, cancellationToken);
     }
-    
-    public async Task<Post> CreatePost(int departmentId, string title, CancellationToken cancellationToken = default)
+
+    public async Task<Post> CreatePost(
+        int departmentId,
+        string title,
+        CancellationToken cancellationToken = default
+    )
     {
         Post post = Post.Create(title, departmentId);
 
         return await _postRepository.Create(post, cancellationToken);
     }
 
-    public async Task<bool> UpdatePost(int postId, string newTitle, int newDepartmentId, CancellationToken cancellationToken = default)
+    public async Task<bool> UpdatePost(
+        int postId,
+        string newTitle,
+        int newDepartmentId,
+        CancellationToken cancellationToken = default
+    )
     {
         Post? post = await _postRepository.FindAsync(postId, cancellationToken);
 
         if (post is null)
             throw new NotFoundException("Должность", postId);
-        
+
         post.UpdatePost(newTitle, newDepartmentId);
-        
+
         return await _postRepository.Update(post, cancellationToken);
     }
 

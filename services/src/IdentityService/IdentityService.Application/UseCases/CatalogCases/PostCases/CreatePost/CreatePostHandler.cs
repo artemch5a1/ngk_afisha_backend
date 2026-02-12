@@ -19,11 +19,18 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, Result<Post>
         _logger = logger;
     }
 
-    public async Task<Result<Post>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Post>> Handle(
+        CreatePostCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            Post result = await _postService.CreatePost(request.DepartmentId, request.PostTitle, cancellationToken);
+            Post result = await _postService.CreatePost(
+                request.DepartmentId,
+                request.PostTitle,
+                cancellationToken
+            );
 
             return Result<Post>.Success(result);
         }

@@ -13,33 +13,36 @@ public class GroupsSeeder : ISeedService
     private readonly IdentityServiceDbContext _db;
 
     private readonly List<GroupsSeed> _groupSeeds;
-    
-    public GroupsSeeder(
-        IdentityServiceDbContext db, 
-        IOptions<GroupsSeedOption> options)
+
+    public GroupsSeeder(IdentityServiceDbContext db, IOptions<GroupsSeedOption> options)
     {
         _db = db;
         _groupSeeds = options.Value.GroupSeed;
     }
+
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
-        if(await _db.Groups.AnyAsync(cancellationToken))
+        if (await _db.Groups.AnyAsync(cancellationToken))
             return;
-        
+
         foreach (GroupsSeed group in _groupSeeds)
         {
-            SpecialtyEntity specialty = await _db
-                .Specialties
-                .FirstAsync(x => x.SpecialtyTitle == group.SpecialtyTitle, cancellationToken);
-            
-            await _db.Groups.AddAsync(new GroupEntity()
-            {
-                Course =  group.Course,
-                NumberGroup = group.Number,
-                SpecialtyId = specialty.SpecialtyId,
-            }, cancellationToken);
+            SpecialtyEntity specialty = await _db.Specialties.FirstAsync(
+                x => x.SpecialtyTitle == group.SpecialtyTitle,
+                cancellationToken
+            );
+
+            await _db.Groups.AddAsync(
+                new GroupEntity()
+                {
+                    Course = group.Course,
+                    NumberGroup = group.Number,
+                    SpecialtyId = specialty.SpecialtyId,
+                },
+                cancellationToken
+            );
         }
-        
+
         await _db.SaveChangesAsync(cancellationToken);
     }
 }

@@ -28,15 +28,15 @@ public class AccountActionsController : ControllerBase
     public async Task<ActionResult<LoginResponseDto>> Login(
         [FromBody] LoginRequest request,
         CancellationToken ct
-        )
+    )
     {
         Result<Guid> accountId = User.ExtractGuid();
-        
+
         Result<LoginResponse> result = await _mediator.Send(request.ToCommand(), ct);
 
         return result.ToActionResult(x => x.ToDto());
     }
-    
+
     [HttpPost("LoginAdmin")]
     public async Task<ActionResult<LoginResponseDto>> LoginAdmin(
         [FromBody] LoginAdminRequest request,
@@ -47,84 +47,82 @@ public class AccountActionsController : ControllerBase
 
         return result.ToActionResult(x => x.ToDto());
     }
-    
+
     [HttpPost("RegistryStudent")]
-    public async Task<ActionResult<CreatedAccountDto>>  RegistryRegistryStudent
-    (
-        [FromBody] RegistryStudentDto request, 
-        CancellationToken ct
-        )
-    {
-        Result<AccountCreated> result = 
-            await _mediator.Send(request.ToCommand(), ct);
-        
-        return result.ToActionResult(x => x.ToDto());
-    }
-    
-    [HttpPost("RegistryPublisher")]
-    [Authorize(Policy = PolicyNames.AdminOnly)]
-    public async Task<ActionResult<CreatedAccountDto>>  RegistryPublisher
-    (
-        [FromBody] RegistryPublisherDto request, 
+    public async Task<ActionResult<CreatedAccountDto>> RegistryRegistryStudent(
+        [FromBody] RegistryStudentDto request,
         CancellationToken ct
     )
     {
-        Result<AccountCreated> result = 
-            await _mediator.Send(request.ToCommand(), ct);
-        
+        Result<AccountCreated> result = await _mediator.Send(request.ToCommand(), ct);
+
         return result.ToActionResult(x => x.ToDto());
     }
-    
+
+    [HttpPost("RegistryPublisher")]
+    [Authorize(Policy = PolicyNames.AdminOnly)]
+    public async Task<ActionResult<CreatedAccountDto>> RegistryPublisher(
+        [FromBody] RegistryPublisherDto request,
+        CancellationToken ct
+    )
+    {
+        Result<AccountCreated> result = await _mediator.Send(request.ToCommand(), ct);
+
+        return result.ToActionResult(x => x.ToDto());
+    }
+
     [HttpGet("GetAllAccounts")]
     [Authorize(Policy = PolicyNames.AdminOnly)]
-    public async Task<ActionResult<List<AccountDto>>>  GetAllUsers(CancellationToken ct)
+    public async Task<ActionResult<List<AccountDto>>> GetAllUsers(CancellationToken ct)
     {
-        Result<List<Account>> result = 
-            await _mediator.Send(new GetAllAccountsQuery(), ct);
-        
+        Result<List<Account>> result = await _mediator.Send(new GetAllAccountsQuery(), ct);
+
         return result.ToActionResult(x => x.ToListDto());
     }
-    
+
     [HttpGet("GetAccountById/{accountId:Guid}")]
     [Authorize(Policy = PolicyNames.AdminOnly)]
-    public async Task<ActionResult<AccountDto>>  GetUserById(Guid accountId, CancellationToken ct)
+    public async Task<ActionResult<AccountDto>> GetUserById(Guid accountId, CancellationToken ct)
     {
-        Result<Account> result = 
-            await _mediator.Send(new GetAccountByIdQuery(accountId), ct);
-        
+        Result<Account> result = await _mediator.Send(new GetAccountByIdQuery(accountId), ct);
+
         return result.ToActionResult(x => x.ToDto());
     }
-    
+
     [HttpGet("CurrentAccount")]
     [Authorize]
-    public async Task<ActionResult<AccountDto>>  GetCurrentAccount(CancellationToken ct)
+    public async Task<ActionResult<AccountDto>> GetCurrentAccount(CancellationToken ct)
     {
         Result<Guid> accountId = User.ExtractGuid();
-        
+
         if (!accountId.IsSuccess)
         {
             return accountId.ToActionResult(x => new AccountDto());
         }
-        
-        Result<Account> result = 
-            await _mediator.Send(new GetAccountByIdQuery(accountId.Value), ct);
-        
+
+        Result<Account> result = await _mediator.Send(new GetAccountByIdQuery(accountId.Value), ct);
+
         return result.ToActionResult(x => x.ToDto());
     }
 
     [HttpPatch("ChangePassword")]
     [Authorize]
-    public async Task<ActionResult<Guid>> ChangePassword([FromBody] ChangePasswordDto dto, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<Guid>> ChangePassword(
+        [FromBody] ChangePasswordDto dto,
+        CancellationToken cancellationToken = default
+    )
     {
         Result<Guid> accountId = User.ExtractGuid();
-        
+
         if (!accountId.IsSuccess)
         {
             return accountId.ToActionResult();
         }
 
-        Result<Guid> result = await
-            _mediator.Send(dto.ToCommand(accountId.Value), cancellationToken);
+        Result<Guid> result = await _mediator.Send(
+            dto.ToCommand(accountId.Value),
+            cancellationToken
+        );
 
         return result.ToActionResult();
     }

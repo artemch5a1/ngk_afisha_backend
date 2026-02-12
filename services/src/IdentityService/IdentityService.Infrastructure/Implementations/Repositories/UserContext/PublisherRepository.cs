@@ -18,9 +18,10 @@ public class PublisherRepository : IPublisherRepository
     private readonly IEntityMapper<PublisherEntity, Publisher> _publisherMapper;
 
     public PublisherRepository(
-        IdentityServiceDbContext db, 
-        ILogger<PublisherRepository> logger, 
-        IEntityMapper<PublisherEntity, Publisher> publisherMapper)
+        IdentityServiceDbContext db,
+        ILogger<PublisherRepository> logger,
+        IEntityMapper<PublisherEntity, Publisher> publisherMapper
+    )
     {
         _db = db;
         _logger = logger;
@@ -31,10 +32,10 @@ public class PublisherRepository : IPublisherRepository
     {
         try
         {
-            List<PublisherEntity> publishers = await _db.Publishers
-                .Include(x => x.User)
+            List<PublisherEntity> publishers = await _db
+                .Publishers.Include(x => x.User)
                 .Include(x => x.Post)
-                .ThenInclude(x => x.Department)
+                    .ThenInclude(x => x.Department)
                 .ToListAsync(cancellationToken);
 
             return _publisherMapper.ToListDomain(publishers);
@@ -55,10 +56,10 @@ public class PublisherRepository : IPublisherRepository
     {
         try
         {
-            PublisherEntity? publisher = await _db.Publishers
-                .Include(x => x.User)
+            PublisherEntity? publisher = await _db
+                .Publishers.Include(x => x.User)
                 .Include(x => x.Post)
-                .ThenInclude(x => x.Department)
+                    .ThenInclude(x => x.Department)
                 .FirstOrDefaultAsync(x => x.PublisherId == id, cancellationToken);
 
             if (publisher is null)
@@ -82,8 +83,7 @@ public class PublisherRepository : IPublisherRepository
     {
         try
         {
-            PublisherEntity? publisher = await _db.Publishers
-                .FindAsync(id, cancellationToken);
+            PublisherEntity? publisher = await _db.Publishers.FindAsync(id, cancellationToken);
 
             if (publisher is null)
                 return null;

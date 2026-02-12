@@ -18,11 +18,11 @@ public class PostRepository : IPostRepository
 
     private readonly IEntityMapper<PostEntity, Post> _postMapper;
 
-
     public PostRepository(
-        IdentityServiceDbContext db, 
-        ILogger<PostRepository> logger, 
-        IEntityMapper<PostEntity, Post> postMapper)
+        IdentityServiceDbContext db,
+        ILogger<PostRepository> logger,
+        IEntityMapper<PostEntity, Post> postMapper
+    )
     {
         _db = db;
         _logger = logger;
@@ -33,8 +33,8 @@ public class PostRepository : IPostRepository
     {
         try
         {
-            List<PostEntity> result = await _db.Posts
-                .Include(x => x.Department)
+            List<PostEntity> result = await _db
+                .Posts.Include(x => x.Department)
                 .ToListAsync(cancellationToken);
 
             return _postMapper.ToListDomain(result);
@@ -55,13 +55,13 @@ public class PostRepository : IPostRepository
     {
         try
         {
-            PostEntity? result = await _db.Posts
-                .Include(x => x.Department)
+            PostEntity? result = await _db
+                .Posts.Include(x => x.Department)
                 .FirstOrDefaultAsync(x => x.PostId == id, cancellationToken);
 
             if (result is null)
                 return null;
-            
+
             return _postMapper.ToDomain(result);
         }
         catch (DbUpdateException ex)
@@ -80,12 +80,11 @@ public class PostRepository : IPostRepository
     {
         try
         {
-            PostEntity? result = await _db.Posts
-                .FindAsync(id, cancellationToken);
+            PostEntity? result = await _db.Posts.FindAsync(id, cancellationToken);
 
             if (result is null)
                 return null;
-            
+
             return _postMapper.ToDomain(result);
         }
         catch (DbUpdateException ex)
@@ -106,10 +105,13 @@ public class PostRepository : IPostRepository
         {
             PostEntity postEntity = _postMapper.ToEntity(model);
 
-            EntityEntry<PostEntity> createdEntity = await _db.Posts.AddAsync(postEntity, cancellationToken);
+            EntityEntry<PostEntity> createdEntity = await _db.Posts.AddAsync(
+                postEntity,
+                cancellationToken
+            );
 
             await _db.SaveChangesAsync(cancellationToken);
-            
+
             return _postMapper.ToDomain(createdEntity.Entity);
         }
         catch (DbUpdateException ex)
@@ -128,12 +130,14 @@ public class PostRepository : IPostRepository
     {
         try
         {
-            int result = await _db.Posts
-                .Where(x => x.PostId == model.PostId)
-                .ExecuteUpdateAsync(x => x
-                        .SetProperty(i => i.Title, i => model.Title)
-                        .SetProperty(i => i.DepartmentId, i => model.DepartmentId),
-                    cancellationToken);
+            int result = await _db
+                .Posts.Where(x => x.PostId == model.PostId)
+                .ExecuteUpdateAsync(
+                    x =>
+                        x.SetProperty(i => i.Title, i => model.Title)
+                            .SetProperty(i => i.DepartmentId, i => model.DepartmentId),
+                    cancellationToken
+                );
 
             return result > 0;
         }
@@ -153,10 +157,10 @@ public class PostRepository : IPostRepository
     {
         try
         {
-            int result = await _db.Posts
-                .Where(x => x.PostId == id)
+            int result = await _db
+                .Posts.Where(x => x.PostId == id)
                 .ExecuteDeleteAsync(cancellationToken);
-            
+
             return result > 0;
         }
         catch (DbUpdateException ex)
@@ -171,12 +175,15 @@ public class PostRepository : IPostRepository
         }
     }
 
-    public async Task<List<Post>> GetAllPostByDepartmentId(int departmentId, CancellationToken cancellationToken = default)
+    public async Task<List<Post>> GetAllPostByDepartmentId(
+        int departmentId,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
-            List<PostEntity> result = await _db.Posts
-                .Where(x => x.DepartmentId == departmentId)
+            List<PostEntity> result = await _db
+                .Posts.Where(x => x.DepartmentId == departmentId)
                 .Include(x => x.Department)
                 .ToListAsync(cancellationToken);
 

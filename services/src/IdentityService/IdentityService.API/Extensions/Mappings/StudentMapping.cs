@@ -10,14 +10,14 @@ public static class StudentMapping
         StudentDto studentDto = new StudentDto()
         {
             StudentId = student.StudentId,
-            GroupId = student.GroupId
+            GroupId = student.GroupId,
         };
 
         if (student.Group is not null)
         {
             studentDto.Group = student.Group.ToDto();
         }
-        
+
         if (student.User is not null)
         {
             studentDto.User = student.User.ToDto();
@@ -25,7 +25,7 @@ public static class StudentMapping
 
         return studentDto;
     }
-    
+
     public static List<StudentDto> ToListDto(this List<Student> students)
     {
         return students.Select(x => x.ToDto()).ToList();

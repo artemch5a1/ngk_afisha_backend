@@ -34,8 +34,8 @@ public class UserEntity : IEntity<UserEntity, User>
         Surname = user.Surname;
         Patronymic = user.Patronymic;
         BirthDate = user.BirthDate;
-        
-        if(user.StudentProfile is not null)
+
+        if (user.StudentProfile is not null)
             StudentProfile = StudentEntity.ToEntity(user.StudentProfile);
 
         if (user.PublisherProfile is not null)
@@ -44,13 +44,7 @@ public class UserEntity : IEntity<UserEntity, User>
 
     public User ToDomain()
     {
-        return User.Restore(
-            UserId, 
-            Surname, 
-            Name, 
-            Patronymic, 
-            BirthDate
-            );
+        return User.Restore(UserId, Surname, Name, Patronymic, BirthDate);
     }
 
     public static UserEntity ToEntity(User domain)

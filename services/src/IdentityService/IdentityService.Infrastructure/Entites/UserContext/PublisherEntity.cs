@@ -10,7 +10,7 @@ public class PublisherEntity : IEntity<PublisherEntity, Publisher>
     public Guid PublisherId { get; set; }
 
     [Column("post_id")]
-    public int PostId { get; set;  }
+    public int PostId { get; set; }
 
     [ForeignKey(nameof(PostId))]
     public PostEntity Post { get; set; } = null!;
@@ -18,10 +18,7 @@ public class PublisherEntity : IEntity<PublisherEntity, Publisher>
     [ForeignKey(nameof(PublisherId))]
     public UserEntity User { get; set; } = null!;
 
-    internal PublisherEntity()
-    {
-        
-    }
+    internal PublisherEntity() { }
 
     private PublisherEntity(Publisher publisher)
     {

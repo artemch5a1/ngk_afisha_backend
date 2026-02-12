@@ -14,18 +14,25 @@ public class CreateDepartmentHandler : IRequestHandler<CreateDepartmentCommand, 
     private readonly ILogger<CreateDepartmentHandler> _logger;
 
     public CreateDepartmentHandler(
-        IDepartmentService departmentService, 
-        ILogger<CreateDepartmentHandler> logger)
+        IDepartmentService departmentService,
+        ILogger<CreateDepartmentHandler> logger
+    )
     {
         _departmentService = departmentService;
         _logger = logger;
     }
 
-    public async Task<Result<Department>> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Department>> Handle(
+        CreateDepartmentCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            Department result = await _departmentService.CreateDepartment(request.DepartmentTitle, cancellationToken);
+            Department result = await _departmentService.CreateDepartment(
+                request.DepartmentTitle,
+                cancellationToken
+            );
 
             return Result<Department>.Success(result);
         }

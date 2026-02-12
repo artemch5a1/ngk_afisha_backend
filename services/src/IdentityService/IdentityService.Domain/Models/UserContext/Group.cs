@@ -14,14 +14,13 @@ public class Group
         SpecialtyId = specialtyId;
     }
 
-
     public int GroupId { get; private set; }
 
     public int Course { get; private set; }
 
     public int NumberGroup { get; private set; }
-    
-    public int SpecialtyId { get; private set;  }
+
+    public int SpecialtyId { get; private set; }
 
     public Specialty? Specialty { get; private set; } = null;
 
@@ -29,7 +28,7 @@ public class Group
     /// Первая буква специальности
     /// </summary>
     public char LetterSpecialty => Specialty?.SpecialtyTitle.First() ?? ' ';
-    
+
     /// <summary>
     /// Создание группы
     /// </summary>
@@ -42,7 +41,7 @@ public class Group
     {
         if (course < 1 || course > 4)
             throw new DomainException("Курс должен быть в промежутке от 1 до 4");
-        
+
         return new Group(course, numberGroup, specialtyId);
     }
 
@@ -56,10 +55,7 @@ public class Group
     /// <returns>Модель группы</returns>
     internal static Group Restore(int groupId, int course, int numberGroup, int specialtyId)
     {
-        Group group = new Group(course, numberGroup, specialtyId)
-        {
-            GroupId = groupId
-        };
+        Group group = new Group(course, numberGroup, specialtyId) { GroupId = groupId };
 
         return group;
     }
@@ -87,6 +83,5 @@ public class Group
     /// Получение уникального название группы: курс + номер + первая буква специальности
     /// </summary>
     /// <returns>Строку с названием</returns>
-    public string GetIdentityGroup() =>  
-        $"{Course}{NumberGroup}{LetterSpecialty}";
+    public string GetIdentityGroup() => $"{Course}{NumberGroup}{LetterSpecialty}";
 }

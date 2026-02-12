@@ -12,18 +12,27 @@ public class CreateSpecialtyHandler : IRequestHandler<CreateSpecialtyCommand, Re
     private readonly ISpecialtyService _specialtyService;
 
     private readonly ILogger<CreateSpecialtyHandler> _logger;
-    
-    public CreateSpecialtyHandler(ISpecialtyService specialtyService, ILogger<CreateSpecialtyHandler> logger)
+
+    public CreateSpecialtyHandler(
+        ISpecialtyService specialtyService,
+        ILogger<CreateSpecialtyHandler> logger
+    )
     {
         _specialtyService = specialtyService;
         _logger = logger;
     }
-    
-    public async Task<Result<Specialty>> Handle(CreateSpecialtyCommand request, CancellationToken cancellationToken)
+
+    public async Task<Result<Specialty>> Handle(
+        CreateSpecialtyCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            Specialty result = await _specialtyService.CreateSpecialty(request.Title, cancellationToken);
+            Specialty result = await _specialtyService.CreateSpecialty(
+                request.Title,
+                cancellationToken
+            );
 
             return Result<Specialty>.Success(result);
         }
@@ -37,7 +46,8 @@ public class CreateSpecialtyHandler : IRequestHandler<CreateSpecialtyCommand, Re
         {
             _logger.LogWarning(ex, "Ошибка базы данных при создании специальности");
 
-            return Result<Specialty>.Failure(ex);;
+            return Result<Specialty>.Failure(ex);
+            ;
         }
         catch (Exception ex)
         {

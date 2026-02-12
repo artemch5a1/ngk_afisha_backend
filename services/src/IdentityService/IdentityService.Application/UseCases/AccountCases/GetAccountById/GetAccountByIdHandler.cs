@@ -13,20 +13,27 @@ public class GetAccountByIdHandler : IRequestHandler<GetAccountByIdQuery, Result
     private readonly ILogger<GetAccountByIdHandler> _logger;
 
     private readonly IAccountService _accountService;
-    
+
     public GetAccountByIdHandler(
-        ILogger<GetAccountByIdHandler> logger, 
-        IAccountService accountService)
+        ILogger<GetAccountByIdHandler> logger,
+        IAccountService accountService
+    )
     {
         _logger = logger;
         _accountService = accountService;
     }
-    
-    public async Task<Result<Account>> Handle(GetAccountByIdQuery request, CancellationToken cancellationToken)
+
+    public async Task<Result<Account>> Handle(
+        GetAccountByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            Account? account = await _accountService.GetAccountById(request.AccountId, cancellationToken);
+            Account? account = await _accountService.GetAccountById(
+                request.AccountId,
+                cancellationToken
+            );
 
             if (account is null)
                 return Result<Account>.Failure("Аккаунт не найден", ApiErrorType.NotFound);

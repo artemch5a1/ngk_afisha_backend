@@ -10,7 +10,11 @@ public interface ISpecialtyService
 
     Task<Specialty> CreateSpecialty(string title, CancellationToken cancellationToken = default);
 
-    Task<bool> UpdateSpecialty(int specialtyId, string newSpecialtyTitle, CancellationToken cancellationToken = default);
+    Task<bool> UpdateSpecialty(
+        int specialtyId,
+        string newSpecialtyTitle,
+        CancellationToken cancellationToken = default
+    );
 
     Task<bool> DeleteSpecialty(int specialtyId, CancellationToken cancellationToken = default);
 }

@@ -13,16 +13,16 @@ public class DeletePostHandler : IRequestHandler<DeletePostCommand, Result<int>>
 
     private readonly ILogger<DeletePostHandler> _logger;
 
-
-    public DeletePostHandler(
-        IPostService postService, 
-        ILogger<DeletePostHandler> logger)
+    public DeletePostHandler(IPostService postService, ILogger<DeletePostHandler> logger)
     {
         _postService = postService;
         _logger = logger;
     }
 
-    public async Task<Result<int>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        DeletePostCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
@@ -40,10 +40,13 @@ public class DeletePostHandler : IRequestHandler<DeletePostCommand, Result<int>>
         catch (DatabaseException ex)
         {
             _logger.LogWarning(ex, "Произошла ошибка базы данных при удалении должности");
-            
-            if(ex.ErrorType == ApiErrorType.UnprocessableEntity)
-                return Result<int>.Failure(["Нельзя удалить используемую должность"], ApiErrorType.UnprocessableEntity);
-            
+
+            if (ex.ErrorType == ApiErrorType.UnprocessableEntity)
+                return Result<int>.Failure(
+                    ["Нельзя удалить используемую должность"],
+                    ApiErrorType.UnprocessableEntity
+                );
+
             return Result<int>.Failure(ex);
         }
         catch (Exception ex)

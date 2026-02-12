@@ -3,4 +3,5 @@ using MediatR;
 
 namespace IdentityService.Application.UseCases.CatalogCases.DepartmentCases.UpdateDepartment;
 
-public record UpdateDepartmentCommand(int DepartmentId, string DepartmentTitle) : IRequest<Result<int>>;
+public record UpdateDepartmentCommand(int DepartmentId, string DepartmentTitle)
+    : IRequest<Result<int>>;

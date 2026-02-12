@@ -27,17 +27,18 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IPostService, PostService>();
 
         serviceCollection.AddScoped<IPublisherService, PublisherService>();
-        
+
         return serviceCollection;
     }
-    
+
     public static IServiceCollection AddMediatr(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddMediatR(cfg => 
-            cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly));
-        
+        serviceCollection.AddMediatR(cfg =>
+            cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly)
+        );
+
         serviceCollection.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-        
+
         return serviceCollection;
     }
 }

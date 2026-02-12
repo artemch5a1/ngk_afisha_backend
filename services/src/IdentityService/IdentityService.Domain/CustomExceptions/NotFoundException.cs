@@ -9,13 +9,14 @@ public class NotFoundException : Exception
     /// Имя не найденного объекта
     /// </summary>
     public string ObjectName;
-    
+
     /// <summary>
     /// Идентификатор поиска
     /// </summary>
     public readonly object Identifier;
 
-    public NotFoundException(string objectName, object identifier) : base($"{objectName} не найден по: {identifier}")
+    public NotFoundException(string objectName, object identifier)
+        : base($"{objectName} не найден по: {identifier}")
     {
         ObjectName = objectName;
         Identifier = identifier;

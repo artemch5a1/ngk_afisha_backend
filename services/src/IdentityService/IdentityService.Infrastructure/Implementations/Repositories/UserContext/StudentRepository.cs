@@ -17,11 +17,11 @@ public class StudentRepository : IStudentRepository
 
     private readonly IEntityMapper<StudentEntity, Student> _studentMapper;
 
-
     public StudentRepository(
-        IdentityServiceDbContext db, 
-        ILogger<StudentRepository> logger, 
-        IEntityMapper<StudentEntity, Student> studentMapper)
+        IdentityServiceDbContext db,
+        ILogger<StudentRepository> logger,
+        IEntityMapper<StudentEntity, Student> studentMapper
+    )
     {
         _db = db;
         _logger = logger;
@@ -32,10 +32,10 @@ public class StudentRepository : IStudentRepository
     {
         try
         {
-            List<StudentEntity> students = await _db.Students
-                .Include(x => x.User)
+            List<StudentEntity> students = await _db
+                .Students.Include(x => x.User)
                 .Include(x => x.Group)
-                .ThenInclude(x => x.Specialty)
+                    .ThenInclude(x => x.Specialty)
                 .ToListAsync(cancellationToken);
 
             return _studentMapper.ToListDomain(students);
@@ -56,15 +56,15 @@ public class StudentRepository : IStudentRepository
     {
         try
         {
-            StudentEntity? student = await _db.Students
-                .Include(x => x.User)
+            StudentEntity? student = await _db
+                .Students.Include(x => x.User)
                 .Include(x => x.Group)
-                .ThenInclude(x => x.Specialty)
+                    .ThenInclude(x => x.Specialty)
                 .FirstOrDefaultAsync(x => x.StudentId == id, cancellationToken);
 
             if (student is null)
                 return null;
-            
+
             return _studentMapper.ToDomain(student);
         }
         catch (DbUpdateException ex)
@@ -83,12 +83,11 @@ public class StudentRepository : IStudentRepository
     {
         try
         {
-            StudentEntity? student = await _db.Students
-                .FindAsync(id, cancellationToken);
+            StudentEntity? student = await _db.Students.FindAsync(id, cancellationToken);
 
             if (student is null)
                 return null;
-            
+
             return _studentMapper.ToDomain(student);
         }
         catch (DbUpdateException ex)

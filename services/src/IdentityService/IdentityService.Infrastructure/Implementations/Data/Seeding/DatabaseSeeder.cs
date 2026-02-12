@@ -17,9 +17,9 @@ public class DatabaseSeeder : IStartupService
 
     public async Task InvokeAsync(CancellationToken ct = default)
     {
-        IEnumerable<ISeedService> seedServices = 
-            _serviceProvider.GetServices<ISeedService>()
-                .OrderBy(s => s.Order);
+        IEnumerable<ISeedService> seedServices = _serviceProvider
+            .GetServices<ISeedService>()
+            .OrderBy(s => s.Order);
 
         foreach (var seedService in seedServices)
         {

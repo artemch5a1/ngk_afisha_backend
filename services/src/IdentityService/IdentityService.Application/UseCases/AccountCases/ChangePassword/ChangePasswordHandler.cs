@@ -14,24 +14,34 @@ public class ChangePasswordHandler : IRequestHandler<ChangePasswordCommand, Resu
     private readonly ILogger<ChangePasswordHandler> _logger;
 
     public ChangePasswordHandler(
-        IAccountService accountService, 
-        ILogger<ChangePasswordHandler> logger)
+        IAccountService accountService,
+        ILogger<ChangePasswordHandler> logger
+    )
     {
         _accountService = accountService;
         _logger = logger;
     }
 
-
-    public async Task<Result<Guid>> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(
+        ChangePasswordCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = 
-                await _accountService.ChangeAccountPassword(request.AccountId, request.OldPassword, request.NewPassword, cancellationToken);
+            bool result = await _accountService.ChangeAccountPassword(
+                request.AccountId,
+                request.OldPassword,
+                request.NewPassword,
+                cancellationToken
+            );
 
-            return result ? 
-                Result<Guid>.Success(request.AccountId) : 
-                Result<Guid>.Failure(["Ошибка при попытке смены пароля"], ApiErrorType.BadRequest);
+            return result
+                ? Result<Guid>.Success(request.AccountId)
+                : Result<Guid>.Failure(
+                    ["Ошибка при попытке смены пароля"],
+                    ApiErrorType.BadRequest
+                );
         }
         catch (DomainException ex)
         {
@@ -40,7 +50,11 @@ public class ChangePasswordHandler : IRequestHandler<ChangePasswordCommand, Resu
         }
         catch (DatabaseException ex)
         {
-            _logger.LogWarning(ex, "Ошибка базы данных при смене пароля: {UserId}", request.AccountId);
+            _logger.LogWarning(
+                ex,
+                "Ошибка базы данных при смене пароля: {UserId}",
+                request.AccountId
+            );
             return Result<Guid>.Failure(ex);
         }
         catch (Exception ex)

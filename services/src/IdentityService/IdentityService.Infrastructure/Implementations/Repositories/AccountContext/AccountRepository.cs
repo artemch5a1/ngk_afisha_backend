@@ -17,11 +17,12 @@ public class AccountRepository : IAccountRepository
     private readonly IEntityMapper<AccountEntity, Account> _accountMapper;
 
     private readonly ILogger<AccountRepository> _logger;
-    
+
     public AccountRepository(
-        IdentityServiceDbContext db, 
-        IEntityMapper<AccountEntity, Account> accountMapper, 
-        ILogger<AccountRepository> logger)
+        IdentityServiceDbContext db,
+        IEntityMapper<AccountEntity, Account> accountMapper,
+        ILogger<AccountRepository> logger
+    )
     {
         _db = db;
         _accountMapper = accountMapper;
@@ -32,8 +33,8 @@ public class AccountRepository : IAccountRepository
     {
         try
         {
-            return await _db.Accounts
-                .Select(x => _accountMapper.ToDomain(x))
+            return await _db
+                .Accounts.Select(x => _accountMapper.ToDomain(x))
                 .ToListAsync(cancellationToken);
         }
         catch (DbUpdateException ex)
@@ -52,8 +53,10 @@ public class AccountRepository : IAccountRepository
     {
         try
         {
-            AccountEntity? accountEntity = await _db.Accounts
-                .FirstOrDefaultAsync(x => x.AccountId == id, cancellationToken);
+            AccountEntity? accountEntity = await _db.Accounts.FirstOrDefaultAsync(
+                x => x.AccountId == id,
+                cancellationToken
+            );
 
             if (accountEntity is null)
                 return null;
@@ -76,8 +79,7 @@ public class AccountRepository : IAccountRepository
     {
         try
         {
-            AccountEntity? accountEntity = await _db.Accounts
-                .FindAsync(id, cancellationToken);
+            AccountEntity? accountEntity = await _db.Accounts.FindAsync(id, cancellationToken);
 
             if (accountEntity is null)
                 return null;
@@ -120,12 +122,17 @@ public class AccountRepository : IAccountRepository
         }
     }
 
-    public async Task<Account?> FindByEmail(string email, CancellationToken cancellationToken = default)
+    public async Task<Account?> FindByEmail(
+        string email,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
-            AccountEntity? accountEntity = await _db.Accounts
-                .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+            AccountEntity? accountEntity = await _db.Accounts.FirstOrDefaultAsync(
+                x => x.Email == email,
+                cancellationToken
+            );
 
             if (accountEntity is null)
                 return null;
@@ -139,12 +146,17 @@ public class AccountRepository : IAccountRepository
         }
     }
 
-    public async Task<Account?> FindAdminByEmail(string email, CancellationToken cancellationToken = default)
+    public async Task<Account?> FindAdminByEmail(
+        string email,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
-            AccountEntity? accountEntity = await _db.Accounts
-                .FirstOrDefaultAsync(x => x.Email == email && x.Role == (int)Role.Admin, cancellationToken);
+            AccountEntity? accountEntity = await _db.Accounts.FirstOrDefaultAsync(
+                x => x.Email == email && x.Role == (int)Role.Admin,
+                cancellationToken
+            );
 
             if (accountEntity is null)
                 return null;
@@ -157,13 +169,18 @@ public class AccountRepository : IAccountRepository
             throw ex.HandleException();
         }
     }
-    
-    public async Task<Account?> FindOnlyUsersByEmail(string email, CancellationToken cancellationToken = default)
+
+    public async Task<Account?> FindOnlyUsersByEmail(
+        string email,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
-            AccountEntity? accountEntity = await _db.Accounts
-                .FirstOrDefaultAsync(x => x.Email == email && x.Role != (int)Role.Admin, cancellationToken);
+            AccountEntity? accountEntity = await _db.Accounts.FirstOrDefaultAsync(
+                x => x.Email == email && x.Role != (int)Role.Admin,
+                cancellationToken
+            );
 
             if (accountEntity is null)
                 return null;
@@ -181,11 +198,10 @@ public class AccountRepository : IAccountRepository
     {
         try
         {
-            int result = await _db.Accounts
-                .Where(x => x.AccountId == model.AccountId)
+            int result = await _db
+                .Accounts.Where(x => x.AccountId == model.AccountId)
                 .ExecuteUpdateAsync(
-                    x => x
-                        .SetProperty(i => i.PasswordHash, i => model.PasswordHash),
+                    x => x.SetProperty(i => i.PasswordHash, i => model.PasswordHash),
                     cancellationToken
                 );
 

@@ -38,10 +38,7 @@ public class Specialty
     /// <returns>Модель специальности</returns>
     internal static Specialty Restore(int idSpecialty, string specialtyTitle)
     {
-        return new Specialty(specialtyTitle)
-        {
-            SpecialtyId = idSpecialty
-        };
+        return new Specialty(specialtyTitle) { SpecialtyId = idSpecialty };
     }
 
     /// <summary>

@@ -9,7 +9,7 @@ public static class ClaimsPrincipalExtensions
     public static Result<Guid> ExtractGuid(this ClaimsPrincipal user)
     {
         var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        
+
         if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var userGuid))
         {
             return Result<Guid>.Failure(["Неверный токен"], ApiErrorType.Forbidden);

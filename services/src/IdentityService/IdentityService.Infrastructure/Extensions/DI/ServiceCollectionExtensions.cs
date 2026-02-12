@@ -3,10 +3,10 @@ using System.Security.Cryptography;
 using IdentityService.Domain.Abstractions.Application.Services.StartupService;
 using IdentityService.Domain.Abstractions.Infrastructure.Mapping;
 using IdentityService.Domain.Abstractions.Infrastructure.Providers;
-using IdentityService.Domain.Abstractions.Infrastructure.Transactions;
-using IdentityService.Domain.Abstractions.Infrastructure.Utils;
 using IdentityService.Domain.Abstractions.Infrastructure.Repositories.AccountContext;
 using IdentityService.Domain.Abstractions.Infrastructure.Repositories.UserContext;
+using IdentityService.Domain.Abstractions.Infrastructure.Transactions;
+using IdentityService.Domain.Abstractions.Infrastructure.Utils;
 using IdentityService.Domain.Enums;
 using IdentityService.Domain.Extensions;
 using IdentityService.Domain.Models.UserContext;
@@ -47,66 +47,77 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IPostRepository, PostRepository>();
 
         serviceCollection.AddScoped<IPublisherRepository, PublisherRepository>();
-        
+
         return serviceCollection;
     }
-    
+
     public static IServiceCollection AddTransactions(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return serviceCollection;
     }
-    
-    public static IServiceCollection AddUtils(this IServiceCollection serviceCollection, IConfiguration configuration)
+
+    public static IServiceCollection AddUtils(
+        this IServiceCollection serviceCollection,
+        IConfiguration configuration
+    )
     {
         serviceCollection.AddScoped<IPasswordHasher, BCryptHasher>();
 
         serviceCollection.Configure<AdminCred>(opt =>
-            {
-                opt.Email = configuration["AdminCred:Email"]!;
-                opt.Password = configuration["AdminCred:Password"]!;
-            }
-        );
-        
+        {
+            opt.Email = configuration["AdminCred:Email"]!;
+            opt.Password = configuration["AdminCred:Password"]!;
+        });
+
         serviceCollection.AddScoped<IStartupService, AdminRegistry>();
-        
+
         return serviceCollection;
     }
-    
-    public static IServiceCollection AddProviders(this IServiceCollection serviceCollection, IConfiguration configuration)
+
+    public static IServiceCollection AddProviders(
+        this IServiceCollection serviceCollection,
+        IConfiguration configuration
+    )
     {
-        serviceCollection.Configure<JwtOptions>(opt => {
+        serviceCollection.Configure<JwtOptions>(opt =>
+        {
             opt.Issuer = configuration["Jwt:Issuer"]!;
             opt.PrivateKey = configuration["Jwt:PrivateKey"]!;
             opt.PublicKey = configuration["Jwt:PublicKey"]!;
             opt.ExpiresMinutes = int.TryParse(configuration["Jwt:Expires"], out int m) ? m : 120;
         });
-        
+
         serviceCollection.AddScoped<IAccessTokenProvider, JwtProvider>();
 
         return serviceCollection;
     }
 
-    public static IServiceCollection ConfigureJwtAuthentication(this IServiceCollection serviceCollection, IConfiguration configuration)
+    public static IServiceCollection ConfigureJwtAuthentication(
+        this IServiceCollection serviceCollection,
+        IConfiguration configuration
+    )
     {
         var rsa = RSA.Create();
 
         string publicKey = configuration["Jwt:PublicKey"]!;
-        
-        var keyBytes = Convert.FromBase64String(publicKey
-            .Replace("-----BEGIN RSA PRIVATE KEY-----", "")
-            .Replace("-----END RSA PRIVATE KEY-----", "")
-            .Replace("-----BEGIN PRIVATE KEY-----", "")
-            .Replace("-----END PRIVATE KEY-----", "")
-            .Replace("-----BEGIN PUBLIC KEY-----", "")
-            .Replace("-----END PUBLIC KEY-----", "")
-            .Replace("\n", "")
-            .Replace("\r", "")
-            .Trim());
-        
+
+        var keyBytes = Convert.FromBase64String(
+            publicKey
+                .Replace("-----BEGIN RSA PRIVATE KEY-----", "")
+                .Replace("-----END RSA PRIVATE KEY-----", "")
+                .Replace("-----BEGIN PRIVATE KEY-----", "")
+                .Replace("-----END PRIVATE KEY-----", "")
+                .Replace("-----BEGIN PUBLIC KEY-----", "")
+                .Replace("-----END PUBLIC KEY-----", "")
+                .Replace("\n", "")
+                .Replace("\r", "")
+                .Trim()
+        );
+
         rsa.ImportSubjectPublicKeyInfo(keyBytes, out _);
-        
+
         serviceCollection
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(
@@ -119,9 +130,7 @@ public static class ServiceCollectionExtensions
                         ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new RsaSecurityKey(
-                            rsa
-                        ),
+                        IssuerSigningKey = new RsaSecurityKey(rsa),
                         RoleClaimType = ClaimTypes.Role,
                     };
                 }
@@ -134,28 +143,20 @@ public static class ServiceCollectionExtensions
     {
         serviceCollection
             .AddAuthorizationBuilder()
-            .AddPolicy(
-                PolicyNames.AdminOnly,
-                policy => policy.RequireRole(Role.Admin.GetString())
-            )
+            .AddPolicy(PolicyNames.AdminOnly, policy => policy.RequireRole(Role.Admin.GetString()))
             .AddPolicy(
                 PolicyNames.UserOrAdmin,
-                policy =>
-                    policy.RequireRole(Role.User.GetString(), Role.Admin.GetString())
+                policy => policy.RequireRole(Role.User.GetString(), Role.Admin.GetString())
             )
             .AddPolicy(
                 PolicyNames.PublisherOrAdmin,
-                policy =>
-                    policy.RequireRole(Role.Publisher.GetString(), Role.Admin.GetString())
+                policy => policy.RequireRole(Role.Publisher.GetString(), Role.Admin.GetString())
             )
             .AddPolicy(
                 PolicyNames.PublisherOnly,
                 policy => policy.RequireRole(Role.Publisher.GetString())
             )
-            .AddPolicy(
-                PolicyNames.UserOnly,
-                policy => policy.RequireRole(Role.User.GetString())
-            );
+            .AddPolicy(PolicyNames.UserOnly, policy => policy.RequireRole(Role.User.GetString()));
 
         return serviceCollection;
     }
@@ -163,17 +164,17 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddEntityMappers(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped(typeof(IEntityMapper<,>), typeof(BaseEntityMapper<,>));
-        
+
         serviceCollection.AddScoped<IEntityMapper<GroupEntity, Group>, GroupMapper>();
-        
+
         serviceCollection.AddScoped<IEntityMapper<UserEntity, User>, UserMapper>();
 
         serviceCollection.AddScoped<IEntityMapper<StudentEntity, Student>, StudentMapper>();
-        
+
         serviceCollection.AddScoped<IEntityMapper<PostEntity, Post>, PostMapper>();
-        
+
         serviceCollection.AddScoped<IEntityMapper<PublisherEntity, Publisher>, PublisherMapper>();
-        
+
         return serviceCollection;
     }
 

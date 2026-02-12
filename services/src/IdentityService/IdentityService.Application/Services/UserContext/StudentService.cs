@@ -13,13 +13,15 @@ public class StudentService : IStudentService
         _repository = repository;
     }
 
-
     public async Task<List<Student>> GetAllStudent(CancellationToken cancellationToken = default)
     {
         return await _repository.GetAll(cancellationToken);
     }
 
-    public async Task<Student?> GetStudentById(Guid studentId, CancellationToken cancellationToken = default)
+    public async Task<Student?> GetStudentById(
+        Guid studentId,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _repository.GetById(studentId, cancellationToken);
     }

@@ -12,15 +12,17 @@ public class DeleteGroupHandler : IRequestHandler<DeleteGroupCommand, Result<int
     private readonly IGroupService _groupService;
 
     private readonly ILogger<DeleteGroupHandler> _logger;
-    
+
     public DeleteGroupHandler(IGroupService groupService, ILogger<DeleteGroupHandler> logger)
     {
         _groupService = groupService;
         _logger = logger;
     }
 
-
-    public async Task<Result<int>> Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        DeleteGroupCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
@@ -38,10 +40,13 @@ public class DeleteGroupHandler : IRequestHandler<DeleteGroupCommand, Result<int
         catch (DatabaseException ex)
         {
             _logger.LogWarning(ex, "Произошла ошибка базы данных при удалении группы");
-            
-            if(ex.ErrorType == ApiErrorType.UnprocessableEntity)
-                return Result<int>.Failure(["Нельзя удалить используемую группу"], ApiErrorType.UnprocessableEntity);
-            
+
+            if (ex.ErrorType == ApiErrorType.UnprocessableEntity)
+                return Result<int>.Failure(
+                    ["Нельзя удалить используемую группу"],
+                    ApiErrorType.UnprocessableEntity
+                );
+
             return Result<int>.Failure(ex);
         }
         catch (Exception ex)

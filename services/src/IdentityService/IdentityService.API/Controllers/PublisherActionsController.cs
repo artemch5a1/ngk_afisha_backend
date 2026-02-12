@@ -22,41 +22,44 @@ public class PublisherActionsController : ControllerBase
     {
         _mediator = mediator;
     }
-    
+
     [HttpGet("GetAllPublisher")]
     [Authorize(Policy = PolicyNames.AdminOnly)]
-    public async Task<ActionResult<List<PublisherDto>>>  GetAllPublisher(CancellationToken ct)
+    public async Task<ActionResult<List<PublisherDto>>> GetAllPublisher(CancellationToken ct)
     {
-        Result<List<Publisher>> result = 
-            await _mediator.Send(new GetAllPublisherQuery(), ct);
-        
+        Result<List<Publisher>> result = await _mediator.Send(new GetAllPublisherQuery(), ct);
+
         return result.ToActionResult(x => x.ToListDto());
     }
-    
+
     [HttpGet("GetPublisherById/{publisherId:Guid}")]
     [Authorize(Policy = PolicyNames.AdminOnly)]
-    public async Task<ActionResult<PublisherDto>>  GetPublisherById(Guid publisherId, CancellationToken ct)
+    public async Task<ActionResult<PublisherDto>> GetPublisherById(
+        Guid publisherId,
+        CancellationToken ct
+    )
     {
-        Result<Publisher> result = 
-            await _mediator.Send(new GetPublisherByIdQuery(publisherId), ct);
-        
+        Result<Publisher> result = await _mediator.Send(new GetPublisherByIdQuery(publisherId), ct);
+
         return result.ToActionResult(x => x.ToDto());
     }
-    
+
     [HttpGet("CurrentPublisher")]
     [Authorize(Policy = PolicyNames.PublisherOnly)]
-    public async Task<ActionResult<PublisherDto>>  GetCurrentPublisher(CancellationToken ct)
+    public async Task<ActionResult<PublisherDto>> GetCurrentPublisher(CancellationToken ct)
     {
         Result<Guid> studentId = User.ExtractGuid();
-        
+
         if (!studentId.IsSuccess)
         {
             return studentId.ToActionResult(x => new PublisherDto());
         }
-        
-        Result<Publisher> result = 
-            await _mediator.Send(new GetPublisherByIdQuery(studentId.Value), ct);
-        
+
+        Result<Publisher> result = await _mediator.Send(
+            new GetPublisherByIdQuery(studentId.Value),
+            ct
+        );
+
         return result.ToActionResult(x => x.ToDto());
     }
 }

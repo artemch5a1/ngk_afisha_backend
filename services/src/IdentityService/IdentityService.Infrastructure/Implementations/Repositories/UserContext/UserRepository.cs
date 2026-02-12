@@ -16,11 +16,12 @@ public class UserRepository : IUserRepository
     private readonly ILogger<UserRepository> _logger;
 
     private readonly IEntityMapper<UserEntity, User> _userMapper;
-    
+
     public UserRepository(
-        IdentityServiceDbContext db, 
-        ILogger<UserRepository> logger, 
-        IEntityMapper<UserEntity, User> userMapper)
+        IdentityServiceDbContext db,
+        ILogger<UserRepository> logger,
+        IEntityMapper<UserEntity, User> userMapper
+    )
     {
         _db = db;
         _logger = logger;
@@ -31,8 +32,8 @@ public class UserRepository : IUserRepository
     {
         try
         {
-            List<UserEntity> result = await _db.Users
-                .Include(x => x.StudentProfile)
+            List<UserEntity> result = await _db
+                .Users.Include(x => x.StudentProfile)
                 .Include(x => x.PublisherProfile)
                 .ToListAsync(cancellationToken);
 
@@ -54,14 +55,14 @@ public class UserRepository : IUserRepository
     {
         try
         {
-            UserEntity? user = await _db.Users
-                .Include(x => x.StudentProfile)
+            UserEntity? user = await _db
+                .Users.Include(x => x.StudentProfile)
                 .Include(x => x.PublisherProfile)
-                .FirstOrDefaultAsync(x => x.UserId == id ,cancellationToken);
+                .FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 
             if (user is null)
                 return null;
-            
+
             return _userMapper.ToDomain(user);
         }
         catch (DbUpdateException ex)
@@ -80,12 +81,11 @@ public class UserRepository : IUserRepository
     {
         try
         {
-            UserEntity? user = await _db.Users
-                .FindAsync(id ,cancellationToken);
+            UserEntity? user = await _db.Users.FindAsync(id, cancellationToken);
 
             if (user is null)
                 return null;
-            
+
             return _userMapper.ToDomain(user);
         }
         catch (DbUpdateException ex)
@@ -128,8 +128,8 @@ public class UserRepository : IUserRepository
     {
         try
         {
-            int result = await _db.Users
-                .Where(x => x.UserId == model.UserId)
+            int result = await _db
+                .Users.Where(x => x.UserId == model.UserId)
                 .ExecuteUpdateAsync(
                     x =>
                         x.SetProperty(i => i.Name, i => model.Name)
@@ -153,7 +153,10 @@ public class UserRepository : IUserRepository
         }
     }
 
-    public  async Task<bool> UpdateStudentProfile(User model, CancellationToken cancellationToken = default)
+    public async Task<bool> UpdateStudentProfile(
+        User model,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
@@ -161,13 +164,13 @@ public class UserRepository : IUserRepository
                 throw new ArgumentException("У пользователя нет профиля студента");
 
             Student student = model.StudentProfile;
-            
-            int result = await _db.Students.Where(x => x.StudentId == model.UserId)
+
+            int result = await _db
+                .Students.Where(x => x.StudentId == model.UserId)
                 .ExecuteUpdateAsync(
-                    x => x
-                        .SetProperty(i => i.GroupId, i => student.GroupId),
+                    x => x.SetProperty(i => i.GroupId, i => student.GroupId),
                     cancellationToken
-                    );
+                );
 
             return result > 0;
         }
@@ -182,8 +185,11 @@ public class UserRepository : IUserRepository
             throw ex.HandleException();
         }
     }
-    
-    public  async Task<bool> UpdatePublisherProfile(User model, CancellationToken cancellationToken = default)
+
+    public async Task<bool> UpdatePublisherProfile(
+        User model,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
@@ -191,11 +197,11 @@ public class UserRepository : IUserRepository
                 throw new ArgumentException("У пользователя нет профиля публикатора");
 
             Publisher student = model.PublisherProfile;
-            
-            int result = await _db.Publishers.Where(x => x.PublisherId == model.UserId)
+
+            int result = await _db
+                .Publishers.Where(x => x.PublisherId == model.UserId)
                 .ExecuteUpdateAsync(
-                    x => x
-                        .SetProperty(i => i.PostId, i => student.PostId),
+                    x => x.SetProperty(i => i.PostId, i => student.PostId),
                     cancellationToken
                 );
 

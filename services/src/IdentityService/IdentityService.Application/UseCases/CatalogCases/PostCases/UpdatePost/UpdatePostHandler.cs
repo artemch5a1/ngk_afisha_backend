@@ -13,20 +13,25 @@ public class UpdatePostHandler : IRequestHandler<UpdatePostCommand, Result<int>>
 
     private readonly ILogger<UpdatePostHandler> _logger;
 
-
-    public UpdatePostHandler(
-        IPostService postService, 
-        ILogger<UpdatePostHandler> logger)
+    public UpdatePostHandler(IPostService postService, ILogger<UpdatePostHandler> logger)
     {
         _postService = postService;
         _logger = logger;
     }
 
-    public async Task<Result<int>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        UpdatePostCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = await _postService.UpdatePost(request.PostId, request.PostTitle,  request.DepartmentId,cancellationToken);
+            bool result = await _postService.UpdatePost(
+                request.PostId,
+                request.PostTitle,
+                request.DepartmentId,
+                cancellationToken
+            );
 
             return result
                 ? Result<int>.Success(request.PostId)

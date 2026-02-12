@@ -10,9 +10,7 @@ namespace IdentityService.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Users_Accounts_UserId",
-                table: "Users");
+            migrationBuilder.DropForeignKey(name: "FK_Users_Accounts_UserId", table: "Users");
         }
 
         /// <inheritdoc />
@@ -24,7 +22,8 @@ namespace IdentityService.Infrastructure.Migrations
                 column: "UserId",
                 principalTable: "Accounts",
                 principalColumn: "AccountId",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Cascade
+            );
         }
     }
 }

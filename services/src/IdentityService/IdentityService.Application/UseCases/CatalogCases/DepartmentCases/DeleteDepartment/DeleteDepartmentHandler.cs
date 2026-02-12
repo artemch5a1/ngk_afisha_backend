@@ -14,18 +14,25 @@ public class DeleteDepartmentHandler : IRequestHandler<DeleteDepartmentCommand, 
     private readonly ILogger<DeleteDepartmentHandler> _logger;
 
     public DeleteDepartmentHandler(
-        IDepartmentService departmentService, 
-        ILogger<DeleteDepartmentHandler> logger)
+        IDepartmentService departmentService,
+        ILogger<DeleteDepartmentHandler> logger
+    )
     {
         _departmentService = departmentService;
         _logger = logger;
     }
 
-    public async Task<Result<int>> Handle(DeleteDepartmentCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        DeleteDepartmentCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = await _departmentService.DeleteDepartment(request.DepartmentId, cancellationToken);
+            bool result = await _departmentService.DeleteDepartment(
+                request.DepartmentId,
+                cancellationToken
+            );
 
             return result
                 ? Result<int>.Success(request.DepartmentId)
@@ -39,10 +46,13 @@ public class DeleteDepartmentHandler : IRequestHandler<DeleteDepartmentCommand, 
         catch (DatabaseException ex)
         {
             _logger.LogWarning(ex, "Произошла ошибка базы данных при удалении отдела");
-            
-            if(ex.ErrorType == ApiErrorType.UnprocessableEntity)
-                return Result<int>.Failure(["Нельзя удалить используемую отдел"], ApiErrorType.UnprocessableEntity);
-            
+
+            if (ex.ErrorType == ApiErrorType.UnprocessableEntity)
+                return Result<int>.Failure(
+                    ["Нельзя удалить используемую отдел"],
+                    ApiErrorType.UnprocessableEntity
+                );
+
             return Result<int>.Failure(ex);
         }
         catch (Exception ex)

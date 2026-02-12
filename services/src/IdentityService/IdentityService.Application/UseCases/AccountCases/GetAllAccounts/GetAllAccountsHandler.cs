@@ -12,16 +12,20 @@ public class GetAllAccountsHandler : IRequestHandler<GetAllAccountsQuery, Result
     private readonly ILogger<GetAllAccountsHandler> _logger;
 
     private readonly IAccountService _accountService;
-    
+
     public GetAllAccountsHandler(
-        ILogger<GetAllAccountsHandler> logger, 
-        IAccountService accountService)
+        ILogger<GetAllAccountsHandler> logger,
+        IAccountService accountService
+    )
     {
         _logger = logger;
         _accountService = accountService;
     }
-    
-    public async Task<Result<List<Account>>> Handle(GetAllAccountsQuery request, CancellationToken cancellationToken)
+
+    public async Task<Result<List<Account>>> Handle(
+        GetAllAccountsQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

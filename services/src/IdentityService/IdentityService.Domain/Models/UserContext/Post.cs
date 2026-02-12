@@ -8,15 +8,15 @@ namespace IdentityService.Domain.Models.UserContext;
 public class Post
 {
     private const int MaxTitleLength = 200;
-    
+
     public int PostId { get; private set; }
-    
+
     public string Title { get; private set; }
-    
+
     public int DepartmentId { get; private set; }
-    
+
     public Department Department { get; private set; } = null!;
-    
+
     private Post(string title, int departmentId)
     {
         Title = title;
@@ -34,9 +34,11 @@ public class Post
     {
         if (string.IsNullOrEmpty(title))
             throw new DomainException("Название специальности не может быть пустым");
-        
+
         if (title.Length > MaxTitleLength)
-            throw new DomainException($"Название отдела не может превышать {MaxTitleLength} символов");
+            throw new DomainException(
+                $"Название отдела не может превышать {MaxTitleLength} символов"
+            );
 
         return new Post(title, departmentId);
     }
@@ -53,7 +55,6 @@ public class Post
         return new Post(title, departmentId) { PostId = postId };
     }
 
-
     /// <summary>
     /// Обновление должности
     /// </summary>
@@ -64,9 +65,11 @@ public class Post
     {
         if (string.IsNullOrEmpty(title))
             throw new DomainException("Название специальности не может быть пустым");
-        
+
         if (title.Length > MaxTitleLength)
-            throw new DomainException($"Название отдела не может превышать {MaxTitleLength} символов");
+            throw new DomainException(
+                $"Название отдела не может превышать {MaxTitleLength} символов"
+            );
 
         Title = title;
         DepartmentId = departmentId;

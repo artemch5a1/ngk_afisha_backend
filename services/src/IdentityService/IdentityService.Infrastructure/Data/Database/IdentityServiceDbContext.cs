@@ -9,11 +9,9 @@ namespace IdentityService.Infrastructure.Data.Database;
 
 public class IdentityServiceDbContext : DbContext
 {
-    public IdentityServiceDbContext(DbContextOptions<IdentityServiceDbContext> options) : base(options)
-    {
-        
-    }
-    
+    public IdentityServiceDbContext(DbContextOptions<IdentityServiceDbContext> options)
+        : base(options) { }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseExceptionProcessor();
@@ -22,7 +20,6 @@ public class IdentityServiceDbContext : DbContext
     //AccountContext
     public DbSet<AccountEntity> Accounts { get; set; }
 
-    
     //UserContext
     public DbSet<UserEntity> Users { get; set; }
 
@@ -41,7 +38,7 @@ public class IdentityServiceDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Контекст AccountService
-        
+
         modelBuilder.Entity<AccountEntity>(entity =>
         {
             entity.ToTable("accounts", Schemes.AccountScheme);
@@ -49,11 +46,9 @@ public class IdentityServiceDbContext : DbContext
 
             entity.HasIndex(e => e.Email).IsUnique();
         });
-        
-        
-        
+
         // Контекст UserService
-        
+
         modelBuilder.Entity<UserEntity>(entity =>
         {
             entity.ToTable("users", Schemes.UserScheme);
@@ -63,32 +58,32 @@ public class IdentityServiceDbContext : DbContext
         modelBuilder.Entity<StudentEntity>(entity =>
         {
             entity.ToTable("students", Schemes.UserScheme);
-            
+
             entity.HasKey(e => e.StudentId);
 
-            entity.HasOne(e => e.User)
+            entity
+                .HasOne(e => e.User)
                 .WithOne(e => e.StudentProfile)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(e => e.Group)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(e => e.Group).WithMany().OnDelete(DeleteBehavior.Restrict);
         });
-        
+
         modelBuilder.Entity<SpecialtyEntity>(entity =>
         {
             entity.ToTable("specialties", Schemes.UserScheme);
-            
+
             entity.HasKey(e => e.SpecialtyId);
         });
 
         modelBuilder.Entity<GroupEntity>(entity =>
         {
             entity.ToTable("groups", Schemes.UserScheme);
-            
+
             entity.HasKey(e => e.GroupId);
 
-            entity.HasOne(e => e.Specialty)
+            entity
+                .HasOne(e => e.Specialty)
                 .WithMany(r => r.Groups)
                 .OnDelete(DeleteBehavior.Restrict);
         });
@@ -96,7 +91,7 @@ public class IdentityServiceDbContext : DbContext
         modelBuilder.Entity<DepartmentEntity>(entity =>
         {
             entity.ToTable("departments", Schemes.UserScheme);
-            
+
             entity.HasKey(e => e.DepartmentId);
         });
 
@@ -106,7 +101,8 @@ public class IdentityServiceDbContext : DbContext
 
             entity.HasKey(e => e.PostId);
 
-            entity.HasOne(e => e.Department)
+            entity
+                .HasOne(e => e.Department)
                 .WithMany(e => e.Posts)
                 .OnDelete(DeleteBehavior.Cascade);
         });
@@ -114,15 +110,12 @@ public class IdentityServiceDbContext : DbContext
         modelBuilder.Entity<PublisherEntity>(entity =>
         {
             entity.ToTable("publishers", Schemes.UserScheme);
-            
+
             entity.HasKey(e => e.PublisherId);
 
-            entity.HasOne(e => e.User)
-                .WithOne(e => e.PublisherProfile);
-            
-            entity.HasOne(e => e.Post)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(e => e.User).WithOne(e => e.PublisherProfile);
+
+            entity.HasOne(e => e.Post).WithMany().OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

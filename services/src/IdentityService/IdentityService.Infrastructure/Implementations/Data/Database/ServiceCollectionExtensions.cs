@@ -12,10 +12,9 @@ namespace IdentityService.Infrastructure.Implementations.Data.Database;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddApplicationDbContext
-    (
-        this IServiceCollection serviceCollection, 
-        string? connectString, 
+    public static IServiceCollection AddApplicationDbContext(
+        this IServiceCollection serviceCollection,
+        string? connectString,
         IConfiguration configuration
     )
     {
@@ -25,34 +24,22 @@ public static class ServiceCollectionExtensions
 
         serviceCollection.AddScoped<IStartupService, DatabaseSeeder>();
 
-        serviceCollection
-            .Configure<SpecialtySeedOption>(
-                configuration.GetSection("SeedData")
-                );
+        serviceCollection.Configure<SpecialtySeedOption>(configuration.GetSection("SeedData"));
 
         serviceCollection.AddScoped<ISeedService, SpecialtySeeder>();
-        
-        serviceCollection
-            .Configure<GroupsSeedOption>(
-                configuration.GetSection("SeedData")
-            );
+
+        serviceCollection.Configure<GroupsSeedOption>(configuration.GetSection("SeedData"));
 
         serviceCollection.AddScoped<ISeedService, GroupsSeeder>();
-        
-        serviceCollection
-            .Configure<DepartmentSeedOptions>(
-                configuration.GetSection("SeedData")
-            );
+
+        serviceCollection.Configure<DepartmentSeedOptions>(configuration.GetSection("SeedData"));
 
         serviceCollection.AddScoped<ISeedService, DepartmentSeeder>();
-        
-        serviceCollection
-            .Configure<PostSeedOptions>(
-                configuration.GetSection("SeedData")
-            );
+
+        serviceCollection.Configure<PostSeedOptions>(configuration.GetSection("SeedData"));
 
         serviceCollection.AddScoped<ISeedService, PostSeeder>();
-        
+
         return serviceCollection;
     }
 }

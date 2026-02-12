@@ -4,9 +4,9 @@ using MediatR;
 namespace IdentityService.Application.UseCases.UserCases.UpdateUser;
 
 public record UpdateUserCommand(
-    Guid UserId, 
-    string Surname, 
-    string Name, 
-    string? Patronymic, 
+    Guid UserId,
+    string Surname,
+    string Name,
+    string? Patronymic,
     DateOnly DateBirth
-    ) : IRequest<Result<Guid>>;
+) : IRequest<Result<Guid>>;

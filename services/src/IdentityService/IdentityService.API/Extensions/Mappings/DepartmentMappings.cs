@@ -12,7 +12,7 @@ public static class DepartmentMappings
         return new DepartmentDto()
         {
             DepartmentId = department.DepartmentId,
-            Title = department.Title
+            Title = department.Title,
         };
     }
 
@@ -25,7 +25,7 @@ public static class DepartmentMappings
     {
         return new CreateDepartmentCommand(dto.Title);
     }
-    
+
     public static UpdateDepartmentCommand ToCommand(this UpdateDepartmentDto dto)
     {
         return new UpdateDepartmentCommand(dto.DepartmentId, dto.NewTitle);

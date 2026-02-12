@@ -17,8 +17,12 @@ public class GroupRepository : IGroupRepository
     private readonly ILogger<GroupRepository> _logger;
 
     private readonly IEntityMapper<GroupEntity, Group> _groupMapper;
-    
-    public GroupRepository(IdentityServiceDbContext db, ILogger<GroupRepository> logger, IEntityMapper<GroupEntity, Group> groupMapper)
+
+    public GroupRepository(
+        IdentityServiceDbContext db,
+        ILogger<GroupRepository> logger,
+        IEntityMapper<GroupEntity, Group> groupMapper
+    )
     {
         _db = db;
         _logger = logger;
@@ -29,8 +33,8 @@ public class GroupRepository : IGroupRepository
     {
         try
         {
-            List<GroupEntity> entities = await _db.Groups
-                .AsNoTracking()
+            List<GroupEntity> entities = await _db
+                .Groups.AsNoTracking()
                 .Include(x => x.Specialty)
                 .ToListAsync(cancellationToken);
 
@@ -48,12 +52,15 @@ public class GroupRepository : IGroupRepository
         }
     }
 
-    public async Task<List<Group>> GetAllBySpecialtyId(int specialtyId, CancellationToken cancellationToken = default)
+    public async Task<List<Group>> GetAllBySpecialtyId(
+        int specialtyId,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
-            List<GroupEntity> entities = await _db.Groups
-                .Where(x => x.SpecialtyId == specialtyId)
+            List<GroupEntity> entities = await _db
+                .Groups.Where(x => x.SpecialtyId == specialtyId)
                 .AsNoTracking()
                 .Include(x => x.Specialty)
                 .ToListAsync(cancellationToken);
@@ -76,10 +83,10 @@ public class GroupRepository : IGroupRepository
     {
         try
         {
-            GroupEntity? entity = await _db.Groups
-                .AsNoTracking()
+            GroupEntity? entity = await _db
+                .Groups.AsNoTracking()
                 .Include(x => x.Specialty)
-                .FirstOrDefaultAsync(x => x.GroupId == id,cancellationToken);
+                .FirstOrDefaultAsync(x => x.GroupId == id, cancellationToken);
 
             if (entity is null)
                 return null;
@@ -102,8 +109,7 @@ public class GroupRepository : IGroupRepository
     {
         try
         {
-            GroupEntity? entity = await _db.Groups
-                .FindAsync(id,cancellationToken);
+            GroupEntity? entity = await _db.Groups.FindAsync(id, cancellationToken);
 
             if (entity is null)
                 return null;
@@ -132,8 +138,8 @@ public class GroupRepository : IGroupRepository
 
             await _db.SaveChangesAsync(cancellationToken);
 
-            GroupEntity createdEntity = await _db.Groups
-                .AsNoTracking()
+            GroupEntity createdEntity = await _db
+                .Groups.AsNoTracking()
                 .Include(x => x.Specialty)
                 .FirstAsync(x => x.GroupId == result.Entity.GroupId, cancellationToken);
 
@@ -155,13 +161,13 @@ public class GroupRepository : IGroupRepository
     {
         try
         {
-            int result = await _db.Groups
-                .Where(x => x.GroupId == model.GroupId)
+            int result = await _db
+                .Groups.Where(x => x.GroupId == model.GroupId)
                 .ExecuteUpdateAsync(
-                    x => x
-                        .SetProperty(i => i.Course, i => model.Course)
-                        .SetProperty(i => i.NumberGroup, i => model.NumberGroup)
-                        .SetProperty(i => i.SpecialtyId, i => model.SpecialtyId),
+                    x =>
+                        x.SetProperty(i => i.Course, i => model.Course)
+                            .SetProperty(i => i.NumberGroup, i => model.NumberGroup)
+                            .SetProperty(i => i.SpecialtyId, i => model.SpecialtyId),
                     cancellationToken
                 );
 
@@ -183,8 +189,8 @@ public class GroupRepository : IGroupRepository
     {
         try
         {
-            int result = await _db.Groups
-                .Where(x => x.GroupId == id)
+            int result = await _db
+                .Groups.Where(x => x.GroupId == id)
                 .ExecuteDeleteAsync(cancellationToken);
 
             return result > 0;

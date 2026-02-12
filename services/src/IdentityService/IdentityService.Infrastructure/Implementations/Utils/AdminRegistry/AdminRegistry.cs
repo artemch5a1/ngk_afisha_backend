@@ -16,7 +16,11 @@ public class AdminRegistry : IStartupService
 
     private readonly IPasswordHasher _passwordHasher;
 
-    public AdminRegistry(IdentityServiceDbContext db, IOptions<AdminCred> adminCred, IPasswordHasher passwordHasher)
+    public AdminRegistry(
+        IdentityServiceDbContext db,
+        IOptions<AdminCred> adminCred,
+        IPasswordHasher passwordHasher
+    )
     {
         _db = db;
         _adminCred = adminCred.Value;
@@ -26,16 +30,14 @@ public class AdminRegistry : IStartupService
     private async Task RegistryAdmin(CancellationToken ct = default)
     {
         bool isExist = await _db.Accounts.AnyAsync(x => x.Email == _adminCred.Email, ct);
-        
-        if(isExist)
+
+        if (isExist)
             return;
 
-        await _db.Accounts
-            .Where(x => x.Role == (int)Role.Admin)
-            .ExecuteDeleteAsync(ct);
-        
+        await _db.Accounts.Where(x => x.Role == (int)Role.Admin).ExecuteDeleteAsync(ct);
+
         string passwordHah = _passwordHasher.HashPassword(_adminCred.Password);
-        
+
         AccountEntity accountAdmin = new AccountEntity(_adminCred.Email, passwordHah);
 
         await _db.Accounts.AddAsync(accountAdmin, ct);

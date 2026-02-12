@@ -11,18 +11,15 @@ public class PostEntity : IEntity<PostEntity, Post>
 
     [Column("title")]
     public string Title { get; set; } = null!;
-    
+
     [Column("department_id")]
     public int DepartmentId { get; set; }
-    
+
     [ForeignKey(nameof(DepartmentId))]
     public DepartmentEntity Department { get; set; } = null!;
 
-    internal PostEntity()
-    {
-        
-    }
-    
+    internal PostEntity() { }
+
     private PostEntity(Post domain)
     {
         Title = domain.Title;

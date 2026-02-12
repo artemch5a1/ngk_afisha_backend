@@ -8,7 +8,7 @@ namespace IdentityService.Infrastructure.Entites.UserContext;
 public class SpecialtyEntity : IEntity<SpecialtyEntity, Specialty>
 {
     internal SpecialtyEntity() { }
-    
+
     private SpecialtyEntity(Specialty specialty)
     {
         SpecialtyTitle = specialty.SpecialtyTitle;

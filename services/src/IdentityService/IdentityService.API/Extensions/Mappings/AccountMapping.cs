@@ -15,11 +15,11 @@ public static class AccountMapping
         {
             AccountId = account.AccountId,
             Email = account.Email,
-            AccountRole = account.AccountRole
+            AccountRole = account.AccountRole,
         };
     }
-    
-    public static List<AccountDto>  ToListDto(this List<Account> accounts)
+
+    public static List<AccountDto> ToListDto(this List<Account> accounts)
     {
         return accounts.Select(x => x.ToDto()).ToList();
     }
@@ -46,7 +46,7 @@ public static class AccountMapping
             AccountId = response.AccountId,
             Email = response.Email,
             Role = response.Role,
-            AccessToken = response.AccessToken
+            AccessToken = response.AccessToken,
         };
     }
 }

@@ -19,9 +19,10 @@ public class DepartmentRepository : IDepartmentRepository
     private readonly ILogger<DepartmentRepository> _logger;
 
     public DepartmentRepository(
-        IdentityServiceDbContext db, 
-        IEntityMapper<DepartmentEntity, Department> departmentEntity, 
-        ILogger<DepartmentRepository> logger)
+        IdentityServiceDbContext db,
+        IEntityMapper<DepartmentEntity, Department> departmentEntity,
+        ILogger<DepartmentRepository> logger
+    )
     {
         _db = db;
         _departmentEntity = departmentEntity;
@@ -52,11 +53,14 @@ public class DepartmentRepository : IDepartmentRepository
     {
         try
         {
-            DepartmentEntity? result = await _db.Departments.FirstOrDefaultAsync(x => x.DepartmentId == id, cancellationToken);
+            DepartmentEntity? result = await _db.Departments.FirstOrDefaultAsync(
+                x => x.DepartmentId == id,
+                cancellationToken
+            );
 
             if (result is null)
                 return null;
-            
+
             return _departmentEntity.ToDomain(result);
         }
         catch (DbUpdateException ex)
@@ -79,7 +83,7 @@ public class DepartmentRepository : IDepartmentRepository
 
             if (result is null)
                 return null;
-            
+
             return _departmentEntity.ToDomain(result);
         }
         catch (DbUpdateException ex)
@@ -94,16 +98,22 @@ public class DepartmentRepository : IDepartmentRepository
         }
     }
 
-    public async Task<Department> Create(Department model, CancellationToken cancellationToken = default)
+    public async Task<Department> Create(
+        Department model,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
             DepartmentEntity entity = _departmentEntity.ToEntity(model);
 
-            EntityEntry<DepartmentEntity> createdEntity = await _db.Departments.AddAsync(entity, cancellationToken);
+            EntityEntry<DepartmentEntity> createdEntity = await _db.Departments.AddAsync(
+                entity,
+                cancellationToken
+            );
 
             await _db.SaveChangesAsync(cancellationToken);
-            
+
             return _departmentEntity.ToDomain(createdEntity.Entity);
         }
         catch (DbUpdateException ex)
@@ -122,12 +132,11 @@ public class DepartmentRepository : IDepartmentRepository
     {
         try
         {
-            int result = await _db.Departments
-                .Where(x => x.DepartmentId == model.DepartmentId)
+            int result = await _db
+                .Departments.Where(x => x.DepartmentId == model.DepartmentId)
                 .ExecuteUpdateAsync(
-                x => x
-                    .SetProperty(i => i.Title, i => model.Title),
-                cancellationToken
+                    x => x.SetProperty(i => i.Title, i => model.Title),
+                    cancellationToken
                 );
 
             return result > 0;
@@ -148,8 +157,8 @@ public class DepartmentRepository : IDepartmentRepository
     {
         try
         {
-            int result = await _db.Departments
-                .Where(x => x.DepartmentId == id)
+            int result = await _db
+                .Departments.Where(x => x.DepartmentId == id)
                 .ExecuteDeleteAsync(cancellationToken);
 
             return result > 0;

@@ -8,7 +8,7 @@ namespace IdentityService.Infrastructure.Entites.UserContext;
 public class GroupEntity : IEntity<GroupEntity, Group>
 {
     internal GroupEntity() { }
-    
+
     private GroupEntity(Group group)
     {
         Course = group.Course;
@@ -20,23 +20,19 @@ public class GroupEntity : IEntity<GroupEntity, Group>
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("group_id")]
     public int GroupId { get; set; }
-    
-    
+
     [Column("course")]
     public int Course { get; set; }
-    
+
     [Column("number_group")]
     public int NumberGroup { get; set; }
-    
+
     [Column("specialty_id")]
     public int SpecialtyId { get; set; }
 
     [ForeignKey(nameof(SpecialtyId))]
     public SpecialtyEntity Specialty { get; set; } = null!;
-    
-    
-    
-    
+
     public Group ToDomain()
     {
         return Group.Restore(GroupId, Course, NumberGroup, SpecialtyId);

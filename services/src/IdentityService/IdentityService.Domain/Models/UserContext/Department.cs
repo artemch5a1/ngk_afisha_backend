@@ -8,7 +8,7 @@ namespace IdentityService.Domain.Models.UserContext;
 public class Department
 {
     private const int MaxTitleLength = 200;
-    
+
     public int DepartmentId { get; private set; }
 
     public string Title { get; private set; }
@@ -28,10 +28,12 @@ public class Department
     {
         if (string.IsNullOrEmpty(title))
             throw new DomainException("Название специальности не может быть пустым");
-        
+
         if (title.Length > MaxTitleLength)
-            throw new DomainException($"Название отдела не может превышать {MaxTitleLength} символов");
-        
+            throw new DomainException(
+                $"Название отдела не может превышать {MaxTitleLength} символов"
+            );
+
         return new Department(title);
     }
 
@@ -43,7 +45,7 @@ public class Department
     /// <returns>Модель отдела</returns>
     internal static Department Restore(int departmentId, string title)
     {
-        return new Department(title){ DepartmentId = departmentId };
+        return new Department(title) { DepartmentId = departmentId };
     }
 
     /// <summary>
@@ -55,9 +57,11 @@ public class Department
     {
         if (string.IsNullOrEmpty(title))
             throw new DomainException("Название специальности не может быть пустым");
-        
+
         if (title.Length > MaxTitleLength)
-            throw new DomainException($"Название отдела не может превышать {MaxTitleLength} символов");
+            throw new DomainException(
+                $"Название отдела не может превышать {MaxTitleLength} символов"
+            );
 
         Title = title;
     }
