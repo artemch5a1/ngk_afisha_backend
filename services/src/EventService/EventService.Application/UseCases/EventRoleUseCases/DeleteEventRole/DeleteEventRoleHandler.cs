@@ -12,18 +12,27 @@ public class DeleteEventRoleHandler : IRequestHandler<DeleteEventRoleCommand, Re
 
     private readonly ILogger<DeleteEventRoleHandler> _logger;
 
-    public DeleteEventRoleHandler(IEventRoleService eventRoleService, ILogger<DeleteEventRoleHandler> logger)
+    public DeleteEventRoleHandler(
+        IEventRoleService eventRoleService,
+        ILogger<DeleteEventRoleHandler> logger
+    )
     {
         _eventRoleService = eventRoleService;
         _logger = logger;
     }
 
-    public async Task<Result<int>> Handle(DeleteEventRoleCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        DeleteEventRoleCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = await _eventRoleService.DeleteEventRole(request.EventRoleId, cancellationToken);
-            
+            bool result = await _eventRoleService.DeleteEventRole(
+                request.EventRoleId,
+                cancellationToken
+            );
+
             return result
                 ? Result<int>.Success(request.EventRoleId)
                 : Result<int>.Failure(["Ошибка при удалении"], ApiErrorType.BadRequest);

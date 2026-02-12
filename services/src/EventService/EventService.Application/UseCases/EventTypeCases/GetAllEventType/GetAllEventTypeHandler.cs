@@ -12,25 +12,32 @@ public class GetAllEventTypeHandler : IRequestHandler<GetAllEventTypeQuery, Resu
 
     private readonly ILogger<GetAllEventTypeHandler> _logger;
 
-
-    public GetAllEventTypeHandler(IEventTypeService eventTypeService, ILogger<GetAllEventTypeHandler> logger)
+    public GetAllEventTypeHandler(
+        IEventTypeService eventTypeService,
+        ILogger<GetAllEventTypeHandler> logger
+    )
     {
         _eventTypeService = eventTypeService;
         _logger = logger;
     }
 
-    public async Task<Result<List<EventType>>> Handle(GetAllEventTypeQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<EventType>>> Handle(
+        GetAllEventTypeQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            List<EventType> location = 
-                await _eventTypeService.GetAllEventType(request.Contract, cancellationToken);
+            List<EventType> location = await _eventTypeService.GetAllEventType(
+                request.Contract,
+                cancellationToken
+            );
 
             return Result<List<EventType>>.Success(location);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex,"Ошбика при получении всех типов событий");
+            _logger.LogWarning(ex, "Ошбика при получении всех типов событий");
 
             return Result<List<EventType>>.Failure(ex);
         }

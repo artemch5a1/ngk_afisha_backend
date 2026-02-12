@@ -13,14 +13,18 @@ public class CreateInvitationHandler : IRequestHandler<CreateInvitationCommand, 
     private readonly ILogger<CreateInvitationHandler> _logger;
 
     public CreateInvitationHandler(
-        IEventService eventService, 
-        ILogger<CreateInvitationHandler> logger)
+        IEventService eventService,
+        ILogger<CreateInvitationHandler> logger
+    )
     {
         _eventService = eventService;
         _logger = logger;
     }
 
-    public async Task<Result<Invitation>> Handle(CreateInvitationCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Invitation>> Handle(
+        CreateInvitationCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

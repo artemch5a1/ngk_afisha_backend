@@ -12,21 +12,29 @@ public class UpdateEventRoleHandler : IRequestHandler<UpdateEventRoleCommand, Re
 
     private readonly ILogger<UpdateEventRoleHandler> _logger;
 
-
-    public UpdateEventRoleHandler(IEventRoleService eventRoleService, ILogger<UpdateEventRoleHandler> logger)
+    public UpdateEventRoleHandler(
+        IEventRoleService eventRoleService,
+        ILogger<UpdateEventRoleHandler> logger
+    )
     {
         _eventRoleService = eventRoleService;
         _logger = logger;
     }
 
-
-    public async Task<Result<int>> Handle(UpdateEventRoleCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        UpdateEventRoleCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result =
-                await _eventRoleService.UpdateEventRole(request.EventRoleId, request.Title, request.Description, cancellationToken);
-            
+            bool result = await _eventRoleService.UpdateEventRole(
+                request.EventRoleId,
+                request.Title,
+                request.Description,
+                cancellationToken
+            );
+
             return result
                 ? Result<int>.Success(request.EventRoleId)
                 : Result<int>.Failure(["Ошибка при обновлении"], ApiErrorType.BadRequest);

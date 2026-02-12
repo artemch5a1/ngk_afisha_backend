@@ -13,14 +13,16 @@ public class GetGenreByIdHandler : IRequestHandler<GetGenreByIdQuery, Result<Gen
 
     private readonly ILogger<GetGenreByIdHandler> _logger;
 
-
     public GetGenreByIdHandler(IGenreService genreService, ILogger<GetGenreByIdHandler> logger)
     {
         _genreService = genreService;
         _logger = logger;
     }
 
-    public async Task<Result<Genre>> Handle(GetGenreByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Genre>> Handle(
+        GetGenreByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

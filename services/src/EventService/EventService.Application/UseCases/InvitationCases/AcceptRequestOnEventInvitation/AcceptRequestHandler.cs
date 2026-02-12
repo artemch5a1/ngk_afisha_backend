@@ -12,16 +12,16 @@ public class AcceptRequestHandler : IRequestHandler<AcceptRequestCommand, Result
 
     private readonly ILogger<AcceptRequestHandler> _logger;
 
-
-    public AcceptRequestHandler(
-        IEventService eventService, 
-        ILogger<AcceptRequestHandler> logger)
+    public AcceptRequestHandler(IEventService eventService, ILogger<AcceptRequestHandler> logger)
     {
         _eventService = eventService;
         _logger = logger;
     }
 
-    public async Task<Result<Guid>> Handle(AcceptRequestCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(
+        AcceptRequestCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
@@ -32,7 +32,7 @@ public class AcceptRequestHandler : IRequestHandler<AcceptRequestCommand, Result
                 request.CurrentUser,
                 cancellationToken
             );
-            
+
             return result
                 ? Result<Guid>.Success(request.InvitationId)
                 : Result<Guid>.Failure(["Ошибка при одобрении заявки"], ApiErrorType.BadRequest);
@@ -40,7 +40,7 @@ public class AcceptRequestHandler : IRequestHandler<AcceptRequestCommand, Result
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Ошибка принятия заявки");
-            
+
             return Result<Guid>.Failure(ex);
         }
     }

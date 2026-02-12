@@ -5,6 +5,6 @@ public class RejectMemberOnInvitationDto
     public Guid EventId { get; set; }
 
     public Guid InvitationId { get; set; }
-    
+
     public Guid StudentId { get; set; }
 }

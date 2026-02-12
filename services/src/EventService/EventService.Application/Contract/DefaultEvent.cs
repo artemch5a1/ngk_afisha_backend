@@ -9,9 +9,9 @@ public class DefaultEvent
     public string Description { get; set; } = null!;
 
     public int LocationId { get; set; }
-    
+
     public int GenreId { get; set; }
-    
+
     public int TypeId { get; set; }
 
     public int MinAge { get; set; }

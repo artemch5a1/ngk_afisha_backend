@@ -19,12 +19,13 @@ public class GetEventByIdHandler : IRequestHandler<GetEventByIdQuery, Result<Eve
     private readonly IStorageService _storageService;
 
     private readonly EventSetting _eventSetting;
-    
+
     public GetEventByIdHandler(
-        IEventService eventService, 
-        ILogger<GetEventByIdHandler> logger, 
-        IStorageService storageService, 
-        IOptions<EventSetting> eventSetting)
+        IEventService eventService,
+        ILogger<GetEventByIdHandler> logger,
+        IStorageService storageService,
+        IOptions<EventSetting> eventSetting
+    )
     {
         _eventService = eventService;
         _logger = logger;
@@ -32,7 +33,10 @@ public class GetEventByIdHandler : IRequestHandler<GetEventByIdQuery, Result<Eve
         _eventSetting = eventSetting.Value;
     }
 
-    public async Task<Result<Event>> Handle(GetEventByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Event>> Handle(
+        GetEventByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
@@ -41,11 +45,13 @@ public class GetEventByIdHandler : IRequestHandler<GetEventByIdQuery, Result<Eve
             if (result is null)
                 return Result<Event>.Failure(["Событие не найдено"], ApiErrorType.NotFound);
 
-            string url = await _storageService.GenerateDownloadUrlAsync(result.PreviewUrl, 
-                TimeSpan.FromMinutes(_eventSetting.TimeActiveDownloadLinkInMilliSeconds));
-            
+            string url = await _storageService.GenerateDownloadUrlAsync(
+                result.PreviewUrl,
+                TimeSpan.FromMinutes(_eventSetting.TimeActiveDownloadLinkInMilliSeconds)
+            );
+
             result.SetDownloadUrl(url);
-            
+
             return Result<Event>.Success(result);
         }
         catch (Exception ex)

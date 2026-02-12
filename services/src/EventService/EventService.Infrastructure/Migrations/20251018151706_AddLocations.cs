@@ -16,26 +16,33 @@ namespace EventService.Infrastructure.Migrations
                 table: "events",
                 type: "integer",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0
+            );
 
             migrationBuilder.CreateTable(
                 name: "locations",
                 columns: table => new
                 {
-                    LocationId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    LocationId = table
+                        .Column<int>(type: "integer", nullable: false)
+                        .Annotation(
+                            "Npgsql:ValueGenerationStrategy",
+                            NpgsqlValueGenerationStrategy.IdentityByDefaultColumn
+                        ),
                     Title = table.Column<string>(type: "text", nullable: false),
-                    Address = table.Column<string>(type: "text", nullable: false)
+                    Address = table.Column<string>(type: "text", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_locations", x => x.LocationId);
-                });
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_events_LocationId",
                 table: "events",
-                column: "LocationId");
+                column: "LocationId"
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "FK_events_locations_LocationId",
@@ -43,7 +50,8 @@ namespace EventService.Infrastructure.Migrations
                 column: "LocationId",
                 principalTable: "locations",
                 principalColumn: "LocationId",
-                onDelete: ReferentialAction.Restrict);
+                onDelete: ReferentialAction.Restrict
+            );
         }
 
         /// <inheritdoc />
@@ -51,18 +59,14 @@ namespace EventService.Infrastructure.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_events_locations_LocationId",
-                table: "events");
+                table: "events"
+            );
 
-            migrationBuilder.DropTable(
-                name: "locations");
+            migrationBuilder.DropTable(name: "locations");
 
-            migrationBuilder.DropIndex(
-                name: "IX_events_LocationId",
-                table: "events");
+            migrationBuilder.DropIndex(name: "IX_events_LocationId", table: "events");
 
-            migrationBuilder.DropColumn(
-                name: "LocationId",
-                table: "events");
+            migrationBuilder.DropColumn(name: "LocationId", table: "events");
         }
     }
 }

@@ -3,8 +3,8 @@ using EventService.Domain.Models;
 
 namespace EventService.Domain.Abstractions.Infrastructure.Repositories.Repositories;
 
-public interface ILocationRepository : 
-    IReadable<Location, int>, 
-    IWritable<Location, int>, 
-    IUpdatable<Location>, 
-    IDeletable<int>;
+public interface ILocationRepository
+    : IReadable<Location, int>,
+        IWritable<Location, int>,
+        IUpdatable<Location>,
+        IDeletable<int>;

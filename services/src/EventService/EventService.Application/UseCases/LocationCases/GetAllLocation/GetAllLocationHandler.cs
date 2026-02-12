@@ -12,24 +12,32 @@ public class GetAllLocationHandler : IRequestHandler<GetAllLocationQuery, Result
 
     private readonly ILogger<GetAllLocationHandler> _logger;
 
-    public GetAllLocationHandler(ILocationService locationService, ILogger<GetAllLocationHandler> logger)
+    public GetAllLocationHandler(
+        ILocationService locationService,
+        ILogger<GetAllLocationHandler> logger
+    )
     {
         _locationService = locationService;
         _logger = logger;
     }
 
-    public async Task<Result<List<Location>>> Handle(GetAllLocationQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Location>>> Handle(
+        GetAllLocationQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            List<Location> location = 
-                await _locationService.GetAllLocation(request.Contract, cancellationToken);
+            List<Location> location = await _locationService.GetAllLocation(
+                request.Contract,
+                cancellationToken
+            );
 
             return Result<List<Location>>.Success(location);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex,"Ошбика при получении всех локаций");
+            _logger.LogWarning(ex, "Ошбика при получении всех локаций");
 
             return Result<List<Location>>.Failure(ex);
         }

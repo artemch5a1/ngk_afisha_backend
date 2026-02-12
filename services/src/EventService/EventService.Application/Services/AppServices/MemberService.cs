@@ -14,24 +14,37 @@ public class MemberService : IMemberService
         _memberRepository = memberRepository;
     }
 
-    public async Task<List<Member>> GetAllMember(PaginationContract? contract = null, CancellationToken cancellationToken = default)
+    public async Task<List<Member>> GetAllMember(
+        PaginationContract? contract = null,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _memberRepository.GetAll(contract, cancellationToken);
     }
 
-    public async Task<List<Member>> GetAllMemberByAuthor(Guid authorId, PaginationContract? contract = null,
-        CancellationToken cancellationToken = default)
+    public async Task<List<Member>> GetAllMemberByAuthor(
+        Guid authorId,
+        PaginationContract? contract = null,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _memberRepository.GetAllByAuthor(authorId, contract, cancellationToken);
     }
 
-    public async Task<List<Member>> GetAllMemberByStudent(Guid studentId, PaginationContract? contract = null,
-        CancellationToken cancellationToken = default)
+    public async Task<List<Member>> GetAllMemberByStudent(
+        Guid studentId,
+        PaginationContract? contract = null,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _memberRepository.GetAllByStudent(studentId, contract, cancellationToken);
     }
 
-    public async Task<Member?> GetMemberById(Guid studentId, Guid invitationId, CancellationToken cancellationToken = default)
+    public async Task<Member?> GetMemberById(
+        Guid studentId,
+        Guid invitationId,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _memberRepository.GetById((invitationId, studentId), cancellationToken);
     }

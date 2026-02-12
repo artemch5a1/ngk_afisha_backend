@@ -15,16 +15,17 @@ public class GetAllEventHandler : IRequestHandler<GetAllEventQuery, Result<List<
     private readonly IEventService _eventService;
 
     private readonly ILogger<GetAllEventHandler> _logger;
-    
+
     private readonly IStorageService _storageService;
 
     private readonly EventSetting _eventSetting;
-    
+
     public GetAllEventHandler(
-        IEventService eventService, 
-        ILogger<GetAllEventHandler> logger, 
-        IStorageService storageService, 
-        IOptions<EventSetting> eventSetting)
+        IEventService eventService,
+        ILogger<GetAllEventHandler> logger,
+        IStorageService storageService,
+        IOptions<EventSetting> eventSetting
+    )
     {
         _eventService = eventService;
         _logger = logger;
@@ -32,21 +33,29 @@ public class GetAllEventHandler : IRequestHandler<GetAllEventQuery, Result<List<
         _eventSetting = eventSetting.Value;
     }
 
-    public async Task<Result<List<Event>>> Handle(GetAllEventQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Event>>> Handle(
+        GetAllEventQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            List<Event> result = await _eventService.GetAllEvent(new UpcomingEventsSpecification(), request.Contract, cancellationToken);
-            
+            List<Event> result = await _eventService.GetAllEvent(
+                new UpcomingEventsSpecification(),
+                request.Contract,
+                cancellationToken
+            );
+
             foreach (Event @event in result)
             {
-                string url = await _storageService
-                    .GenerateDownloadUrlAsync(@event.PreviewUrl, 
-                        TimeSpan.FromMinutes(_eventSetting.TimeActiveDownloadLinkInMilliSeconds));
-                
+                string url = await _storageService.GenerateDownloadUrlAsync(
+                    @event.PreviewUrl,
+                    TimeSpan.FromMinutes(_eventSetting.TimeActiveDownloadLinkInMilliSeconds)
+                );
+
                 @event.SetDownloadUrl(url);
             }
-            
+
             return Result<List<Event>>.Success(result);
         }
         catch (Exception ex)

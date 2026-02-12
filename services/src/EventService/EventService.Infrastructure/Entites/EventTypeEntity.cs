@@ -17,10 +17,7 @@ public class EventTypeEntity : IEntity<EventTypeEntity, EventType>
         Title = eventType.Title;
     }
 
-    internal EventTypeEntity()
-    {
-        
-    }
+    internal EventTypeEntity() { }
 
     public EventType ToDomain()
     {

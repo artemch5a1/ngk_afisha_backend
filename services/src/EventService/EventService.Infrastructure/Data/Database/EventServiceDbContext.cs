@@ -6,16 +6,14 @@ namespace EventService.Infrastructure.Data.Database;
 
 public class EventServiceDbContext : DbContext
 {
-    public EventServiceDbContext(DbContextOptions<EventServiceDbContext> options) : base(options)
-    {
-        
-    }
-    
+    public EventServiceDbContext(DbContextOptions<EventServiceDbContext> options)
+        : base(options) { }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseExceptionProcessor();
     }
-    
+
     public DbSet<EventEntity> Events { get; set; }
 
     public DbSet<LocationEntity> Locations { get; set; }
@@ -38,17 +36,11 @@ public class EventServiceDbContext : DbContext
 
             entity.HasKey(e => e.EventId);
 
-            entity.HasOne(e => e.Location)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
-            
-            entity.HasOne(e => e.Type)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
-            
-            entity.HasOne(e => e.Genre)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(e => e.Location).WithMany().OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Type).WithMany().OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Genre).WithMany().OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<LocationEntity>(entity =>
@@ -64,7 +56,7 @@ public class EventServiceDbContext : DbContext
 
             entity.HasKey(e => e.TypeId);
         });
-        
+
         modelBuilder.Entity<GenreEntity>(entity =>
         {
             entity.ToTable("genres");
@@ -75,7 +67,7 @@ public class EventServiceDbContext : DbContext
         modelBuilder.Entity<EventRoleEntity>(entity =>
         {
             entity.ToTable("event_roles");
-            
+
             entity.HasKey(e => e.EventRoleId);
         });
 
@@ -85,13 +77,12 @@ public class EventServiceDbContext : DbContext
 
             entity.HasKey(e => e.InvitationId);
 
-            entity.HasOne(e => e.Event)
+            entity
+                .HasOne(e => e.Event)
                 .WithMany(e => e.Invitations)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(e => e.Role)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.Role).WithMany().OnDelete(DeleteBehavior.Cascade);
 
             entity.HasIndex(e => new { e.RoleId, e.EventId }).IsUnique();
         });
@@ -102,7 +93,8 @@ public class EventServiceDbContext : DbContext
 
             entity.HasKey(e => new { e.InvitationId, e.StudentId });
 
-            entity.HasOne(e => e.Invitation)
+            entity
+                .HasOne(e => e.Invitation)
                 .WithMany(e => e.Members)
                 .OnDelete(DeleteBehavior.Cascade);
         });

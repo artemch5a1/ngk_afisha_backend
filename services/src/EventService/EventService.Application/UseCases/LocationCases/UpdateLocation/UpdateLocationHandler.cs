@@ -12,20 +12,28 @@ public class UpdateLocationHandler : IRequestHandler<UpdateLocationCommand, Resu
 
     private readonly ILogger<UpdateLocationHandler> _logger;
 
-
-    public UpdateLocationHandler(ILocationService locationService, ILogger<UpdateLocationHandler> logger)
+    public UpdateLocationHandler(
+        ILocationService locationService,
+        ILogger<UpdateLocationHandler> logger
+    )
     {
         _locationService = locationService;
         _logger = logger;
     }
 
-    public async Task<Result<int>> Handle(UpdateLocationCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        UpdateLocationCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = 
-                await _locationService.UpdateLocation(request.LocationId, request.Title, request.Address,
-                cancellationToken);
+            bool result = await _locationService.UpdateLocation(
+                request.LocationId,
+                request.Title,
+                request.Address,
+                cancellationToken
+            );
 
             return result
                 ? Result<int>.Success(request.LocationId)

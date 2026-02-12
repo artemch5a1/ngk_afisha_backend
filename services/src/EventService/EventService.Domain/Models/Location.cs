@@ -9,7 +9,7 @@ public class Location
 {
     private const int MinTitleLength = 4;
     private const int MaxTitleLength = 45;
-    
+
     public int LocationId { get; private set; }
 
     public string Title { get; private set; }
@@ -33,12 +33,15 @@ public class Location
     /// </exception>
     public static Location Create(string title, string address)
     {
-        if (string.IsNullOrWhiteSpace(title) || title.Length < MinTitleLength || title.Length > MaxTitleLength)
+        if (
+            string.IsNullOrWhiteSpace(title)
+            || title.Length < MinTitleLength
+            || title.Length > MaxTitleLength
+        )
         {
-            throw new DomainException(MaxMinMessage(
-                "Название локации",  
-                MinTitleLength, 
-                MaxTitleLength));
+            throw new DomainException(
+                MaxMinMessage("Название локации", MinTitleLength, MaxTitleLength)
+            );
         }
 
         return new Location(title, address);
@@ -53,11 +56,11 @@ public class Location
     /// <returns>Восстановленный экземпляр <see cref="Location"/>.</returns>
     internal static Location Restore(int locationId, string title, string address)
     {
-        return new Location(title, address){ LocationId = locationId  };
+        return new Location(title, address) { LocationId = locationId };
     }
 
-    private static string MaxMinMessage(object someObject, int min, int max)
-        => $"{someObject} не должно быть меньше {min} или больше {max} символов";
+    private static string MaxMinMessage(object someObject, int min, int max) =>
+        $"{someObject} не должно быть меньше {min} или больше {max} символов";
 
     /// <summary>
     /// Обновляет название и адрес локации.
@@ -69,14 +72,17 @@ public class Location
     /// </exception>
     public void UpdateLocation(string title, string address)
     {
-        if (string.IsNullOrWhiteSpace(title) || title.Length < MinTitleLength || title.Length > MaxTitleLength)
+        if (
+            string.IsNullOrWhiteSpace(title)
+            || title.Length < MinTitleLength
+            || title.Length > MaxTitleLength
+        )
         {
-            throw new DomainException(MaxMinMessage(
-                "Название локации",  
-                MinTitleLength, 
-                MaxTitleLength));
+            throw new DomainException(
+                MaxMinMessage("Название локации", MinTitleLength, MaxTitleLength)
+            );
         }
-        
+
         Title = title;
         Address = address;
     }

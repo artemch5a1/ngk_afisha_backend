@@ -12,19 +12,26 @@ public class DeleteEventTypeHandler : IRequestHandler<DeleteEventTypeCommand, Re
 
     private readonly ILogger<DeleteEventTypeHandler> _logger;
 
-
-    public DeleteEventTypeHandler(IEventTypeService eventTypeService, ILogger<DeleteEventTypeHandler> logger)
+    public DeleteEventTypeHandler(
+        IEventTypeService eventTypeService,
+        ILogger<DeleteEventTypeHandler> logger
+    )
     {
         _eventTypeService = eventTypeService;
         _logger = logger;
     }
 
-    public async Task<Result<int>> Handle(DeleteEventTypeCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        DeleteEventTypeCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = 
-                await _eventTypeService.DeleteEventType(request.TypeId, cancellationToken);
+            bool result = await _eventTypeService.DeleteEventType(
+                request.TypeId,
+                cancellationToken
+            );
 
             return result
                 ? Result<int>.Success(request.TypeId)

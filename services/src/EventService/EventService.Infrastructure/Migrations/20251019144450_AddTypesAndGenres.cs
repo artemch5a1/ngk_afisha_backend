@@ -16,50 +16,64 @@ namespace EventService.Infrastructure.Migrations
                 table: "events",
                 type: "integer",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0
+            );
 
             migrationBuilder.AddColumn<int>(
                 name: "TypeId",
                 table: "events",
                 type: "integer",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0
+            );
 
             migrationBuilder.CreateTable(
                 name: "event_types",
                 columns: table => new
                 {
-                    TypeId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: false)
+                    TypeId = table
+                        .Column<int>(type: "integer", nullable: false)
+                        .Annotation(
+                            "Npgsql:ValueGenerationStrategy",
+                            NpgsqlValueGenerationStrategy.IdentityByDefaultColumn
+                        ),
+                    Title = table.Column<string>(type: "text", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_event_types", x => x.TypeId);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "genres",
                 columns: table => new
                 {
-                    GenreId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: false)
+                    GenreId = table
+                        .Column<int>(type: "integer", nullable: false)
+                        .Annotation(
+                            "Npgsql:ValueGenerationStrategy",
+                            NpgsqlValueGenerationStrategy.IdentityByDefaultColumn
+                        ),
+                    Title = table.Column<string>(type: "text", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_genres", x => x.GenreId);
-                });
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_events_GenreId",
                 table: "events",
-                column: "GenreId");
+                column: "GenreId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_events_TypeId",
                 table: "events",
-                column: "TypeId");
+                column: "TypeId"
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "FK_events_event_types_TypeId",
@@ -67,7 +81,8 @@ namespace EventService.Infrastructure.Migrations
                 column: "TypeId",
                 principalTable: "event_types",
                 principalColumn: "TypeId",
-                onDelete: ReferentialAction.Restrict);
+                onDelete: ReferentialAction.Restrict
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "FK_events_genres_GenreId",
@@ -75,41 +90,28 @@ namespace EventService.Infrastructure.Migrations
                 column: "GenreId",
                 principalTable: "genres",
                 principalColumn: "GenreId",
-                onDelete: ReferentialAction.Restrict);
+                onDelete: ReferentialAction.Restrict
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_events_event_types_TypeId",
-                table: "events");
+            migrationBuilder.DropForeignKey(name: "FK_events_event_types_TypeId", table: "events");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_events_genres_GenreId",
-                table: "events");
+            migrationBuilder.DropForeignKey(name: "FK_events_genres_GenreId", table: "events");
 
-            migrationBuilder.DropTable(
-                name: "event_types");
+            migrationBuilder.DropTable(name: "event_types");
 
-            migrationBuilder.DropTable(
-                name: "genres");
+            migrationBuilder.DropTable(name: "genres");
 
-            migrationBuilder.DropIndex(
-                name: "IX_events_GenreId",
-                table: "events");
+            migrationBuilder.DropIndex(name: "IX_events_GenreId", table: "events");
 
-            migrationBuilder.DropIndex(
-                name: "IX_events_TypeId",
-                table: "events");
+            migrationBuilder.DropIndex(name: "IX_events_TypeId", table: "events");
 
-            migrationBuilder.DropColumn(
-                name: "GenreId",
-                table: "events");
+            migrationBuilder.DropColumn(name: "GenreId", table: "events");
 
-            migrationBuilder.DropColumn(
-                name: "TypeId",
-                table: "events");
+            migrationBuilder.DropColumn(name: "TypeId", table: "events");
         }
     }
 }

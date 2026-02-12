@@ -5,20 +5,26 @@ namespace EventService.Domain.Abstractions.Application.Services.AppServices;
 
 public interface IMemberService
 {
-    Task<List<Member>> GetAllMember(PaginationContract? contract = null, CancellationToken cancellationToken = default);
-    
+    Task<List<Member>> GetAllMember(
+        PaginationContract? contract = null,
+        CancellationToken cancellationToken = default
+    );
+
     Task<List<Member>> GetAllMemberByAuthor(
-        Guid authorId, 
-        PaginationContract? contract = null, 
-        CancellationToken cancellationToken = default);
-    
+        Guid authorId,
+        PaginationContract? contract = null,
+        CancellationToken cancellationToken = default
+    );
+
     Task<List<Member>> GetAllMemberByStudent(
-        Guid studentId, 
-        PaginationContract? contract = null, 
-        CancellationToken cancellationToken = default);
+        Guid studentId,
+        PaginationContract? contract = null,
+        CancellationToken cancellationToken = default
+    );
 
     Task<Member?> GetMemberById(
-        Guid studentId, 
-        Guid invitationId, 
-        CancellationToken cancellationToken = default);
+        Guid studentId,
+        Guid invitationId,
+        CancellationToken cancellationToken = default
+    );
 }

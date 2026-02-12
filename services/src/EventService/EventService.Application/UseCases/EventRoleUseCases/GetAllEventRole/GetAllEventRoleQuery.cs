@@ -5,4 +5,5 @@ using MediatR;
 
 namespace EventService.Application.UseCases.EventRoleUseCases.GetAllEventRole;
 
-public record GetAllEventRoleQuery(PaginationContract? Contract) : IRequest<Result<List<EventRole>>>;
+public record GetAllEventRoleQuery(PaginationContract? Contract)
+    : IRequest<Result<List<EventRole>>>;

@@ -5,4 +5,5 @@ using MediatR;
 
 namespace EventService.Application.UseCases.EventTypeCases.GetAllEventType;
 
-public record GetAllEventTypeQuery(PaginationContract? Contract) : IRequest<Result<List<EventType>>>;
+public record GetAllEventTypeQuery(PaginationContract? Contract)
+    : IRequest<Result<List<EventType>>>;

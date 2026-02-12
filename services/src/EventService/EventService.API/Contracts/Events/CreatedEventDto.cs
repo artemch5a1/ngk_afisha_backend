@@ -19,18 +19,18 @@ public class CreatedEventDto
     public int LocationId { get; set; }
 
     public LocationDto Location { get; set; } = null!;
-    
+
     public int GenreId { get; set; }
-    
+
     public GenreDto Genre { get; set; } = null!;
-    
+
     public int TypeId { get; set; }
-    
+
     public EventTypeDto Type { get; set; } = null!;
 
     public int MinAge { get; set; }
 
     internal Guid Author { get; set; }
-    
+
     public string UploadUrl { get; set; } = null!;
 }

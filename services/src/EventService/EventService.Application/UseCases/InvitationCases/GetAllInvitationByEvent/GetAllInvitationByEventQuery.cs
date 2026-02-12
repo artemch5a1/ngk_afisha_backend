@@ -5,4 +5,5 @@ using MediatR;
 
 namespace EventService.Application.UseCases.InvitationCases.GetAllInvitationByEvent;
 
-public record GetAllInvitationByEventQuery(Guid EventId, PaginationContract? Contract) : IRequest<Result<List<Invitation>>>;
+public record GetAllInvitationByEventQuery(Guid EventId, PaginationContract? Contract)
+    : IRequest<Result<List<Invitation>>>;

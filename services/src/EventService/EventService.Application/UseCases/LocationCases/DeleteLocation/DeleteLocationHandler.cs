@@ -12,19 +12,26 @@ public class DeleteLocationHandler : IRequestHandler<DeleteLocationCommand, Resu
 
     private readonly ILogger<DeleteLocationHandler> _logger;
 
-
-    public DeleteLocationHandler(ILocationService locationService, ILogger<DeleteLocationHandler> logger)
+    public DeleteLocationHandler(
+        ILocationService locationService,
+        ILogger<DeleteLocationHandler> logger
+    )
     {
         _locationService = locationService;
         _logger = logger;
     }
 
-    public async Task<Result<int>> Handle(DeleteLocationCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(
+        DeleteLocationCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            bool result = 
-                await _locationService.DeleteLocation(request.LocationId, cancellationToken);
+            bool result = await _locationService.DeleteLocation(
+                request.LocationId,
+                cancellationToken
+            );
 
             return result
                 ? Result<int>.Success(request.LocationId)

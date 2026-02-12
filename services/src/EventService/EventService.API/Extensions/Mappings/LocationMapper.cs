@@ -13,20 +13,20 @@ public static class LocationMapper
         {
             LocationId = location.LocationId,
             Title = location.Title,
-            Address = location.Address
+            Address = location.Address,
         };
     }
 
-    public static List<LocationDto> ToListDto(this List<Location> locations)
-        => locations.Select(x => x.ToDto()).ToList();
+    public static List<LocationDto> ToListDto(this List<Location> locations) =>
+        locations.Select(x => x.ToDto()).ToList();
 
     public static CreateLocationCommand ToCommand(this CreateLocationDto dto)
     {
         return new CreateLocationCommand(dto.Title, dto.Address);
     }
-    
+
     public static UpdateLocationCommand ToCommand(this UpdateLocationDto dto)
     {
-        return new UpdateLocationCommand(dto.LocationId ,dto.Title, dto.Address);
+        return new UpdateLocationCommand(dto.LocationId, dto.Title, dto.Address);
     }
 }

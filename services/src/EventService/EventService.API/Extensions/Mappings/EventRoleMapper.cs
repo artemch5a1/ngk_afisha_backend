@@ -13,21 +13,20 @@ public static class EventRoleMapper
         {
             EventRoleId = eventRole.EventRoleId,
             Title = eventRole.Title,
-            Description = eventRole.Description 
+            Description = eventRole.Description,
         };
     }
 
-    public static List<EventRoleDto> ToListDto(this List<EventRole> eventRoles)
-        => eventRoles.Select(x => x.ToDto()).ToList();
+    public static List<EventRoleDto> ToListDto(this List<EventRole> eventRoles) =>
+        eventRoles.Select(x => x.ToDto()).ToList();
 
     public static CreateEventRoleCommand ToCommand(this CreateEventRoleDto dto)
     {
         return new CreateEventRoleCommand(dto.Title, dto.Description);
     }
-    
+
     public static UpdateEventRoleCommand ToCommand(this UpdateEventRoleDto dto)
     {
-        return new UpdateEventRoleCommand(dto.EventRoleId,
-            dto.Title, dto.Description);
+        return new UpdateEventRoleCommand(dto.EventRoleId, dto.Title, dto.Description);
     }
 }

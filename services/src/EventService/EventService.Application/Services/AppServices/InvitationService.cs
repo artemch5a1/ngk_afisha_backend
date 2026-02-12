@@ -15,38 +15,43 @@ public class InvitationService : IInvitationService
     }
 
     public async Task<List<Invitation>> GetAllActualInvitation(
-        PaginationContract? contract, 
-        CancellationToken cancellationToken = default)
+        PaginationContract? contract,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _invitationRepository.GetAllActual(contract, cancellationToken);
     }
-    
+
     public async Task<List<Invitation>> GetAllInvitation(
-        PaginationContract? contract, 
-        CancellationToken cancellationToken = default)
+        PaginationContract? contract,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _invitationRepository.GetAll(contract, cancellationToken);
     }
 
     public async Task<Invitation?> GetInvitationById(
-        Guid invitationId, 
-        CancellationToken cancellationToken = default)
+        Guid invitationId,
+        CancellationToken cancellationToken = default
+    )
     {
         return await _invitationRepository.GetById(invitationId, cancellationToken);
     }
 
     public async Task<List<Invitation>> GetAllInvitationByAuthor(
-        Guid authorId, 
+        Guid authorId,
         PaginationContract? contract = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         return await _invitationRepository.GetAllByAuthor(authorId, contract, cancellationToken);
     }
 
     public async Task<List<Invitation>> GetAllInvitationByEvent(
-        Guid eventId, 
+        Guid eventId,
         PaginationContract? contract = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         return await _invitationRepository.GetAllByEvent(eventId, contract, cancellationToken);
     }

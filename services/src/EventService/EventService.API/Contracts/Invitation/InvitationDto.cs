@@ -23,7 +23,7 @@ public class InvitationDto
     public int RequiredMember { get; set; }
 
     public int AcceptedMember { get; set; }
-    
+
     public DateTime DeadLine { get; set; }
 
     public InvitationStatus Status { get; set; }

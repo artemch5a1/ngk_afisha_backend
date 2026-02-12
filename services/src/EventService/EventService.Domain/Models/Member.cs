@@ -29,7 +29,7 @@ public class Member
     /// <param name="studentId">Идентификатор студента.</param>
     /// <returns>Новый экземпляр <see cref="Member"/> со статусом Review.</returns>
     internal static Member Create(Guid invitationId, Guid studentId)
-    {   
+    {
         return new Member(invitationId, studentId, MemberStatus.Review);
     }
 

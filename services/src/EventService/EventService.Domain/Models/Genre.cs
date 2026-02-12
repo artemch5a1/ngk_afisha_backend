@@ -9,7 +9,7 @@ public class Genre
 {
     private const int MinTitleLength = 2;
     private const int MaxTitleLength = 45;
-    
+
     public int GenreId { get; private set; }
 
     public string Title { get; private set; }
@@ -29,14 +29,17 @@ public class Genre
     /// </exception>
     public static Genre Create(string title)
     {
-        if (string.IsNullOrWhiteSpace(title) || title.Length < MinTitleLength || title.Length > MaxTitleLength)
+        if (
+            string.IsNullOrWhiteSpace(title)
+            || title.Length < MinTitleLength
+            || title.Length > MaxTitleLength
+        )
         {
-            throw new DomainException(MaxMinMessage(
-                "Название жанра",  
-                MinTitleLength, 
-                MaxTitleLength));
+            throw new DomainException(
+                MaxMinMessage("Название жанра", MinTitleLength, MaxTitleLength)
+            );
         }
-        
+
         return new Genre(title);
     }
 
@@ -48,14 +51,11 @@ public class Genre
     /// <returns>Восстановленный экземпляр <see cref="Genre"/>.</returns>
     internal static Genre Restore(int genreId, string title)
     {
-        return new Genre(title)
-        {
-            GenreId = genreId,
-        };
+        return new Genre(title) { GenreId = genreId };
     }
-    
-    private static string MaxMinMessage(object someObject, int min, int max)
-        => $"{someObject} не должно быть меньше {min} или больше {max} символов";
+
+    private static string MaxMinMessage(object someObject, int min, int max) =>
+        $"{someObject} не должно быть меньше {min} или больше {max} символов";
 
     /// <summary>
     /// Обновляет название жанра.
@@ -66,14 +66,17 @@ public class Genre
     /// </exception>
     public void UpdateGenre(string title)
     {
-        if (string.IsNullOrWhiteSpace(title) || title.Length < MinTitleLength || title.Length > MaxTitleLength)
+        if (
+            string.IsNullOrWhiteSpace(title)
+            || title.Length < MinTitleLength
+            || title.Length > MaxTitleLength
+        )
         {
-            throw new DomainException(MaxMinMessage(
-                "Название жанра",  
-                MinTitleLength, 
-                MaxTitleLength));
+            throw new DomainException(
+                MaxMinMessage("Название жанра", MinTitleLength, MaxTitleLength)
+            );
         }
-        
+
         Title = title;
     }
 }

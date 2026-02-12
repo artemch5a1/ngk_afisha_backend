@@ -19,10 +19,7 @@ public class MemberEntity : IEntity<MemberEntity, Member>
     [Column("status")]
     public int Status { get; set; }
 
-    internal MemberEntity()
-    {
-        
-    }
+    internal MemberEntity() { }
 
     public MemberEntity(Member member)
     {

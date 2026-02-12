@@ -8,15 +8,15 @@ namespace EventService.Domain.Models;
 public class Event
 {
     private const int TitleMaxLength = 85;
-    
+
     private const int TitleMinLength = 7;
 
     private const int ShortDescriptionMaxLength = 255;
 
     private const int ShortDescriptionMinLength = 15;
-    
+
     private const int DescriptionMaxLength = 750;
-    
+
     private const int DescriptionMinLength = 35;
 
     private static readonly int[] MinAgeRange = [0, 14, 16, 18];
@@ -34,13 +34,13 @@ public class Event
     public int LocationId { get; private set; }
 
     public Location Location { get; private set; } = null!;
-    
+
     public int GenreId { get; private set; }
-    
+
     public Genre Genre { get; private set; } = null!;
-    
+
     public int TypeId { get; private set; }
-    
+
     public EventType Type { get; private set; } = null!;
 
     public int MinAge { get; private set; }
@@ -52,21 +52,22 @@ public class Event
     public string DownloadUrl { get; private set; } = null!;
 
     public IReadOnlyList<Invitation> Invitations => _invitations;
-    
+
     private List<Invitation> _invitations = new();
 
     private Event(
-        Guid eventId, 
-        string title, 
-        string shortDescription, 
-        string description, 
+        Guid eventId,
+        string title,
+        string shortDescription,
+        string description,
         DateTime dateStart,
         int locationId,
         int genreId,
         int typeId,
-        int minAge, 
-        Guid author, 
-        string previewUrl)
+        int minAge,
+        Guid author,
+        string previewUrl
+    )
     {
         EventId = eventId;
         Title = title;
@@ -98,83 +99,118 @@ public class Event
     /// <returns>Созданное событие.</returns>
     /// <exception cref="DomainException">Если входные данные не проходят валидацию.</exception>
     public static Event Create(
-        Guid eventId, 
-        string title, 
-        string shortDescription, 
-        string description, 
+        Guid eventId,
+        string title,
+        string shortDescription,
+        string description,
         DateTime dateStart,
         int locationId,
         int genreId,
         int typeId,
-        int minAge, 
-        Guid author, 
+        int minAge,
+        Guid author,
         string previewUrl
-        )
+    )
     {
         ExecuteValidation(title, shortDescription, description, dateStart, minAge, author);
 
-        return new Event(eventId, title, shortDescription, description, dateStart, locationId,  genreId, typeId, minAge, author, previewUrl);
+        return new Event(
+            eventId,
+            title,
+            shortDescription,
+            description,
+            dateStart,
+            locationId,
+            genreId,
+            typeId,
+            minAge,
+            author,
+            previewUrl
+        );
     }
 
     /// <summary>
     /// Восстанавливает событие из базы данных без повторной валидации.
     /// </summary>
     internal static Event Restore(
-        Guid eventId, 
-        string title, 
-        string shortDescription, 
-        string description, 
+        Guid eventId,
+        string title,
+        string shortDescription,
+        string description,
         DateTime dateStart,
         int locationId,
         int genreId,
         int typeId,
-        int minAge, 
-        Guid author, 
-        string previewUrl)
+        int minAge,
+        Guid author,
+        string previewUrl
+    )
     {
-        return new Event(eventId, title, shortDescription, description, dateStart, locationId, genreId, typeId, minAge, author, previewUrl);
+        return new Event(
+            eventId,
+            title,
+            shortDescription,
+            description,
+            dateStart,
+            locationId,
+            genreId,
+            typeId,
+            minAge,
+            author,
+            previewUrl
+        );
     }
 
     private static void ExecuteValidation(
-        string title, 
-        string shortDescription, 
-        string description, 
-        DateTime dateStart, 
+        string title,
+        string shortDescription,
+        string description,
+        DateTime dateStart,
         int minAge,
-        Guid authorId)
+        Guid authorId
+    )
     {
-        if (string.IsNullOrWhiteSpace(title) 
-            || title.Length < TitleMinLength 
-            || title.Length > TitleMaxLength)
+        if (
+            string.IsNullOrWhiteSpace(title)
+            || title.Length < TitleMinLength
+            || title.Length > TitleMaxLength
+        )
         {
-            throw new DomainException(MaxMinMessage(
-                "Название события",  
-                TitleMinLength, 
-                TitleMaxLength));
+            throw new DomainException(
+                MaxMinMessage("Название события", TitleMinLength, TitleMaxLength)
+            );
         }
-        
-        if (string.IsNullOrWhiteSpace(shortDescription) 
-            || shortDescription.Length < ShortDescriptionMinLength 
-            || shortDescription.Length > ShortDescriptionMaxLength)
+
+        if (
+            string.IsNullOrWhiteSpace(shortDescription)
+            || shortDescription.Length < ShortDescriptionMinLength
+            || shortDescription.Length > ShortDescriptionMaxLength
+        )
         {
-            throw new DomainException(MaxMinMessage(
-                "Короткое описание события",  
-                ShortDescriptionMinLength, 
-                ShortDescriptionMaxLength));
+            throw new DomainException(
+                MaxMinMessage(
+                    "Короткое описание события",
+                    ShortDescriptionMinLength,
+                    ShortDescriptionMaxLength
+                )
+            );
         }
-        
-        if (string.IsNullOrWhiteSpace(description) 
-            || description.Length < DescriptionMinLength 
-            || description.Length > DescriptionMaxLength)
+
+        if (
+            string.IsNullOrWhiteSpace(description)
+            || description.Length < DescriptionMinLength
+            || description.Length > DescriptionMaxLength
+        )
         {
-            throw new DomainException(MaxMinMessage(
-                "Описание события",  
-                DescriptionMinLength, 
-                DescriptionMaxLength));
+            throw new DomainException(
+                MaxMinMessage("Описание события", DescriptionMinLength, DescriptionMaxLength)
+            );
         }
 
         if (!MinAgeRange.Contains(minAge))
-            throw new DomainException("Некорректное ограничение возраста. Может быть только 14+, 16+, 18+");
+            throw new DomainException(
+                "Некорректное ограничение возраста. Может быть только 14+, 16+, 18+"
+            );
 
         if (dateStart.ToUniversalTime() <= DateTime.Now.ToUniversalTime())
             throw new DomainException("Дата события должна быть в будущем");
@@ -184,9 +220,9 @@ public class Event
             throw new DomainException("Некорректный автор");
         }
     }
-    
-    private static string MaxMinMessage(object someObject, int min, int max)
-        => $"{someObject} не должно быть меньше {min} или больше {max} символов";
+
+    private static string MaxMinMessage(object someObject, int min, int max) =>
+        $"{someObject} не должно быть меньше {min} или больше {max} символов";
 
     /// <summary>
     /// Проверяет, может ли текущий пользователь удалить событие.
@@ -214,18 +250,19 @@ public class Event
     /// <exception cref="DomainException">Если входные данные не проходят валидацию.</exception>
     public void Update(
         Guid currentUser,
-        string title, 
-        string shortDescription, 
-        string description, 
+        string title,
+        string shortDescription,
+        string description,
         DateTime dateStart,
         int locationId,
         int genreId,
         int typeId,
-        int minAge)
+        int minAge
+    )
     {
         if (Author != currentUser)
             throw new NotFoundException("Событие", EventId);
-        
+
         ExecuteValidation(title, shortDescription, description, dateStart, minAge, currentUser);
 
         Title = title;
@@ -252,46 +289,55 @@ public class Event
     /// <exception cref="DomainException">Если крайний срок превышает дату события.</exception>
     public Invitation AddNewInvitation(
         Guid currentUser,
-        int roleId, 
-        string shortDescription, 
-        string description, 
+        int roleId,
+        string shortDescription,
+        string description,
         int requiredMember,
-        DateTime deadLine)
+        DateTime deadLine
+    )
     {
-        if(currentUser != Author)
+        if (currentUser != Author)
             throw new NotFoundException("Событие", EventId);
 
         if (deadLine.ToUniversalTime() > DateStart.ToUniversalTime())
             throw new DomainException("Дэдлайн нельзя установить позже наступления события");
-        
-        Invitation invitation = Invitation.Create(Guid.NewGuid(), EventId, roleId, shortDescription, description,
-            requiredMember, deadLine);
-        
+
+        Invitation invitation = Invitation.Create(
+            Guid.NewGuid(),
+            EventId,
+            roleId,
+            shortDescription,
+            description,
+            requiredMember,
+            deadLine
+        );
+
         _invitations.Add(invitation);
 
         return invitation;
     }
 
     public void UpdateInvitation(
-        Guid currentUser, 
-        Guid invitationId, 
+        Guid currentUser,
+        Guid invitationId,
         int roleId,
-        string shortDescription, 
-        string description, 
+        string shortDescription,
+        string description,
         int requiredMember,
-        DateTime deadLine)
+        DateTime deadLine
+    )
     {
-        if(currentUser != Author)
+        if (currentUser != Author)
             throw new NotFoundException("Событие", EventId);
 
         if (deadLine.ToUniversalTime() > DateStart.ToUniversalTime())
             throw new DomainException("Дэдлайн нельзя установить позже наступления события");
-        
+
         Invitation? invitation = _invitations.FirstOrDefault(x => x.InvitationId == invitationId);
 
         if (invitation is null)
             throw new NotFoundException("Приглашение", invitationId);
-        
+
         invitation.Update(shortDescription, description, requiredMember, deadLine, roleId);
     }
 
@@ -300,9 +346,9 @@ public class Event
     /// </summary>
     public void RemoveInvitation(Guid currentUser, Guid invitationId)
     {
-        if(currentUser != Author)
+        if (currentUser != Author)
             throw new NotFoundException("Событие", EventId);
-        
+
         Invitation? invitation = _invitations.FirstOrDefault(x => x.InvitationId == invitationId);
 
         if (invitation is null)
@@ -320,13 +366,13 @@ public class Event
     public void TakeRequestByInvitationId(Guid studentId, Guid invitationId)
     {
         Invitation? invitation = _invitations.FirstOrDefault(x => x.InvitationId == invitationId);
-        
+
         if (invitation is null)
             throw new NotFoundException("Приглашение", invitationId);
-        
+
         invitation.TakeRequest(studentId);
     }
-    
+
     /// <summary>
     /// Отменяет заявку на приглашение от студента.
     /// </summary>
@@ -336,10 +382,10 @@ public class Event
     public void CancelRequestByInvitationId(Guid studentId, Guid invitationId)
     {
         Invitation? invitation = _invitations.FirstOrDefault(x => x.InvitationId == invitationId);
-        
+
         if (invitation is null)
             throw new NotFoundException("Приглашение", invitationId);
-        
+
         invitation.CancelRequest(studentId);
     }
 
@@ -354,15 +400,15 @@ public class Event
     {
         if (currentUser != Author)
             throw new NotFoundException("Приглашение", invitationId);
-        
+
         Invitation? invitation = _invitations.FirstOrDefault(x => x.InvitationId == invitationId);
-        
+
         if (invitation is null)
             throw new NotFoundException("Приглашение", invitationId);
 
         invitation.AcceptRequest(studentId);
     }
-    
+
     /// <summary>
     /// Удаляет студента из участников.
     /// </summary>
@@ -374,9 +420,9 @@ public class Event
     {
         if (currentUser != Author)
             throw new NotFoundException("Приглашение", invitationId);
-        
+
         Invitation? invitation = _invitations.FirstOrDefault(x => x.InvitationId == invitationId);
-        
+
         if (invitation is null)
             throw new NotFoundException("Приглашение", invitationId);
 

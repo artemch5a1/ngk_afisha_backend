@@ -13,18 +13,26 @@ public class GetLocationByIdHandler : IRequestHandler<GetLocationByIdQuery, Resu
 
     private readonly ILogger<GetLocationByIdHandler> _logger;
 
-
-    public GetLocationByIdHandler(ILocationService locationService, ILogger<GetLocationByIdHandler> logger)
+    public GetLocationByIdHandler(
+        ILocationService locationService,
+        ILogger<GetLocationByIdHandler> logger
+    )
     {
         _locationService = locationService;
         _logger = logger;
     }
 
-    public async Task<Result<Location>> Handle(GetLocationByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Location>> Handle(
+        GetLocationByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            Location? location = await _locationService.GetLocationById(request.LocationId, cancellationToken);
+            Location? location = await _locationService.GetLocationById(
+                request.LocationId,
+                cancellationToken
+            );
 
             if (location is null)
                 return Result<Location>.Failure(["Локация не найдена"], ApiErrorType.NotFound);

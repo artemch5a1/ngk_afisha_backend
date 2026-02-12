@@ -34,10 +34,10 @@ namespace EventService.Infrastructure.Extensions.DI;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplicationDbContext(
-        this IServiceCollection serviceCollection, 
+        this IServiceCollection serviceCollection,
         string? connectString,
         IConfiguration configuration
-        )
+    )
     {
         serviceCollection.AddDbContext<EventServiceDbContext>(options =>
             options.UseNpgsql(connectString)
@@ -45,43 +45,47 @@ public static class ServiceCollectionExtensions
 
         serviceCollection.AddScoped<IStartupService, DatabaseSeeder>();
 
-        serviceCollection
-            .Configure<GenreSeedOptions>(configuration.GetSection("SeedData"));
-        
+        serviceCollection.Configure<GenreSeedOptions>(configuration.GetSection("SeedData"));
+
         serviceCollection.AddScoped<ISeedService, GenreSeeder>();
-        
+
         serviceCollection.Configure<EventRoleSeedOptions>(configuration.GetSection("SeedData"));
         serviceCollection.AddScoped<ISeedService, EventRoleSeeder>();
-        
+
         serviceCollection.Configure<EventTypeSeedOptions>(configuration.GetSection("SeedData"));
         serviceCollection.AddScoped<ISeedService, EventTypeSeeder>();
-        
+
         serviceCollection.Configure<LocationSeedOptions>(configuration.GetSection("SeedData"));
         serviceCollection.AddScoped<ISeedService, LocationSeeder>();
 
         AddSpecifications(serviceCollection);
-        
+
         return serviceCollection;
     }
 
     private static void AddSpecifications(IServiceCollection serviceCollection)
     {
         serviceCollection.AddSingleton<EfSpecificationMapper>();
-        
-        serviceCollection.AddSingleton<IEfSpecificationHandler<Event, EventEntity>, UpcomingEventsSpecification>();
+
+        serviceCollection.AddSingleton<
+            IEfSpecificationHandler<Event, EventEntity>,
+            UpcomingEventsSpecification
+        >();
     }
 
-    public static IServiceCollection AddTransportService(this IServiceCollection serviceCollection, IConfiguration configuration)
+    public static IServiceCollection AddTransportService(
+        this IServiceCollection serviceCollection,
+        IConfiguration configuration
+    )
     {
-        serviceCollection.Configure<S3StorageSettings>(
-            opt =>
-            {
-                opt.BucketName = configuration["S3Storage:BucketName"]!;
-                opt.AccessKey = configuration["S3Storage:AccessKey"]!;
-                opt.SecretKey = configuration["S3Storage:SecretKey"]!;
-                opt.ServiceUrl = configuration["S3Storage:ServiceUrl"]!;
-                opt.ServiceUrlBounded = configuration.GetValue<string?>("S3Storage:ServiceUrlBounded");
-            });
+        serviceCollection.Configure<S3StorageSettings>(opt =>
+        {
+            opt.BucketName = configuration["S3Storage:BucketName"]!;
+            opt.AccessKey = configuration["S3Storage:AccessKey"]!;
+            opt.SecretKey = configuration["S3Storage:SecretKey"]!;
+            opt.ServiceUrl = configuration["S3Storage:ServiceUrl"]!;
+            opt.ServiceUrlBounded = configuration.GetValue<string?>("S3Storage:ServiceUrlBounded");
+        });
 
         serviceCollection.AddScoped<IStorageService, S3StorageService>();
 
@@ -103,7 +107,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IEventRoleRepository, EventRoleRepository>();
 
         serviceCollection.AddScoped<IMemberRepository, MemberRepository>();
-        
+
         return serviceCollection;
     }
 
@@ -113,26 +117,31 @@ public static class ServiceCollectionExtensions
 
         return serviceCollection;
     }
-    
-    public static IServiceCollection ConfigureJwtAuthentication(this IServiceCollection serviceCollection, IConfiguration configuration)
+
+    public static IServiceCollection ConfigureJwtAuthentication(
+        this IServiceCollection serviceCollection,
+        IConfiguration configuration
+    )
     {
         var rsa = RSA.Create();
 
         string publicKey = configuration["Jwt:PublicKey"]!;
-        
-        var keyBytes = Convert.FromBase64String(publicKey
-            .Replace("-----BEGIN RSA PRIVATE KEY-----", "")
-            .Replace("-----END RSA PRIVATE KEY-----", "")
-            .Replace("-----BEGIN PRIVATE KEY-----", "")
-            .Replace("-----END PRIVATE KEY-----", "")
-            .Replace("-----BEGIN PUBLIC KEY-----", "")
-            .Replace("-----END PUBLIC KEY-----", "")
-            .Replace("\n", "")
-            .Replace("\r", "")
-            .Trim());
-        
+
+        var keyBytes = Convert.FromBase64String(
+            publicKey
+                .Replace("-----BEGIN RSA PRIVATE KEY-----", "")
+                .Replace("-----END RSA PRIVATE KEY-----", "")
+                .Replace("-----BEGIN PRIVATE KEY-----", "")
+                .Replace("-----END PRIVATE KEY-----", "")
+                .Replace("-----BEGIN PUBLIC KEY-----", "")
+                .Replace("-----END PUBLIC KEY-----", "")
+                .Replace("\n", "")
+                .Replace("\r", "")
+                .Trim()
+        );
+
         rsa.ImportSubjectPublicKeyInfo(keyBytes, out _);
-        
+
         serviceCollection
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(
@@ -145,9 +154,7 @@ public static class ServiceCollectionExtensions
                         ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new RsaSecurityKey(
-                            rsa
-                        ),
+                        IssuerSigningKey = new RsaSecurityKey(rsa),
                         RoleClaimType = ClaimTypes.Role,
                     };
                 }
@@ -160,45 +167,40 @@ public static class ServiceCollectionExtensions
     {
         serviceCollection
             .AddAuthorizationBuilder()
-            .AddPolicy(
-                PolicyNames.AdminOnly,
-                policy => policy.RequireRole(Role.Admin.GetString())
-            )
+            .AddPolicy(PolicyNames.AdminOnly, policy => policy.RequireRole(Role.Admin.GetString()))
             .AddPolicy(
                 PolicyNames.UserOrAdmin,
-                policy =>
-                    policy.RequireRole(Role.User.GetString(), Role.Admin.GetString())
+                policy => policy.RequireRole(Role.User.GetString(), Role.Admin.GetString())
             )
             .AddPolicy(
                 PolicyNames.PublisherOrAdmin,
-                policy =>
-                    policy.RequireRole(Role.Publisher.GetString(), Role.Admin.GetString())
+                policy => policy.RequireRole(Role.Publisher.GetString(), Role.Admin.GetString())
             )
             .AddPolicy(
                 PolicyNames.PublisherOnly,
                 policy => policy.RequireRole(Role.Publisher.GetString())
             )
-            .AddPolicy(
-                PolicyNames.UserOnly,
-                policy => policy.RequireRole(Role.User.GetString())
-            );
+            .AddPolicy(PolicyNames.UserOnly, policy => policy.RequireRole(Role.User.GetString()));
 
         return serviceCollection;
     }
-    
+
     public static IServiceCollection AddEntityMappers(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped(typeof(IEntityMapper<,>), typeof(BaseEntityMapper<,>));
 
         serviceCollection.AddScoped<IEntityMapper<EventEntity, Event>, EventMapper>();
 
-        serviceCollection.AddScoped<IEntityMapper<InvitationEntity, Invitation>, InvitationMapper>();
+        serviceCollection.AddScoped<
+            IEntityMapper<InvitationEntity, Invitation>,
+            InvitationMapper
+        >();
 
         serviceCollection.AddScoped<IEntityMapper<MemberEntity, Member>, MemberMapper>();
-        
+
         return serviceCollection;
     }
-    
+
     public static IServiceCollection AddDataService(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IStartupService, MigrationService>();

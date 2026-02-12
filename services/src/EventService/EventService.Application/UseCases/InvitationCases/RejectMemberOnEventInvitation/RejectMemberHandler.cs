@@ -6,22 +6,22 @@ using Microsoft.Extensions.Logging;
 
 namespace EventService.Application.UseCases.InvitationCases.RejectMemberOnEventInvitation;
 
-public class RejectMemberHandler: IRequestHandler<RejectMemberCommand, Result<Guid>>
+public class RejectMemberHandler : IRequestHandler<RejectMemberCommand, Result<Guid>>
 {
     private readonly IEventService _eventService;
 
     private readonly ILogger<RejectMemberHandler> _logger;
 
-
-    public RejectMemberHandler(
-        IEventService eventService, 
-        ILogger<RejectMemberHandler> logger)
+    public RejectMemberHandler(IEventService eventService, ILogger<RejectMemberHandler> logger)
     {
         _eventService = eventService;
         _logger = logger;
     }
 
-    public async Task<Result<Guid>> Handle(RejectMemberCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(
+        RejectMemberCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
@@ -32,7 +32,7 @@ public class RejectMemberHandler: IRequestHandler<RejectMemberCommand, Result<Gu
                 request.CurrentUser,
                 cancellationToken
             );
-            
+
             return result
                 ? Result<Guid>.Success(request.InvitationId)
                 : Result<Guid>.Failure(["Ошибка при удалении участника"], ApiErrorType.BadRequest);
@@ -40,7 +40,7 @@ public class RejectMemberHandler: IRequestHandler<RejectMemberCommand, Result<Gu
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Ошибка при удалении участника");
-            
+
             return Result<Guid>.Failure(ex);
         }
     }

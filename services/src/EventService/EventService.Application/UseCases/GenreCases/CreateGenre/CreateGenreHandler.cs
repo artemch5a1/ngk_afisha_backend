@@ -12,14 +12,16 @@ public class CreateGenreHandler : IRequestHandler<CreateGenreCommand, Result<Gen
 
     private readonly ILogger<CreateGenreHandler> _logger;
 
-
     public CreateGenreHandler(IGenreService genreService, ILogger<CreateGenreHandler> logger)
     {
         _genreService = genreService;
         _logger = logger;
     }
 
-    public async Task<Result<Genre>> Handle(CreateGenreCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Genre>> Handle(
+        CreateGenreCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {

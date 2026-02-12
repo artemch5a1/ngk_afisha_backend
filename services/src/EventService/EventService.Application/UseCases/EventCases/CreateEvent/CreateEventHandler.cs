@@ -19,11 +19,13 @@ public class CreateEventHandler : IRequestHandler<CreateEventCommand, Result<Cre
     private readonly IStorageService _storageService;
 
     private readonly EventSetting _eventSetting;
-    
+
     public CreateEventHandler(
-        IEventService eventService, 
-        ILogger<CreateEventHandler> logger, IStorageService storageService,
-        IOptions<EventSetting> eventOptions)
+        IEventService eventService,
+        ILogger<CreateEventHandler> logger,
+        IStorageService storageService,
+        IOptions<EventSetting> eventOptions
+    )
     {
         _eventService = eventService;
         _logger = logger;
@@ -31,8 +33,10 @@ public class CreateEventHandler : IRequestHandler<CreateEventCommand, Result<Cre
         _eventSetting = eventOptions.Value;
     }
 
-
-    public async Task<Result<CreatedEvent>> Handle(CreateEventCommand request, CancellationToken cancellationToken)
+    public async Task<Result<CreatedEvent>> Handle(
+        CreateEventCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
@@ -46,12 +50,14 @@ public class CreateEventHandler : IRequestHandler<CreateEventCommand, Result<Cre
                 request.TypeId,
                 request.MinAge,
                 request.Author,
-                cancellationToken);
+                cancellationToken
+            );
 
             string url = await _storageService.GenerateUploadUrlAsync(
-                result.PreviewUrl, 
-                TimeSpan.FromMinutes(_eventSetting.TimeActiveUploadLinkInMilliSeconds));
-            
+                result.PreviewUrl,
+                TimeSpan.FromMinutes(_eventSetting.TimeActiveUploadLinkInMilliSeconds)
+            );
+
             return Result<CreatedEvent>.Success(new CreatedEvent(result, url));
         }
         catch (Exception ex)

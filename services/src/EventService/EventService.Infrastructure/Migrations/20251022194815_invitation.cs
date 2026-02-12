@@ -16,15 +16,20 @@ namespace EventService.Infrastructure.Migrations
                 name: "event_roles",
                 columns: table => new
                 {
-                    event_role_id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    event_role_id = table
+                        .Column<int>(type: "integer", nullable: false)
+                        .Annotation(
+                            "Npgsql:ValueGenerationStrategy",
+                            NpgsqlValueGenerationStrategy.IdentityByDefaultColumn
+                        ),
                     title = table.Column<string>(type: "text", nullable: false),
-                    description = table.Column<string>(type: "text", nullable: false)
+                    description = table.Column<string>(type: "text", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_event_roles", x => x.event_role_id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "invitations",
@@ -38,7 +43,7 @@ namespace EventService.Infrastructure.Migrations
                     required_member = table.Column<int>(type: "integer", nullable: false),
                     accepted_member = table.Column<int>(type: "integer", nullable: false),
                     dead_line = table.Column<DateOnly>(type: "date", nullable: false),
-                    status = table.Column<int>(type: "integer", nullable: false)
+                    status = table.Column<int>(type: "integer", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -48,14 +53,17 @@ namespace EventService.Infrastructure.Migrations
                         column: x => x.role_id,
                         principalTable: "event_roles",
                         principalColumn: "event_role_id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade
+                    );
                     table.ForeignKey(
                         name: "FK_invitations_events_event_id",
                         column: x => x.event_id,
                         principalTable: "events",
                         principalColumn: "event_id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "members",
@@ -63,7 +71,7 @@ namespace EventService.Infrastructure.Migrations
                 {
                     invitation_id = table.Column<Guid>(type: "uuid", nullable: false),
                     student_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    status = table.Column<int>(type: "integer", nullable: false)
+                    status = table.Column<int>(type: "integer", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -73,32 +81,33 @@ namespace EventService.Infrastructure.Migrations
                         column: x => x.invitation_id,
                         principalTable: "invitations",
                         principalColumn: "invitation_id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_invitations_event_id",
                 table: "invitations",
-                column: "event_id");
+                column: "event_id"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_invitations_role_id_event_id",
                 table: "invitations",
                 columns: new[] { "role_id", "event_id" },
-                unique: true);
+                unique: true
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "members");
+            migrationBuilder.DropTable(name: "members");
 
-            migrationBuilder.DropTable(
-                name: "invitations");
+            migrationBuilder.DropTable(name: "invitations");
 
-            migrationBuilder.DropTable(
-                name: "event_roles");
+            migrationBuilder.DropTable(name: "event_roles");
         }
     }
 }

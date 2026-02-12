@@ -45,7 +45,10 @@ public static class DatabaseExceptionHandler
             ),
 
             // Ошибка проверки ограничения (23514)
-            "23514" => new DatabaseException("Недопустимые данные.", ApiErrorType.UnprocessableEntity),
+            "23514" => new DatabaseException(
+                "Недопустимые данные.",
+                ApiErrorType.UnprocessableEntity
+            ),
 
             // Ошибка NULL-ограничения (23502)
             "23502" => new DatabaseException(
@@ -54,7 +57,10 @@ public static class DatabaseExceptionHandler
             ),
 
             // Все остальные ошибки PostgreSQL
-            _ => new DatabaseException("Произошла ошибка базы данных.", ApiErrorType.InternalServerError),
+            _ => new DatabaseException(
+                "Произошла ошибка базы данных.",
+                ApiErrorType.InternalServerError
+            ),
         };
     }
 

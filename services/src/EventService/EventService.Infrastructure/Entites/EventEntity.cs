@@ -26,13 +26,13 @@ public class EventEntity : IEntity<EventEntity, Event>
 
     [ForeignKey(nameof(LocationId))]
     public LocationEntity Location { get; set; } = null!;
-    
+
     [Column("genre_id")]
     public int GenreId { get; set; }
 
     [ForeignKey(nameof(GenreId))]
     public GenreEntity Genre { get; set; } = null!;
-    
+
     [Column("type_id")]
     public int TypeId { get; set; }
 
@@ -67,14 +67,23 @@ public class EventEntity : IEntity<EventEntity, Event>
         Invitations = @event.Invitations.Select(InvitationEntity.ToEntity).ToList();
     }
 
-    internal EventEntity()
-    {
-        
-    }
-    
+    internal EventEntity() { }
+
     public Event ToDomain()
     {
-        return Event.Restore(EventId, Title, ShortDescription, Description, DateStart, LocationId,  GenreId, TypeId, MinAge, Author, PreviewUrl);
+        return Event.Restore(
+            EventId,
+            Title,
+            ShortDescription,
+            Description,
+            DateStart,
+            LocationId,
+            GenreId,
+            TypeId,
+            MinAge,
+            Author,
+            PreviewUrl
+        );
     }
 
     public static EventEntity ToEntity(Event domain)

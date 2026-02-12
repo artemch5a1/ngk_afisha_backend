@@ -15,7 +15,10 @@ public interface IReadable<TModel, in TId>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <param name="contract">Структура данных для получения по частям</param>
     /// <returns>Коллекция записей сущности</returns>
-    Task<List<TModel>> GetAll(PaginationContract? contract = null, CancellationToken cancellationToken = default);
+    Task<List<TModel>> GetAll(
+        PaginationContract? contract = null,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     /// Получение одной записи по id

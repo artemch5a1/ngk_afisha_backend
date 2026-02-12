@@ -19,12 +19,13 @@ public class GetInvitationByIdHandler : IRequestHandler<GetInvitationByIdQuery, 
     private readonly IStorageService _storageService;
 
     private readonly EventSetting _eventSetting;
-    
+
     public GetInvitationByIdHandler(
-        IInvitationService invitationService, 
+        IInvitationService invitationService,
         ILogger<GetInvitationByIdHandler> logger,
-        IStorageService storageService, 
-        IOptions<EventSetting> eventSetting)
+        IStorageService storageService,
+        IOptions<EventSetting> eventSetting
+    )
     {
         _invitationService = invitationService;
         _logger = logger;
@@ -32,20 +33,31 @@ public class GetInvitationByIdHandler : IRequestHandler<GetInvitationByIdQuery, 
         _eventSetting = eventSetting.Value;
     }
 
-    public async Task<Result<Invitation>> Handle(GetInvitationByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Invitation>> Handle(
+        GetInvitationByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            Invitation? location = await _invitationService.GetInvitationById(request.InvitationId, cancellationToken);
+            Invitation? location = await _invitationService.GetInvitationById(
+                request.InvitationId,
+                cancellationToken
+            );
 
             if (location is null)
-                return Result<Invitation>.Failure(["Приглашение не найдено"], ApiErrorType.NotFound);
+                return Result<Invitation>.Failure(
+                    ["Приглашение не найдено"],
+                    ApiErrorType.NotFound
+                );
 
-            string url = await _storageService.GenerateDownloadUrlAsync(location.Event.PreviewUrl, 
-                TimeSpan.FromMinutes(_eventSetting.TimeActiveDownloadLinkInMilliSeconds));
-            
+            string url = await _storageService.GenerateDownloadUrlAsync(
+                location.Event.PreviewUrl,
+                TimeSpan.FromMinutes(_eventSetting.TimeActiveDownloadLinkInMilliSeconds)
+            );
+
             location.Event.SetDownloadUrl(url);
-            
+
             return Result<Invitation>.Success(location);
         }
         catch (Exception ex)

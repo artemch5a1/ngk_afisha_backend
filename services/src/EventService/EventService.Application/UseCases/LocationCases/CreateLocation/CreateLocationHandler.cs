@@ -12,18 +12,27 @@ public class CreateLocationHandler : IRequestHandler<CreateLocationCommand, Resu
 
     private readonly ILogger<CreateLocationHandler> _logger;
 
-
-    public CreateLocationHandler(ILocationService locationService, ILogger<CreateLocationHandler> logger)
+    public CreateLocationHandler(
+        ILocationService locationService,
+        ILogger<CreateLocationHandler> logger
+    )
     {
         _locationService = locationService;
         _logger = logger;
     }
 
-    public async Task<Result<Location>> Handle(CreateLocationCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Location>> Handle(
+        CreateLocationCommand request,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            Location location = await _locationService.CreateLocation(request.Title, request.Address, cancellationToken);
+            Location location = await _locationService.CreateLocation(
+                request.Title,
+                request.Address,
+                cancellationToken
+            );
 
             return Result<Location>.Success(location);
         }
